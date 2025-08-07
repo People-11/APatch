@@ -18,6 +18,9 @@ import androidx.lifecycle.ViewModel
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.async
 import kotlinx.parcelize.Parcelize
 import me.bmax.apatch.IAPRootService
 import me.bmax.apatch.Natives
@@ -30,7 +33,6 @@ import java.text.Collator
 import java.util.Locale
 import kotlin.concurrent.thread
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 
 class SuperUserViewModel : ViewModel() {
@@ -87,14 +89,16 @@ class SuperUserViewModel : ViewModel() {
 
     private suspend inline fun connectRootService(
         crossinline onDisconnect: () -> Unit = {}
-    ): Pair<IBinder, ServiceConnection> = suspendCoroutine {
+    ): Pair<IBinder, ServiceConnection> = suspendCancellableCoroutine { continuation ->
         val connection = object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
                 onDisconnect()
             }
 
             override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-                it.resume(binder as IBinder to this)
+                if (continuation.isActive) {
+                    continuation.resume(binder as IBinder to this)
+                }
             }
         }
         val intent = Intent(apApp, RootServices::class.java)
@@ -115,17 +119,22 @@ class SuperUserViewModel : ViewModel() {
     suspend fun fetchAppList() {
         isRefreshing = true
 
-        val result = connectRootService {
-            Log.w(TAG, "RootService disconnected")
-        }
-
         withContext(Dispatchers.IO) {
-            val binder = result.first
-            val allPackages = IAPRootService.Stub.asInterface(binder).getPackages(0)
-
-            withContext(Dispatchers.Main) {
-                stopRootService()
+            val flags = 0x00400000 // PackageManager.MATCH_ANY_USER
+            val packageList = withTimeoutOrNull(1000) {
+                async {
+                    runCatching {
+                        val res = connectRootService()
+                        val pkgs = IAPRootService.Stub.asInterface(res.first).getPackages(flags)
+                        apApp.unbindService(res.second)
+                        stopRootService()
+                        @Suppress("UNCHECKED_CAST") (pkgs as List<PackageInfo>)
+                    }.getOrNull()
+                }.await()
+            } ?: runCatching { apApp.packageManager.getInstalledPackages(flags) }.getOrElse { 
+                apApp.packageManager.getInstalledPackages(0) 
             }
+
             val uids = Natives.suUids().toList()
             Log.d(TAG, "all allows: $uids")
 
@@ -137,7 +146,7 @@ class SuperUserViewModel : ViewModel() {
 
             Log.d(TAG, "all configs: $configs")
 
-            val newApps = allPackages.list.map {
+            val newApps = packageList.map {
                 val appInfo = it.applicationInfo
                 val uid = appInfo!!.uid
                 val actProfile = if (uids.contains(uid)) Natives.suProfile(uid) else null
