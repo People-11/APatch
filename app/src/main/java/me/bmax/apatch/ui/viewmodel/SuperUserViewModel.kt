@@ -106,17 +106,8 @@ class SuperUserViewModel : ViewModel() {
     suspend fun fetchAppList() {
         isRefreshing = true
 
-        val result = connectRootService {
-            Log.w(TAG, "RootService disconnected")
-        }
-
         withContext(Dispatchers.IO) {
-            val binder = result.first
-            val allPackages = IAPRootService.Stub.asInterface(binder).getPackages(0)
-
-            withContext(Dispatchers.Main) {
-                stopRootService()
-            }
+            val packageList = apApp.packageManager.getInstalledPackages(0)
             val uids = Natives.suUids().toList()
             Log.d(TAG, "all allows: $uids")
 
@@ -128,7 +119,7 @@ class SuperUserViewModel : ViewModel() {
 
             Log.d(TAG, "all configs: $configs")
 
-            apps = allPackages.list.map {
+            apps = packageList.map {
                 val appInfo = it.applicationInfo
                 val uid = appInfo!!.uid
                 val actProfile = if (uids.contains(uid)) Natives.suProfile(uid) else null
