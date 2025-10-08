@@ -103,6 +103,9 @@ import me.bmax.apatch.util.ui.NavigationBarsSpacer
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import me.bmax.apatch.util.reboot
+import androidx.compose.runtime.produceState
+import me.bmax.apatch.util.IconUtils
 
 @Destination<RootGraph>
 @Composable
@@ -328,6 +331,7 @@ fun SettingScreen() {
                     prefs.edit { putBoolean("use_system_color_theme", it) }
                     useSystemDynamicColor = it
                     refreshTheme.value = true
+                    IconUtils.switchIcon(context, it)
                 }
 
                 if (!useSystemDynamicColor) {
