@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@android:color/system_accent1_800"/>
+    <foreground>
+        <vector
+            android:width="1080dp"
+            android:height="1080dp"
+            android:viewportWidth="1080"
+            android:viewportHeight="1080">
+            <group android:scaleX="0.65"
+                android:scaleY="0.65"
+                android:translateX="189"
+                android:translateY="189">
+                <path
+                    android:pathData="M 736.8 585.2 L 736.8 494.62 L 736.8 499.95 C 774.03 499.95 804.22 469.77 804.22 432.53 C 804.22 395.3 774.03 365.12 736.8 365.12 L 736.8 285.2 C 818.17 285.2 884.14 351.16 884.14 432.53 C 884.14 513.91 818.17 579.87 736.8 579.87 Z"
+                    android:fillColor="@android:color/system_accent1_200"
+                    android:strokeWidth="1"/>
+                <path
+                    android:pathData="M 640.14 500.2 L 740.14 500.2 L 740.14 580.2 L 640.14 580.2 Z"
+                    android:fillColor="@android:color/system_accent1_200"
+                    android:strokeWidth="1"/>
+                <path
+                    android:pathData="M 640.14 285.2 L 740.14 285.2 L 740.14 365.2 L 640.14 365.2 Z"
+                    android:fillColor="@android:color/system_accent1_200"
+                    android:strokeWidth="1"/>
+                <path
+                    android:pathData="M 565.108 433.794 L 293.154 794.689 L 196.498 794.478 L 503.357 387.262 Z"
+                    android:fillColor="@android:color/system_accent1_200"
+                    android:strokeWidth="1"/>
+                <path
+                    android:pathData="M 503.14 395.2 L 581.14 395.2 L 581.14 795.2 L 503.14 795.2 Z"
+                    android:fillColor="@android:color/system_accent1_200"
+                    android:strokeWidth="1"/>
+                <path
+                    android:pathData="M 503.14 415.2 L 503.14 387.5 L 581.14 283.5 L 581.14 415.2 Z"
+                    android:fillColor="@android:color/system_accent1_200"
+                    android:strokeWidth="1"/>
+            </group>
+        </vector>
+    </foreground>
+</adaptive-icon>
