@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fallback for API < 31: Dark mode - dark background, light pattern -->
+    <color name="ic_launcher_bg_dyn">#181B25</color>
+    <color name="ic_launcher_fg_color_dyn">#B3C5FF</color>
+</resources>

@@ -64,13 +64,14 @@ fun AboutScreen(navigator: DestinationsNavigator) {
             Spacer(modifier = Modifier.height(20.dp))
             Surface(
                 modifier = Modifier.size(95.dp),
-                color = colorResource(id = R.color.ic_launcher_background),
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = CircleShape
             ) {
-                Image(
+                Icon(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "icon",
-                    modifier = Modifier.scale(1.4f)
+                    modifier = Modifier.scale(1.4f),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
 
