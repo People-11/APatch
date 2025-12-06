@@ -19,26 +19,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import me.bmax.apatch.R
 
 @Composable
 fun ModuleUpdateButton(
     onClick: () -> Unit
 ) = FilledTonalButton(
-    onClick = onClick, enabled = true, contentPadding = PaddingValues(horizontal = 12.dp)
+    onClick = onClick, enabled = true, contentPadding = PaddingValues(horizontal = 7.dp, vertical = 4.dp)
 ) {
     Icon(
-        modifier = Modifier.size(20.dp),
+        modifier = Modifier.size(14.dp),
         painter = painterResource(id = R.drawable.device_mobile_down),
         contentDescription = null
     )
 
-    Spacer(modifier = Modifier.width(6.dp))
+    Spacer(modifier = Modifier.width(3.dp))
     Text(
         text = stringResource(id = R.string.apm_update),
         maxLines = 1,
         overflow = TextOverflow.Visible,
-        softWrap = false
+        softWrap = false,
+        fontSize = 12.sp
     )
 }
 
@@ -46,20 +48,21 @@ fun ModuleUpdateButton(
 fun ModuleRemoveButton(
     enabled: Boolean, onClick: () -> Unit
 ) = FilledTonalButton(
-    onClick = onClick, enabled = enabled, contentPadding = PaddingValues(horizontal = 12.dp)
+    onClick = onClick, enabled = enabled, contentPadding = PaddingValues(horizontal = 7.dp, vertical = 4.dp)
 ) {
     Icon(
-        modifier = Modifier.size(20.dp),
+        modifier = Modifier.size(14.dp),
         painter = painterResource(id = R.drawable.trash),
         contentDescription = null
     )
 
-    Spacer(modifier = Modifier.width(6.dp))
+    Spacer(modifier = Modifier.width(3.dp))
     Text(
         text = stringResource(id = R.string.apm_remove),
         maxLines = 1,
         overflow = TextOverflow.Visible,
-        softWrap = false
+        softWrap = false,
+        fontSize = 12.sp
     )
 }
 

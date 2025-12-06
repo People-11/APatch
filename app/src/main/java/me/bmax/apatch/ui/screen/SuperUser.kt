@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -149,16 +152,18 @@ private fun AppItem(
     var excludeApp by remember { mutableIntStateOf(config.exclude) }
 
     ListItem(
-        modifier = Modifier.clickable(onClick = {
-            if (!rootGranted) {
-                showEditProfile = !showEditProfile
-            } else {
-                rootGranted = false
-                config.allow = 0
-                Natives.revokeSu(app.uid)
-                PkgConfig.changeConfig(config)
-            }
-        }),
+        modifier = Modifier
+            .heightIn(min = 32.dp)
+            .clickable(onClick = {
+                if (!rootGranted) {
+                    showEditProfile = !showEditProfile
+                } else {
+                    rootGranted = false
+                    config.allow = 0
+                    Natives.revokeSu(app.uid)
+                    PkgConfig.changeConfig(config)
+                }
+            }),
         headlineContent = { Text(app.label) },
         leadingContent = {
             AsyncImage(
@@ -166,15 +171,16 @@ private fun AppItem(
                     .crossfade(true).build(),
                 contentDescription = app.label,
                 modifier = Modifier
-                    .padding(4.dp)
+                    .padding(horizontal = 4.dp, vertical = 1.dp)
                     .width(48.dp)
-                    .height(48.dp)
+                    .height(40.dp)
             )
         },
         supportingContent = {
 
             Column {
                 Text(app.packageName)
+                Spacer(modifier = Modifier.height(1.dp))
                 FlowRow {
 
                     if (excludeApp == 1) {
@@ -195,25 +201,29 @@ private fun AppItem(
             }
         },
         trailingContent = {
-            Switch(checked = rootGranted, onCheckedChange = {
-                rootGranted = !rootGranted
-                if (rootGranted) {
-                    excludeApp = 0
-                    config.allow = 1
-                    config.exclude = 0
-                    config.profile.scontext = APApplication.MAGISK_SCONTEXT
-                } else {
-                    config.allow = 0
+            Switch(
+                modifier = Modifier.scale(0.85f),
+                checked = rootGranted,
+                onCheckedChange = {
+                    rootGranted = !rootGranted
+                    if (rootGranted) {
+                        excludeApp = 0
+                        config.allow = 1
+                        config.exclude = 0
+                        config.profile.scontext = APApplication.MAGISK_SCONTEXT
+                    } else {
+                        config.allow = 0
+                    }
+                    config.profile.uid = app.uid
+                    PkgConfig.changeConfig(config)
+                    if (config.allow == 1) {
+                        Natives.grantSu(app.uid, 0, config.profile.scontext)
+                        Natives.setUidExclude(app.uid, 0)
+                    } else {
+                        Natives.revokeSu(app.uid)
+                    }
                 }
-                config.profile.uid = app.uid
-                PkgConfig.changeConfig(config)
-                if (config.allow == 1) {
-                    Natives.grantSu(app.uid, 0, config.profile.scontext)
-                    Natives.setUidExclude(app.uid, 0)
-                } else {
-                    Natives.revokeSu(app.uid)
-                }
-            })
+            )
         },
     )
 
@@ -250,14 +260,14 @@ private fun AppItem(
 fun LabelText(label: String) {
     Box(
         modifier = Modifier
-            .padding(top = 4.dp, end = 4.dp)
+            .padding(top = 1.dp, end = 4.dp)
             .background(
                 Color.Black, shape = RoundedCornerShape(4.dp)
             )
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(vertical = 2.dp, horizontal = 5.dp),
+            modifier = Modifier.padding(vertical = 1.dp, horizontal = 5.dp),
             style = TextStyle(
                 fontSize = 8.sp,
                 color = Color.White,
