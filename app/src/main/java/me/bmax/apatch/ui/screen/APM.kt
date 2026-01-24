@@ -246,6 +246,22 @@ private fun getMetaModuleWarningText(
     viewModel: APModuleViewModel,
     context: Context
 ) : String? {
+    // Only show this warning if we are in Metamodule mount mode
+    val modeFile = SuFile.open("/data/adb/.mount_mode")
+    val isMetaMode = if (modeFile.exists()) {
+        try {
+            com.topjohnwu.superuser.io.SuFileInputStream.open(modeFile).use { 
+                it.readBytes().toString(Charsets.UTF_8).trim() 
+            } == "metamodule"
+        } catch (e: Exception) {
+            false
+        }
+    } else {
+        false
+    }
+    
+    if (!isMetaMode) return null
+
     val hasSystemModule = viewModel.moduleList.any { module ->
         SuFile.open("/data/adb/modules/${module.id}/system").exists()
     }

@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.InvertColors
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.AlertDialogDefaults
@@ -93,16 +94,29 @@ import me.bmax.apatch.ui.component.rememberLoadingDialog
 import me.bmax.apatch.ui.theme.refreshTheme
 import me.bmax.apatch.util.APatchKeyHelper
 import me.bmax.apatch.util.getBugreportFile
+import me.bmax.apatch.util.getMountMode
 import me.bmax.apatch.util.isGlobalNamespaceEnabled
+import me.bmax.apatch.util.isForceUsingOverlayFS
+import me.bmax.apatch.util.isLiteModeEnabled
+import me.bmax.apatch.util.MOUNT_MODE_DISABLED
+import me.bmax.apatch.util.MOUNT_MODE_MAGIC
+import me.bmax.apatch.util.MOUNT_MODE_METAMODULE
 import me.bmax.apatch.util.outputStream
+import me.bmax.apatch.util.overlayFsAvailable
 import me.bmax.apatch.util.rootShellForResult
+import me.bmax.apatch.util.setForceUsingOverlayFS
 import me.bmax.apatch.util.setGlobalNamespaceEnabled
+import me.bmax.apatch.util.setLiteMode
+import me.bmax.apatch.util.setMountMode
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils
 import me.bmax.apatch.util.ui.LocalSnackbarHost
 import me.bmax.apatch.util.ui.NavigationBarsSpacer
 import java.time.LocalDateTime
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarResult
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import me.bmax.apatch.util.reboot
 
 @Destination<RootGraph>
 @Composable
@@ -237,6 +251,90 @@ fun SettingScreen() {
                         )
                         isGlobalNamespaceEnabled = it
                     })
+            }
+
+            // Mount Mode Selector
+            if (kPatchReady && aPatchReady) {
+                var mountMode by rememberSaveable {
+                    mutableStateOf(getMountMode())
+                }
+                val showMountModeDialog = remember { mutableStateOf(false) }
+                
+                ListItem(
+                    leadingContent = {
+                        Icon(Icons.Filled.Storage, stringResource(id = R.string.mount_mode))
+                    },
+                    headlineContent = { Text(stringResource(id = R.string.mount_mode)) },
+                    supportingContent = {
+                        Column {
+                            Text(
+                                text = stringResource(id = getMountModeDisplayName(mountMode)),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                        }
+                    },
+                    modifier = Modifier.clickable {
+                        showMountModeDialog.value = true
+                    }
+                )
+                
+                if (showMountModeDialog.value) {
+                    val reboot = stringResource(id = R.string.reboot)
+                    val rebootToApply = stringResource(id = R.string.apm_reboot_to_apply)
+                    MountModeDialog(showMountModeDialog, mountMode) { newMode ->
+                        mountMode = newMode
+                        setMountMode(newMode)
+                        
+                        scope.launch {
+                             val result = snackBarHost.showSnackbar(
+                                message = rebootToApply,
+                                actionLabel = reboot,
+                                duration = SnackbarDuration.Long
+                            )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                reboot()
+                            }
+                        }
+                    }
+                }
+
+                // Force OverlayFS switch (only available in Magic Mount mode)
+                val isMagicMountMode = mountMode == MOUNT_MODE_MAGIC
+                val overlayFsSupported = remember { mutableStateOf(overlayFsAvailable()) }
+                var forceOverlayFs by rememberSaveable {
+                    mutableStateOf(isForceUsingOverlayFS())
+                }
+                
+                SwitchItem(
+                    icon = Icons.Filled.Storage,
+                    title = stringResource(id = R.string.force_overlayfs),
+                    summary = if (!isMagicMountMode) {
+                        stringResource(id = R.string.force_overlayfs_unavailable)
+                    } else if (!overlayFsSupported.value) {
+                        stringResource(id = R.string.force_overlayfs_not_supported)
+                    } else {
+                        stringResource(id = R.string.force_overlayfs_summary)
+                    },
+                    checked = forceOverlayFs && isMagicMountMode && overlayFsSupported.value,
+                    enabled = isMagicMountMode && overlayFsSupported.value
+                ) {
+                    forceOverlayFs = it
+                    setForceUsingOverlayFS(it)
+                    
+                    val reboot = context.getString(R.string.reboot)
+                    val rebootToApply = context.getString(R.string.apm_reboot_to_apply)
+                    scope.launch {
+                         val result = snackBarHost.showSnackbar(
+                            message = rebootToApply,
+                            actionLabel = reboot,
+                            duration = SnackbarDuration.Long
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            reboot()
+                        }
+                    }
+                }
             }
 
             // WebView Debug
@@ -703,5 +801,88 @@ fun LanguageDialog(showLanguageDialog: MutableState<Boolean>) {
             val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
             APDialogBlurBehindUtils.setupWindowBlurListener(dialogWindowProvider.window)
         }
+    }
+}
+
+@Composable
+private fun getMountModeDisplayName(mode: String): Int {
+    return when (mode) {
+        MOUNT_MODE_MAGIC -> R.string.mount_mode_magic
+        MOUNT_MODE_METAMODULE -> R.string.mount_mode_metamodule
+        MOUNT_MODE_DISABLED -> R.string.mount_mode_disabled
+        else -> R.string.mount_mode_magic
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MountModeDialog(
+    showDialog: MutableState<Boolean>,
+    currentMode: String,
+    onModeSelected: (String) -> Unit
+) {
+    val modes = listOf(
+        Triple(MOUNT_MODE_MAGIC, R.string.mount_mode_magic, R.string.mount_mode_magic_desc),
+        Triple(MOUNT_MODE_METAMODULE, R.string.mount_mode_metamodule, R.string.mount_mode_metamodule_desc),
+        Triple(MOUNT_MODE_DISABLED, R.string.mount_mode_disabled, R.string.mount_mode_disabled_desc)
+    )
+
+    BasicAlertDialog(
+        onDismissRequest = { showDialog.value = false },
+        properties = DialogProperties(
+            decorFitsSystemWindows = true,
+            usePlatformDefaultWidth = false,
+        )
+    ) {
+        Surface(
+            modifier = Modifier
+                .width(320.dp)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(28.dp),
+            tonalElevation = AlertDialogDefaults.TonalElevation,
+            color = AlertDialogDefaults.containerColor,
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                Text(
+                    text = stringResource(R.string.mount_mode),
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
+                modes.forEach { (mode, nameRes, descRes) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onModeSelected(mode)
+                                showDialog.value = false
+                            }
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        androidx.compose.material3.RadioButton(
+                            selected = mode == currentMode,
+                            onClick = {
+                                onModeSelected(mode)
+                                showDialog.value = false
+                            }
+                        )
+                        Column(modifier = Modifier.padding(start = 8.dp)) {
+                            Text(
+                                text = stringResource(nameRes),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = stringResource(descRes),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
+        APDialogBlurBehindUtils.setupWindowBlurListener(dialogWindowProvider.window)
     }
 }

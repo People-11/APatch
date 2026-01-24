@@ -157,3 +157,12 @@ pub fn get_tmp_path() -> &'static str {
     }
     ""
 }
+
+/// Check if OverlayFS is available on this system
+pub fn overlayfs_available() -> bool {
+    // Check if overlay filesystem is supported by checking /proc/filesystems
+    if let std::result::Result::Ok(content) = std::fs::read_to_string("/proc/filesystems") {
+        return content.contains("overlay");
+    }
+    false
+}

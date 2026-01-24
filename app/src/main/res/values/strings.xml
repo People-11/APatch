@@ -171,10 +171,10 @@
     <string name="apm_new_version_available">New version %s is available, click to upgrade.</string>
 
     <string name="warning_of_meta_module_title">Require Meta module</string>
-    <string name="warning_of_meta_module_summary">This module want to mount /system, meta module will handle that. Otherwise, it might not work.</string>
-    <string name="meta_module_disabled">module not mounted, because metamodule disabled</string>
-    <string name="meta_module_removed">module not mounted, because metamodule being delete</string>
-    <string name="no_meta_module_installed">module not mounted, because metamodule not installed</string>
+    <string name="warning_of_meta_module_summary">This module want to mount /system, Metamodule will handle that. Otherwise, it might not work.</string>
+    <string name="meta_module_disabled">Module not mounted, because Metamodule disabled</string>
+    <string name="meta_module_removed">Module not mounted, because Metamodule is deleted</string>
+    <string name="no_meta_module_installed">Module not mounted, because Metamodule not installed</string>
 
     <string name="hide_apatch_manager">Hide APatch Manager</string>
     <string name="hide_apatch_manager_summary">Install a proxy app with a random package ID and custom app label</string>
@@ -257,4 +257,16 @@
     <string name="crash_handle_title">App crashed…</string>
     <string name="crash_handle_copy">Copy crash log</string>
     <string name="crash_handle_copied">Crash log copied to clipboard.</string>
+    <string name="mount_mode">Mount Mode</string>
+    <string name="mount_mode_magic">Magic Mount (Built-in)</string>
+    <string name="mount_mode_metamodule">Metamodule (Third-party)</string>
+    <string name="mount_mode_disabled">Disable Mount</string>
+    <string name="mount_mode_magic_desc">Use APatch\'s built-in module mounting system</string>
+    <string name="mount_mode_metamodule_desc">Use third-party metamodule to manage module mounts (Recommended)</string>
+    <string name="mount_mode_disabled_desc">Disable all module mounts, only load scripts</string>
+    <!-- Force OverlayFS Settings -->
+    <string name="force_overlayfs">Use OverlayFS</string>
+    <string name="force_overlayfs_summary">Use OverlayFS to mount modules. Can be enabled don\'t mean it functions normally</string>
+    <string name="force_overlayfs_unavailable">Only available in Magic Mount mode</string>
+    <string name="force_overlayfs_not_supported">Kernel does not support OverlayFS</string>
 </resources>

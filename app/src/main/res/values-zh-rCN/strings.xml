@@ -222,4 +222,16 @@
     <string name="crash_handle_title">应用崩溃了…</string>
     <string name="crash_handle_copy">复制崩溃日志</string>
     <string name="crash_handle_copied">崩溃日志已复制到剪贴板。</string>
+    <string name="mount_mode">挂载模式</string>
+    <string name="mount_mode_magic">Magic Mount（内置）</string>
+    <string name="mount_mode_metamodule">Metamodule（第三方）</string>
+    <string name="mount_mode_disabled">禁用挂载</string>
+    <string name="mount_mode_magic_desc">使用 APatch 内置的模块挂载系统</string>
+    <string name="mount_mode_metamodule_desc">使用第三方 metamodule 管理模块挂载（推荐）</string>
+    <string name="mount_mode_disabled_desc">禁用所有模块挂载，仅加载脚本</string>
+    <!-- 强制 OverlayFS 设置 -->
+    <string name="force_overlayfs">使用 OverlayFS</string>
+    <string name="force_overlayfs_summary">使用 OverlayFS 挂载模块，可打开不代表可正常工作</string>
+    <string name="force_overlayfs_unavailable">仅在 Magic Mount 模式下可用</string>
+    <string name="force_overlayfs_not_supported">内核不支持 OverlayFS</string>
 </resources>

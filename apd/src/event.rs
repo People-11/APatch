@@ -20,7 +20,7 @@ use notify::{
 use signal_hook::{consts::signal::*, iterator::Signals};
 
 use crate::{
-    assets, defs, metamodule, module, restorecon, supercall,
+    assets, defs, magic_mount, metamodule, module, mount, restorecon, supercall,
     supercall::{
         fork_for_result, init_load_package_uid_config, init_load_su_path, refresh_ap_package_list,
     },
@@ -28,6 +28,274 @@ use crate::{
         self, switch_cgroups,
     },
 };
+
+use std::io;
+use anyhow::ensure;
+
+/// Calculate the total size of all files in a directory (recursive)
+fn calculate_total_size(path: &Path) -> io::Result<u64> {
+    let mut total_size = 0;
+    if path.is_dir() {
+        for entry in fs::read_dir(path)? {
+            let entry = entry?;
+            let file_type = entry.file_type()?;
+            if file_type.is_file() {
+                total_size += entry.metadata()?.len();
+            } else if file_type.is_dir() {
+                total_size += calculate_total_size(&entry.path())?;
+            }
+        }
+    }
+    Ok(total_size)
+}
+
+/// Ensure a file exists, create it if it doesn't
+fn ensure_file_exists(path: &Path) -> Result<()> {
+    if !path.exists() {
+        fs::File::create(path).with_context(|| format!("Failed to create {}", path.display()))?;
+    }
+    Ok(())
+}
+
+/// Ensure a directory exists and is empty
+fn ensure_clean_dir(path: &str) -> Result<()> {
+    let path = Path::new(path);
+    if path.exists() {
+        fs::remove_dir_all(path)?;
+    }
+    fs::create_dir_all(path)?;
+    Ok(())
+}
+
+/// Get the current mount mode from configuration file
+fn get_mount_mode() -> String {
+    let mode_file = Path::new(defs::MOUNT_MODE_FILE);
+    if mode_file.exists() {
+        if let Ok(content) = std::fs::read_to_string(mode_file) {
+            let mode = content.trim();
+            match mode {
+                defs::MOUNT_MODE_MAGIC | defs::MOUNT_MODE_METAMODULE | defs::MOUNT_MODE_DISABLED => return mode.to_string(),
+                _ => {}
+            }
+        }
+    }
+    // Check legacy lite mode file for backwards compatibility
+    if Path::new(defs::LITEMODE_FILE).exists() {
+        return defs::MOUNT_MODE_DISABLED.to_string();
+    }
+    // Default to magic mount for backwards compatibility
+    defs::MOUNT_MODE_MAGIC.to_string()
+}
+
+/// Check if OverlayFS should be used instead of bind mount
+/// OverlayFS is only used when:
+/// 1. Force OverlayFS file exists (/data/adb/.overlayfs_enable), AND
+/// 2. Kernel supports OverlayFS
+fn should_use_overlayfs() -> bool {
+    // Requires explicit opt-in via force_overlayfs file
+    Path::new(defs::FORCE_OVERLAYFS_FILE).exists() && utils::overlayfs_available()
+}
+
+/// Mount a partition using OverlayFS with module directories as lower layers
+fn mount_partition(partition_name: &str, lowerdir: &Vec<String>) -> Result<()> {
+    if lowerdir.is_empty() {
+        info!("partition: {partition_name} lowerdir is empty, skip");
+        return Ok(());
+    }
+
+    let partition = format!("/{partition_name}");
+
+    // if /partition is a symlink (e.g., /vendor -> /system/vendor), don't overlay it separately
+    if Path::new(&partition).read_link().is_ok() {
+        info!("partition: {partition} is a symlink, skip overlay");
+        return Ok(());
+    }
+
+    let mut workdir = None;
+    let mut upperdir = None;
+    let system_rw_dir = Path::new(defs::SYSTEM_RW_DIR);
+    if system_rw_dir.exists() {
+        workdir = Some(system_rw_dir.join(partition_name).join("workdir"));
+        upperdir = Some(system_rw_dir.join(partition_name).join("upperdir"));
+    }
+
+    mount::mount_overlay(&partition, lowerdir, workdir, upperdir)
+}
+
+/// Mount modules using OverlayFS (systemless mount)
+/// This collects all module system directories and mounts them as overlay layers
+fn mount_systemlessly_overlayfs(module_dir: &str) -> Result<()> {
+    let module_dir_path = Path::new(module_dir);
+    let dir = match fs::read_dir(module_dir) {
+        Ok(d) => d,
+        Err(e) => {
+            warn!("Failed to read module dir {}: {}", module_dir, e);
+            return Ok(());
+        }
+    };
+
+    let mut system_lowerdir: Vec<String> = Vec::new();
+
+    // Extended partition list including Samsung partitions
+    let partitions = vec!["vendor", "product", "system_ext", "odm", "oem"];
+    let mut partition_lowerdir: std::collections::HashMap<String, Vec<String>> = std::collections::HashMap::new();
+    for part in &partitions {
+        partition_lowerdir.insert((*part).to_string(), Vec::new());
+    }
+
+    for entry in dir.flatten() {
+        let module = entry.path();
+        if !module.is_dir() {
+            continue;
+        }
+
+        // Check if module is disabled
+        if let Some(module_name) = module.file_name() {
+            let real_module_path = module_dir_path.join(module_name);
+            if real_module_path.join(defs::DISABLE_FILE_NAME).exists() {
+                info!("module: {} is disabled, skip", module.display());
+                continue;
+            }
+        }
+
+        // Check if module has skip_mount flag
+        if module.join(defs::SKIP_MOUNT_FILE_NAME).exists() {
+            info!("module: {} has skip_mount, skip", module.display());
+            continue;
+        }
+
+        // Collect /system overlay
+        let module_system = module.join("system");
+        if module_system.is_dir() {
+            system_lowerdir.push(format!("{}", module_system.display()));
+        }
+
+        // Collect partition-specific overlays
+        for part in &partitions {
+            let part_path = module.join(part);
+            let part_path_in_system = module.join("system").join(part);
+            
+            // Check $MODPATH/$PART
+            if part_path.is_dir() {
+                if let Some(v) = partition_lowerdir.get_mut(*part) {
+                    v.push(format!("{}", part_path.display()));
+                }
+            }
+            // Check $MODPATH/system/$PART (common in Magisk modules)
+            else if part_path_in_system.is_dir() {
+                 if let Some(v) = partition_lowerdir.get_mut(*part) {
+                    v.push(format!("{}", part_path_in_system.display()));
+                }
+            }
+        }
+    }
+
+    // Mount /system first
+    if let Err(e) = mount_partition("system", &system_lowerdir) {
+        warn!("mount system overlay failed: {:#}", e);
+    }
+
+    // Mount other partitions
+    for (partition, dirs) in partition_lowerdir {
+        if let Err(e) = mount_partition(&partition, &dirs) {
+            warn!("mount {} overlay failed: {:#}", partition, e);
+        }
+    }
+
+
+    Ok(())
+}
+
+/// Mount modules using an ext4 image (modules.img)
+/// This is used when bind mounting individual directories is not preferred or efficient
+/// 1. Creates/Updates modules.img
+/// 2. Mounts modules.img to modules_mount dir
+/// 3. Performs overlayfs mount from the mounted image
+fn mount_systemlessly_with_image(module_dir: &str) -> Result<()> {
+    info!("Using image-based OverlayFS mount");
+    let module_mount_dir = defs::MODULE_MOUNT_DIR;
+    let tmp_module_img = defs::MODULE_UPDATE_TMP_IMG;
+    let tmp_module_path = Path::new(tmp_module_img);
+
+    ensure_clean_dir(module_mount_dir)?;
+    info!("- Preparing image");
+
+    let module_update_flag = Path::new(defs::WORKING_DIR).join(defs::UPDATE_FILE_NAME);
+
+    // If tmp image doesn't exist, force update logic to create it
+    if !tmp_module_path.exists() {
+        ensure_file_exists(&module_update_flag)?;
+    }
+
+    if module_update_flag.exists() {
+        if tmp_module_path.exists() {
+            // If it has update, remove tmp file
+            fs::remove_file(tmp_module_path)?;
+        }
+        
+        // Calculate size needed. Use module_dir as source of truth.
+        let total_size = calculate_total_size(Path::new(module_dir))?;
+        info!(
+            "Total size of files in '{}': {} bytes",
+            module_dir,
+            total_size
+        );
+        
+        // Create image with extra space (128MB)
+        let grow_size = 128 * 1024 * 1024 + total_size;
+        fs::File::create(tmp_module_img)
+            .context("Failed to create ext4 image file")?
+            .set_len(grow_size)
+            .context("Failed to extend ext4 image")?;
+            
+        // Format image
+        let result = Command::new("mkfs.ext4")
+            .arg("-b")
+            .arg("1024")
+            .arg("-O")
+            .arg("^has_journal") // Disable journal for speed and less space
+            .arg(tmp_module_img)
+            .stdout(std::process::Stdio::piped())
+            .output()?;
+            
+        ensure!(
+            result.status.success(),
+            "Failed to format ext4 image: {}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        
+        info!("Checking Image");
+        // We skip check_image simple implementation for now, mkfs should be enough
+    }
+
+    info!("- Mounting image");
+    // Mount the image to module_mount_dir using AutoMountExt4
+    // This resolves "unused struct AutoMountExt4" warning
+    let _mounted_image = mount::AutoMountExt4::try_new(tmp_module_img, module_mount_dir, false)
+        .context("mount module image failed")?;
+        
+    info!("mounted {} to {}", tmp_module_img, module_mount_dir);
+    
+    // Set context
+    let _ = restorecon::setsyscon(module_mount_dir);
+
+    // Copy modules into the mounted image if we are updating
+    if module_update_flag.exists() {
+        info!("Copying modules to image...");
+        let command_string = format!(
+            "cp --preserve=context -RP {}* {};",
+            module_dir, module_mount_dir
+        );
+        let args = vec!["-c", &command_string];
+        let _ = utils::run_command("sh", &args, None)?.wait()?;
+        
+        // Remove update flag
+        fs::remove_file(module_update_flag).ok();
+    }
+    
+    // Now perform standard systemless mount using the files in the mounted image
+    mount_systemlessly_overlayfs(module_mount_dir)
+}
 
 pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
     utils::umask(0);
@@ -164,8 +432,58 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
         warn!("load sepolicy.rule failed");
     }
 
-    if let Err(e) = metamodule::exec_mount_script(module_dir) {
-        warn!("execute metamodule mount failed: {e}");
+    // Mount modules based on configured mount mode
+    let mount_mode = get_mount_mode();
+    info!("Current mount mode: {}", mount_mode);
+
+    match mount_mode.as_str() {
+        defs::MOUNT_MODE_DISABLED => {
+            info!("Mount disabled (lite mode), skipping all module mounts");
+        }
+        defs::MOUNT_MODE_METAMODULE => {
+            // Use metamodule's custom mount script
+            if let Err(e) = metamodule::exec_mount_script(module_dir) {
+                warn!("execute metamodule mount failed: {e}");
+            }
+        }
+        defs::MOUNT_MODE_MAGIC | _ => {
+            // Use built-in magic mount (default for backwards compatibility)
+            if should_use_overlayfs() {
+                // OverlayFS mode
+                info!("Using OverlayFS mount mode");
+                
+                // 1. Try image-based overlay mount (most stable, compatible with legacy)
+                match mount_systemlessly_with_image(module_dir) {
+                    Ok(_) => {
+                        info!("Image-based OverlayFS mount successful");
+                    }
+                    Err(e_img) => {
+                        warn!("Image-based OverlayFS mount failed: {}, falling back to direct overlay", e_img);
+                        
+                        // 2. Try direct directory overlay mount (lightweight)
+                        match mount_systemlessly_overlayfs(module_dir) {
+                            Ok(_) => {
+                                info!("Direct OverlayFS mount successful");
+                            }
+                            Err(e_dir) => {
+                                warn!("Direct OverlayFS mount failed: {}, falling back to magic mount", e_dir);
+                                
+                                // 3. Fallback to magic mount (bind mount)
+                                if let Err(e_magic) = magic_mount::magic_mount() {
+                                    warn!("Magic mount fallback also failed: {}", e_magic);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Standard magic mount (bind mount)
+                info!("Using Magic Mount (bind mount) mode");
+                if let Err(e) = magic_mount::magic_mount() {
+                    warn!("magic mount failed: {}", e);
+                }
+            }
+        }
     }
 
     // exec modules post-fs-data scripts

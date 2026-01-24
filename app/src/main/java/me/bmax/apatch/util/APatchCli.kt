@@ -361,3 +361,73 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
     }
     return fileName
 }
+
+// Mount mode constants
+const val MOUNT_MODE_MAGIC = "magic"
+const val MOUNT_MODE_METAMODULE = "metamodule"
+const val MOUNT_MODE_DISABLED = "disabled"
+const val MOUNT_MODE_FILE = "/data/adb/.mount_mode"
+
+fun getMountMode(): String {
+    val shell = getRootShell()
+    val result = ShellUtils.fastCmd(shell, "cat $MOUNT_MODE_FILE 2>/dev/null || echo magic")
+    val mode = result.trim()
+    Log.i(TAG, "getMountMode: $mode")
+    return when (mode) {
+        MOUNT_MODE_MAGIC, MOUNT_MODE_METAMODULE, MOUNT_MODE_DISABLED -> mode
+        else -> MOUNT_MODE_MAGIC  // Default to magic mount
+    }
+}
+
+fun setMountMode(mode: String) {
+    getRootShell().newJob().add("echo $mode > $MOUNT_MODE_FILE")
+        .submit { result ->
+            Log.i(TAG, "setMountMode($mode) result: ${result.isSuccess}")
+        }
+}
+
+fun isLiteModeEnabled(): Boolean {
+    val shell = getRootShell()
+    val result = shell.newJob().add("test -f /data/adb/.litemode_enable").exec()
+    Log.i(TAG, "is lite mode enabled: ${result.isSuccess}")
+    return result.isSuccess
+}
+
+fun setLiteMode(enabled: Boolean) {
+    val cmd = if (enabled) {
+        "touch /data/adb/.litemode_enable"
+    } else {
+        "rm -f /data/adb/.litemode_enable"
+    }
+    getRootShell().newJob().add(cmd)
+        .submit { result ->
+            Log.i(TAG, "setLiteMode($enabled) result: ${result.isSuccess}")
+        }
+}
+
+fun isForceUsingOverlayFS(): Boolean {
+    val shell = getRootShell()
+    val result = shell.newJob().add("test -f /data/adb/.overlayfs_enable").exec()
+    Log.i(TAG, "is force overlayfs enabled: ${result.isSuccess}")
+    return result.isSuccess
+}
+
+fun setForceUsingOverlayFS(enabled: Boolean) {
+    val cmd = if (enabled) {
+        "touch /data/adb/.overlayfs_enable"
+    } else {
+        "rm -f /data/adb/.overlayfs_enable"
+    }
+    getRootShell().newJob().add(cmd)
+        .submit { result ->
+            Log.i(TAG, "setForceUsingOverlayFS($enabled) result: ${result.isSuccess}")
+        }
+}
+
+fun overlayFsAvailable(): Boolean {
+    val shell = getRootShell()
+    val result = shell.newJob().add("grep -q overlay /proc/filesystems").exec()
+    Log.i(TAG, "overlayfs available: ${result.isSuccess}")
+    return result.isSuccess
+}
+
