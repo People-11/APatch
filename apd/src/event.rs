@@ -20,12 +20,28 @@ use notify::{
 use signal_hook::{consts::signal::*, iterator::Signals};
 
 use crate::{
-    assets, defs, metamodule, module, restorecon, supercall,
+    assets, defs, magic_mount, metamodule, module, restorecon, supercall,
     supercall::{
         fork_for_result, init_load_package_uid_config, init_load_su_path, refresh_ap_package_list,
     },
     utils::{self, switch_cgroups},
 };
+
+/// Get the current mount mode from configuration file
+fn get_mount_mode() -> String {
+    let mode_file = Path::new(defs::MOUNT_MODE_FILE);
+    if mode_file.exists() {
+        if let Ok(content) = std::fs::read_to_string(mode_file) {
+            let mode = content.trim();
+            match mode {
+                defs::MOUNT_MODE_MAGIC | defs::MOUNT_MODE_METAMODULE | defs::MOUNT_MODE_DISABLED => return mode.to_string(),
+                _ => {}
+            }
+        }
+    }
+    // Default to magic mount for backwards compatibility
+    defs::MOUNT_MODE_MAGIC.to_string()
+}
 
 pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
     utils::umask(0);
@@ -162,8 +178,27 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
         warn!("load sepolicy.rule failed");
     }
 
-    if let Err(e) = metamodule::exec_mount_script(module_dir) {
-        warn!("execute metamodule mount failed: {e}");
+    // Mount modules based on configured mount mode
+    let mount_mode = get_mount_mode();
+    info!("Current mount mode: {}", mount_mode);
+
+    match mount_mode.as_str() {
+        defs::MOUNT_MODE_DISABLED => {
+            info!("Mount disabled (lite mode), skipping all module mounts");
+        }
+        defs::MOUNT_MODE_METAMODULE => {
+            // Use metamodule's custom mount script
+            if let Err(e) = metamodule::exec_mount_script(module_dir) {
+                warn!("execute metamodule mount failed: {e}");
+            }
+        }
+        defs::MOUNT_MODE_MAGIC | _ => {
+            // Use built-in magic mount (bind mount) (default for backwards compatibility)
+            info!("Using Magic Mount (bind mount) mode");
+            if let Err(e) = magic_mount::magic_mount() {
+                warn!("magic mount failed: {}", e);
+            }
+        }
     }
 
     // exec modules post-fs-data scripts

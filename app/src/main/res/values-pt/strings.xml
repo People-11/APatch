@@ -81,7 +81,6 @@
     <string name="apm_version">Versão</string>
     <string name="apm_author">Autor</string>
     <string name="apm_desc">Descrição</string>
-    <string name="apm_overlay_fs_not_available">Os módulos não estão disponíveis porque o OverlayFS está desabilitado pelo kernel!</string>
     <string name="apm_magisk_conflict">Os módulos estão indisponíveis devido a um conflito com Magisk!</string>
     <string name="apm_reboot_to_apply">Reinicie para entrar em vigor</string>
     <string name="apm_changelog">Registro de alterações</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_title">A app travou…</string>
     <string name="crash_handle_copy">Copiar registro de falha</string>
     <string name="crash_handle_copied">Registo de falhas copiado.</string>
-    <string name="settings_lite_mode">Habilitar modo leve</string>
-    <string name="settings_lite_mode_mode_summary">Funções APModule podem exibir falhas após serem habilitadas, mas em alguns casos elas conseguem evitar detecção eficientemente. Necessário reinicialização.</string>
-    <string name="settings_force_overlayfs_mode">Forçar o uso de OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Usar OverlayFS para montar APModules ao invés de Magic Mount quando o suporte ao kernel estiver disponível. Necessário reinicialização.</string>
 </resources>

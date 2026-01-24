@@ -11,7 +11,6 @@ use crate::defs;
 
 pub const SYSTEM_CON: &str = "u:object_r:system_file:s0";
 pub const ADB_CON: &str = "u:object_r:adb_data_file:s0";
-pub const UNLABEL_CON: &str = "u:object_r:unlabeled:s0";
 
 const SELINUX_XATTR: &str = "security.selinux";
 
@@ -56,27 +55,21 @@ pub fn lgetfilecon<P: AsRef<Path>>(path: P) -> Result<String> {
 pub fn restore_syscon<P: AsRef<Path>>(dir: P) -> Result<()> {
     for dir_entry in WalkDir::new(dir).parallelism(Serial) {
         if let Some(path) = dir_entry.ok().map(|dir_entry| dir_entry.path()) {
-            setsyscon(&path)?;
-        }
-    }
-    Ok(())
-}
-
-fn restore_syscon_if_unlabeled<P: AsRef<Path>>(dir: P) -> Result<()> {
-    for dir_entry in WalkDir::new(dir).parallelism(Serial) {
-        if let Some(path) = dir_entry.ok().map(|dir_entry| dir_entry.path()) {
-            if let Result::Ok(con) = lgetfilecon(&path) {
-                if con == UNLABEL_CON || con.is_empty() {
-                    lsetfilecon(&path, SYSTEM_CON)?;
-                }
+            // Optimization: Only set context if it is incorrect.
+            // Reading xattr is much cheaper than writing it (avoids metadata updates).
+            match lgetfilecon(&path) {
+                Result::Ok(con) if con == SYSTEM_CON => continue,
+                _ => setsyscon(&path)?,
             }
         }
     }
     Ok(())
 }
 
+
 pub fn restorecon() -> Result<()> {
     lsetfilecon(defs::DAEMON_PATH, ADB_CON)?;
-    restore_syscon_if_unlabeled(defs::MODULE_DIR)?;
+    // Recursively set system_file context for all modules.
+    restore_syscon(defs::MODULE_DIR)?;
     Ok(())
 }

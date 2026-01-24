@@ -32,7 +32,6 @@
     <string name="kpm_args">Argümanlar</string>
     <string name="home_fingerprint">Parmak izi</string>
     <string name="apatch_version">Sürüm: %s</string>
-    <string name="apm_overlay_fs_not_available">OverlayFS, kernel tarafından devre dışı bırakıldığından modüllere erişilemiyor!</string>
     <string name="kpm_version">Sürüm</string>
     <string name="su_refresh">Yenile</string>
     <string name="safe_mode">Güvenli mod</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_title">Uygulama çöktü…</string>
     <string name="crash_handle_copy">Çökme raporunu kopyala</string>
     <string name="crash_handle_copied">Çökme raporu panoya kopyalandı.</string>
-    <string name="settings_lite_mode">Lite modunu etkinleştir.</string>
-    <string name="settings_lite_mode_mode_summary">APModule işlevleri etkinleştirildikten sonra hatalar gösterebilir, ancak bazı durumlarda tespiti etkili bir şekilde engelleyebilir. Yeniden başlatma gereklidir.</string>
-    <string name="settings_force_overlayfs_mode">OverlayFS kullanımını zorla</string>
-    <string name="settings_force_overlayfs_mode_summary">Kernel desteği mevcut olduğunda, Magic Mount yerine APModule’leri bağlamak için OverlayFS kullan. Yeniden başlatma gereklidir.</string>
 </resources>

@@ -80,7 +80,6 @@
     <string name="apm_version">Versão</string>
     <string name="apm_author">Autor</string>
     <string name="apm_desc">Descrição</string>
-    <string name="apm_overlay_fs_not_available">Os módulos estão indisponíveis porque OverlayFS está desabilitado pelo kernel!</string>
     <string name="apm_magisk_conflict">Os módulos estão indisponíveis devido a um conflito com Magisk!</string>
     <string name="apm_changelog">Registro de alterações</string>
     <string name="apm_update">Atualizar</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_title">O app travou…</string>
     <string name="crash_handle_copy">Copiar registro de falhas</string>
     <string name="log_saved">Registros salvos</string>
-    <string name="settings_lite_mode">Ativar Modo lite</string>
-    <string name="settings_lite_mode_mode_summary">As funções do APMódulo podem apresentar falhas após serem ativadas, mas em alguns casos ainda podem evitar a detecção. Reinicialização necessária.</string>
-    <string name="settings_force_overlayfs_mode_summary">Use OverlayFS para montar os APMódulos em vez do Magic Mount, quando houver suporte no kernel. Reinicialização necessária.</string>
-    <string name="settings_force_overlayfs_mode">Forçar o uso do OverlayFS</string>
 </resources>

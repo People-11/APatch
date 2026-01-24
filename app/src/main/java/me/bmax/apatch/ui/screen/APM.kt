@@ -106,6 +106,7 @@ import me.bmax.apatch.util.reboot
 import me.bmax.apatch.util.toggleModule
 import me.bmax.apatch.util.ui.LocalSnackbarHost
 import me.bmax.apatch.util.uninstallModule
+import me.bmax.apatch.util.isMetaModuleMode
 import okhttp3.Request
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -246,6 +247,12 @@ private fun getMetaModuleWarningText(
     viewModel: APModuleViewModel,
     context: Context
 ) : String? {
+    // Only show this warning if we are in Metamodule mount mode
+    // Only show this warning if we are in Metamodule mount mode
+    val isMetaMode = isMetaModuleMode()
+    
+    if (!isMetaMode) return null
+
     val hasSystemModule = viewModel.moduleList.any { module ->
         SuFile.open("/data/adb/modules/${module.id}/system").exists()
     }
@@ -382,7 +389,7 @@ private fun ModuleList(
     }
 
     suspend fun onModuleUninstall(module: APModuleViewModel.ModuleInfo) {
-        val formatter = if (module.metamodule) metaModuleUninstallConfirm else moduleUninstallConfirm
+        val formatter = if (module.metamodule && isMetaModuleMode()) metaModuleUninstallConfirm else moduleUninstallConfirm
         val confirmResult = confirmDialog.awaitConfirm(
             moduleStr,
             content = formatter.format(module.name),
@@ -574,7 +581,7 @@ private fun ModuleItem(
                         SubcomposeLayout { constraints ->
                             val spacingPx = 6.dp.roundToPx()
                             var nameTextLayout: TextLayoutResult? = null
-                            val metaPlaceable = if (module.metamodule) {
+                            val metaPlaceable = if (module.metamodule && isMetaModuleMode()) {
                                 subcompose("meta") {
                                     Surface(
                                         shape = RoundedCornerShape(4.dp),

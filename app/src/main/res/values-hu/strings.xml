@@ -61,7 +61,6 @@
     <string name="reboot_bootloader">Újraindítás a Bootloaderbe</string>
     <string name="settings_global_namespace_mode_summary">Minden gyökérmunka a globális hegyi neveket használja</string>
     <string name="home_learn_apatch">APatch tanulása</string>
-    <string name="apm_overlay_fs_not_available">A modulok nem elérhetőek, mert az OverlayFS ki van kapcsolva a kernelben!</string>
     <string name="settings_clear_super_key_dialog">Biztos folytatni akarod?</string>
     <string name="home_click_to_learn_apatch">Ismerd meg az APatch funkcióit és használatát</string>
     <string name="about_source_code"><![CDATA[<p>Forráskód megtekintése %1$s-on<p/>Csatlakozz a %2$s csatornánkhoz<p/>Csatlakozz a %3$s csoportunkhoz]]></string>

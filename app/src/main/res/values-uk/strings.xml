@@ -83,7 +83,6 @@
     <string name="apm_uninstall_success">%s видалено</string>
     <string name="apm_uninstall_failed">Не вдалося видалити %s</string>
     <string name="apm_version">Версія</string>
-    <string name="apm_overlay_fs_not_available">Модулі недоступні, оскільки OverlayFS вимкнено ядром!</string>
     <string name="apm_magisk_conflict">Модулі недоступні через конфлікт з Magisk!</string>
     <string name="apm_downloading">Завантаження модуля \"%s\"…</string>
     <string name="kpm_unload_confirm">Видалити модуль \"%s\"?</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_title">Збій програми…</string>
     <string name="crash_handle_copied">Журнал збоїв скопійовано в буфер обміну.</string>
     <string name="crash_handle_copy">Копіювати журнал збоїв</string>
-    <string name="settings_lite_mode">Увімкнути спрощений режим</string>
-    <string name="settings_lite_mode_mode_summary">Функції APModule можуть демонструвати збої після ввімкнення, але в деяких випадках вони все ще можуть ефективно уникати виявлення. Потрібне перезавантаження.</string>
-    <string name="settings_force_overlayfs_mode">Примусове використання OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Використовуйте OverlayFS для монтування APModules замість Magic Mount, коли доступна підтримка ядра. Потрібне перезавантаження.</string>
 </resources>
