@@ -37,6 +37,13 @@ pub const DISABLE_FILE_NAME: &str = "disable";
 pub const UPDATE_FILE_NAME: &str = "update";
 pub const REMOVE_FILE_NAME: &str = "remove";
 pub const SKIP_MOUNT_FILE_NAME: &str = "skip_mount";
+pub const EXTENDED_PARTITIONS: &[(&str, bool)] = &[
+    ("vendor", true),
+    ("system_ext", true),
+    ("product", true),
+    ("odm", false),
+    ("oem", false),
+];
 
 // Metamodule support
 pub const METAMODULE_MOUNT_SCRIPT: &str = "metamount.sh";

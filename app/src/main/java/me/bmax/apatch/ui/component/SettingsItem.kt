@@ -3,6 +3,7 @@ package me.bmax.apatch.ui.component
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
@@ -12,6 +13,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
@@ -44,7 +46,11 @@ fun SwitchItem(
             )
         },
         leadingContent = icon?.let {
-            { Icon(icon, title) }
+            {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(icon, title)
+                }
+            }
         },
         trailingContent = {
             Switch(

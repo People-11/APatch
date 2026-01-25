@@ -440,7 +440,11 @@ fun SettingScreen() {
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.outline
                         )
-                    }, leadingContent = { Icon(Icons.Filled.FormatColorFill, null) })
+                    }, leadingContent = {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(Icons.Filled.FormatColorFill, null)
+                        }
+                    })
 
                 }
             } else {
@@ -455,16 +459,22 @@ fun SettingScreen() {
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.outline
                     )
-                }, leadingContent = { Icon(Icons.Filled.FormatColorFill, null) })
+                }, leadingContent = {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(Icons.Filled.FormatColorFill, null)
+                    }
+                })
             }
 
             // su path
             if (kPatchReady) {
                 ListItem(
                     leadingContent = {
-                        Icon(
-                            Icons.Filled.Commit, stringResource(id = R.string.setting_reset_su_path)
-                        )
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                Icons.Filled.Commit, stringResource(id = R.string.setting_reset_su_path)
+                            )
+                        }
                     },
                     supportingContent = {},
                     headlineContent = { Text(stringResource(id = R.string.setting_reset_su_path)) },
@@ -486,14 +496,20 @@ fun SettingScreen() {
                 } ?: stringResource(id = R.string.system_default),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.outline)
-            }, leadingContent = { Icon(Icons.Filled.Translate, null) })
+            }, leadingContent = {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(Icons.Filled.Translate, null)
+                }
+            })
 
             // log
             ListItem(
                 leadingContent = {
-                    Icon(
-                        Icons.Filled.BugReport, stringResource(id = R.string.send_log)
-                    )
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            Icons.Filled.BugReport, stringResource(id = R.string.send_log)
+                        )
+                    }
                 },
                 headlineContent = { Text(stringResource(id = R.string.send_log)) },
                 modifier = Modifier.clickable {

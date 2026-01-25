@@ -127,13 +127,7 @@ fn collect_module_files() -> Result<Option<Node>> {
     let mut has_file = false;
     
     // Extended partition list with additional Samsung/vendor partitions
-    let partitions = [
-        ("vendor", true),
-        ("system_ext", true),
-        ("product", true),
-        ("odm", false),
-        ("oem", false),
-    ];
+    let partitions = crate::defs::EXTENDED_PARTITIONS;
 
 
     for entry in module_root.read_dir()?.flatten() {

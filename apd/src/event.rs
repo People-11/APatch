@@ -92,7 +92,8 @@ fn get_mount_mode() -> String {
 /// 1. Force OverlayFS file exists (/data/adb/.overlayfs_enable), AND
 /// 2. Kernel supports OverlayFS
 fn should_use_overlayfs() -> bool {
-    // Requires explicit opt-in via force_overlayfs file
+    let available = utils::overlayfs_available();
+    println!("OverlayFS available: {}", available);
     Path::new(defs::FORCE_OVERLAYFS_FILE).exists() && utils::overlayfs_available()
 }
 
@@ -105,11 +106,6 @@ fn mount_partition(partition_name: &str, lowerdir: &Vec<String>) -> Result<()> {
 
     let partition = format!("/{partition_name}");
 
-    // if /partition is a symlink (e.g., /vendor -> /system/vendor), don't overlay it separately
-    if Path::new(&partition).read_link().is_ok() {
-        info!("partition: {partition} is a symlink, skip overlay");
-        return Ok(());
-    }
 
     let mut workdir = None;
     let mut upperdir = None;
@@ -147,12 +143,17 @@ fn mount_systemlessly_overlayfs(module_dir: &str) -> Result<()> {
     let mut system_lowerdir: Vec<String> = Vec::new();
 
     // Extended partition list including Samsung partitions
-    let partitions = vec!["vendor", "product", "system_ext", "odm", "oem"];
+    let partitions = crate::defs::EXTENDED_PARTITIONS;
     let mut partition_lowerdir: std::collections::HashMap<String, Vec<String>> = std::collections::HashMap::new();
-    for part in &partitions {
-        partition_lowerdir.insert((*part).to_string(), Vec::new());
-    }
 
+    for (part, _) in partitions {
+        let path_of_root = Path::new("/").join(part);
+        // Only require the root partition to exist
+        if path_of_root.is_dir() {
+            partition_lowerdir.insert(part.to_string(), Vec::new());
+        }
+    }
+    
     for entry in dir.flatten() {
         let module = entry.path();
         if !module.is_dir() {
@@ -181,20 +182,18 @@ fn mount_systemlessly_overlayfs(module_dir: &str) -> Result<()> {
         }
 
         // Collect partition-specific overlays
-        for part in &partitions {
+        for (part, _) in partitions {
             let part_path = module.join(part);
             let part_path_in_system = module.join("system").join(part);
             
-            // Check $MODPATH/$PART
-            if part_path.is_dir() {
-                if let Some(v) = partition_lowerdir.get_mut(*part) {
-                    v.push(format!("{}", part_path.display()));
-                }
-            }
-            // Check $MODPATH/system/$PART (common in Magisk modules)
-            else if part_path_in_system.is_dir() {
-                 if let Some(v) = partition_lowerdir.get_mut(*part) {
+            if let Some(v) = partition_lowerdir.get_mut(*part) {
+                // Priority: system/$PART > $PART
+                if part_path_in_system.is_dir() {
                     v.push(format!("{}", part_path_in_system.display()));
+                }
+                
+                if part_path.is_dir() {
+                    v.push(format!("{}", part_path.display()));
                 }
             }
         }
@@ -203,12 +202,14 @@ fn mount_systemlessly_overlayfs(module_dir: &str) -> Result<()> {
     // Mount /system first
     if let Err(e) = mount_partition("system", &system_lowerdir) {
         warn!("mount system overlay failed: {:#}", e);
+        return Err(e);
     }
 
     // Mount other partitions
     for (partition, dirs) in partition_lowerdir {
         if let Err(e) = mount_partition(&partition, &dirs) {
             warn!("mount {} overlay failed: {:#}", partition, e);
+            return Err(e);
         }
     }
 
@@ -458,29 +459,33 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
         }
         defs::MOUNT_MODE_MAGIC | _ => {
             // Use built-in magic mount (default for backwards compatibility)
+            println!("Choosing mount mode... magic/default");
             if should_use_overlayfs() {
                 // OverlayFS mode
                 info!("Using OverlayFS mount mode");
-                
+                println!("Using OverlayFS mount mode");
                 // 1. Try image-based overlay mount (most stable, compatible with legacy)
                 match mount_systemlessly_with_image(module_dir) {
                     Ok(_) => {
                         info!("Image-based OverlayFS mount successful");
+                        println!("Image-based OverlayFS mount successful");
                     }
                     Err(e_img) => {
                         warn!("Image-based OverlayFS mount failed: {}, falling back to direct overlay", e_img);
-                        
+                        println!("Image-based OverlayFS mount failed: {}, falling back to direct overlay", e_img);
                         // 2. Try direct directory overlay mount (lightweight)
                         match mount_systemlessly_overlayfs(module_dir) {
                             Ok(_) => {
                                 info!("Direct OverlayFS mount successful");
+                                println!("Direct OverlayFS mount successful");
                             }
                             Err(e_dir) => {
                                 warn!("Direct OverlayFS mount failed: {}, falling back to magic mount", e_dir);
-                                
+                                println!("Direct OverlayFS mount failed: {}, falling back to magic mount", e_dir);
                                 // 3. Fallback to magic mount (bind mount)
                                 if let Err(e_magic) = magic_mount::magic_mount() {
                                     warn!("Magic mount fallback also failed: {}", e_magic);
+                                    println!("Magic mount fallback also failed: {}", e_magic);
                                 }
                             }
                         }
@@ -489,8 +494,10 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
             } else {
                 // Standard magic mount (bind mount)
                 info!("Using Magic Mount (bind mount) mode");
+                println!("Using Magic Mount (bind mount) mode");
                 if let Err(e) = magic_mount::magic_mount() {
                     warn!("magic mount failed: {}", e);
+                    println!("magic mount failed: {}", e);
                 }
             }
         }

@@ -128,6 +128,13 @@ pub fn mount_overlayfs(
         upperdir,
         workdir
     );
+    println!(
+        "mount overlayfs on {:?}, lowerdir={}, upperdir={:?}, workdir={:?}",
+        dest.as_ref(),
+        lowerdir_config,
+        upperdir,
+        workdir
+    );
 
     let upperdir = upperdir
         .filter(|up| up.exists())
@@ -158,6 +165,7 @@ pub fn mount_overlayfs(
 
     if let Err(e) = result {
         warn!("fsopen mount failed: {:#}, fallback to mount", e);
+        println!("fsopen mount failed: {:#}, fallback to mount", e);
         let mut data = format!("lowerdir={lowerdir_config}");
         if let (Some(upperdir), Some(workdir)) = (upperdir, workdir) {
             data = format!("{data},upperdir={upperdir},workdir={workdir}");
@@ -169,6 +177,20 @@ pub fn mount_overlayfs(
             MountFlags::empty(),
             data,
         )?;
+
+        // Verify mount success (workaround for silent mount failure on some kernels)
+        let mounts = Process::myself().context("get process")?.mountinfo().context("get mountinfo")?;
+        let mounted = mounts.0.iter().any(|m| {
+            m.mount_point == dest.as_ref() && m.fs_type == "overlay"
+        });
+        
+        if !mounted {
+            let msg = format!("Mount syscall reported success but {} not found in mountinfo", dest.as_ref().display());
+            warn!("{}", msg);
+            println!("{}", msg);
+            bail!(msg);
+        }
+        println!("Mount verification success for {}", dest.as_ref().display());
     }
     Ok(())
 }
