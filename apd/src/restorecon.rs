@@ -77,6 +77,19 @@ fn restore_syscon_if_unlabeled<P: AsRef<Path>>(dir: P) -> Result<()> {
 
 pub fn restorecon() -> Result<()> {
     lsetfilecon(defs::DAEMON_PATH, ADB_CON)?;
-    restore_syscon_if_unlabeled(defs::MODULE_DIR)?;
+    // Recursively set system_file context for all modules.
+    // This is critical for OverlayFS because files with adb_data_file context 
+    // will cause the system to crash/reboot if overlaid on /system.
+    restore_syscon(defs::MODULE_DIR)?;
+    
+    // Also ensure the RW directory (used for upperdir/workdir) exists and has correct context
+    let system_rw_dir = Path::new(defs::SYSTEM_RW_DIR);
+    if !system_rw_dir.exists() {
+        let _ = std::fs::create_dir_all(system_rw_dir);
+    }
+    if system_rw_dir.exists() {
+        let _ = restore_syscon(system_rw_dir);
+    }
+    
     Ok(())
 }

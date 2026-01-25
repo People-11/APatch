@@ -115,8 +115,18 @@ fn mount_partition(partition_name: &str, lowerdir: &Vec<String>) -> Result<()> {
     let mut upperdir = None;
     let system_rw_dir = Path::new(defs::SYSTEM_RW_DIR);
     if system_rw_dir.exists() {
-        workdir = Some(system_rw_dir.join(partition_name).join("workdir"));
-        upperdir = Some(system_rw_dir.join(partition_name).join("upperdir"));
+        let part_rw_dir = system_rw_dir.join(partition_name);
+        let wd = part_rw_dir.join("workdir");
+        let ud = part_rw_dir.join("upperdir");
+        
+        let _ = std::fs::create_dir_all(&wd);
+        let _ = std::fs::create_dir_all(&ud);
+        let _ = restorecon::setsyscon(&part_rw_dir);
+        let _ = restorecon::setsyscon(&wd);
+        let _ = restorecon::setsyscon(&ud);
+
+        workdir = Some(wd);
+        upperdir = Some(ud);
     }
 
     mount::mount_overlay(&partition, lowerdir, workdir, upperdir)
@@ -276,8 +286,8 @@ fn mount_systemlessly_with_image(module_dir: &str) -> Result<()> {
         
     info!("mounted {} to {}", tmp_module_img, module_mount_dir);
     
-    // Set context
-    let _ = restorecon::setsyscon(module_mount_dir);
+    // Set context recursively for all files inside the mounted image
+    let _ = restorecon::restore_syscon(module_mount_dir);
 
     // Copy modules into the mounted image if we are updating
     if module_update_flag.exists() {
