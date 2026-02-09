@@ -86,7 +86,6 @@
     <string name="apm_downloading">Baixando módulo %s</string>
     <string name="apm_start_downloading">Começando a baixar %s</string>
     <string name="apm_new_version_available">Nova versão %s está disponível, clique para atualizar.</string>
-    <string name="clear_super_key">Limpar SuperKey</string>
     <string name="apm_not_installed">AndroidPatch não instalado</string>
     <string name="settings_app_language">Idioma</string>
     <string name="system_default">Padrão do sistema</string>
@@ -124,7 +123,6 @@
     <string name="patch_item_extra_args">Argumentos:</string>
     <string name="patch_item_extra_event">Evento:</string>
     <string name="patch_item_skey">SuperKey</string>
-    <string name="settings_clear_super_key_dialog">Você realmente deseja continuar?</string>
     <string name="patch_item_set_skey_label">A SuperKey deve ter de 8 a 63 caracteres e incluir números e letras, mas sem caracteres especiais.</string>
     <string name="hide_apatch_dialog_new_manager_name">Nome do novo gerenciador</string>
     <string name="hide_apatch_dialog_summary">Ele será usado como o novo nome do app mostrado na launcher</string>
@@ -138,8 +136,6 @@
     <string name="setting_reset_su_new_path">Novo caminho completo</string>
     <string name="success">Sucesso</string>
     <string name="setting_reset_su_path">Redefinir caminho su</string>
-    <string name="settings_check_update_summary">Verifique automaticamente se há atualizações ao abrir o app</string>
-    <string name="settings_check_update">Verificar por atualizações</string>
     <string name="mode_select_page_install_inactive_slot">Instalar no slot inativo (Após o OTA)</string>
     <string name="mode_select_page_install_inactive_slot_warning">Seu dispositivo será **FORÇADO** a inicializar no slot inativo atual após uma reinicialização!
 \nSó use esta opção após a conclusão do OTA.
@@ -152,11 +148,8 @@
     <string name="home_more_menu_feedback_or_suggestion">Feedback ou sugestão</string>
     <string name="home_more_menu_about">Sobre</string>
     <string name="apm_webui_open">Abrir</string>
-    <string name="enable_web_debugging">Ativar depuração do WebView</string>
     <string name="settings_donot_store_superkey_summary">Autentique a SuperKey sempre que o gerenciador iniciar</string>
-    <string name="enable_web_debugging_summary">Pode ser usado para depurar o WebUI. Por favor, ative somente quando necessário.</string>
     <string name="settings_donot_store_superkey">Não armazenar a SuperKey no local</string>
-    <string name="home_new_apatch_found">Nova versão %s está disponível, clique para atualizar.</string>
     <string name="patch_mode_install_to_next_slot">Modo: Instalar no slot inativo (Após o OTA)</string>
     <string name="home_device_info">Dispositivo</string>
     <string name="home_dialog_uninstall_ap_only">Desinstalar AndroidPatch</string>

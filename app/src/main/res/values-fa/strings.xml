@@ -9,8 +9,6 @@
     <string name="about">درباره</string>
     <string name="system_default">تنظیمات پیشفرض سیستم</string>
     <string name="settings_global_namespace_mode">حالت نام جهانی</string>
-    <string name="settings_clear_super_key_dialog">آیا واقعا میخواهید ادامه دهید؟</string>
-    <string name="settings_check_update">برسی نسخه به روز</string>
     <string name="home_click_to_learn_apatch">با ویژگی های APatch و نحو استفاده آن آشنا شوید</string>
     <string name="home_learn_apatch">با APatch آشنا شو</string>
     <string name="send_log">ارسال گزارشات</string>
@@ -25,7 +23,6 @@
     <string name="kernel_patch">پچ کردن کرنل</string>
     <string name="reboot_bootloader">راه اندازی به بوتلودر</string>
     <string name="android_patch">پچ کردن اندروید</string>
-    <string name="settings_check_update_summary">هنگام باز کردن برنامه، به طور خودکار نسخه به روز را برسی کن</string>
     <string name="home_not_installed">نصب نشده</string>
     <string name="home_need_update">نسخه جدید موجود است</string>
     <string name="log_saved">گزارشات ذخیره شد</string>
@@ -72,7 +69,6 @@
     <string name="patch_item_skey">ابر کلید</string>
     <string name="settings_global_namespace_mode_summary">همه جلسات ریشه از فضای نام نصب جهانی استفاده می کنند</string>
     <string name="about_source_code"><![CDATA[<p>مشاهده کد منبع در %1$s<p/>به کانال %2$s ما بپیوندید<p/>به گروه %3$s ما بپیوندید]]></string>
-    <string name="clear_super_key">حذف ابر کلید</string>
     <string name="patch_set_superkey">تنظیم ابر کلید</string>
     <string name="patch_embed_kpm_btn">قراردادن KPM</string>
     <string name="patch_mode_install_to_next_slot">حالت: نصب در اسلات بعدی (بعد از OTA)</string>
@@ -123,8 +119,6 @@
     <string name="apm">ماژول AP</string>
     <string name="apm_not_installed">AndroidPatch نصب نشده</string>
     <string name="apm_failed_to_enable">فعالسازی ماژول \"%s\" ناموفق بود</string>
-    <string name="enable_web_debugging">فعالسازی اشکال زدایی نمای وب</string>
-    <string name="enable_web_debugging_summary">می تواند برای اشکال زدایی رابط کاربری وب استفاده شود. لطفا فقط وقتی لازم است فعال کنید.</string>
     <string name="settings_donot_store_superkey_summary">اعتبار سنجی ابر کلید با هر بار شروع مدیر</string>
     <string name="mode_select_page_patch_and_install">وصله و نصب</string>
     <string name="cyan_theme">فیروزه ای</string>
@@ -174,7 +168,6 @@
     <string name="apm_webui_open">باز کردن</string>
     <string name="apm_action">اجرا</string>
     <string name="mode_select_page_select_file">یک نمونه بوت را برای وصله کردن انتخاب کنید</string>
-    <string name="home_new_apatch_found">نسخه جدید %s در دسترس است، برای بروزرسانی کلیک کنید.</string>
     <string name="home_more_menu_about">درباره</string>
     <string name="kpm_control_paramters">پارامتر ها</string>
     <string name="kpm_control_ok">عملیات موفق بود!</string>

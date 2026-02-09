@@ -86,14 +86,12 @@
     <string name="kpm_load_toast_succ">Başarıyla yüklendi</string>
     <string name="apm_author">Geliştirici</string>
     <string name="patch_title">Yamala</string>
-    <string name="clear_super_key">Süper Anahtarı Sil</string>
     <string name="apm_not_installed">AndroidPatch kurulu değil</string>
     <string name="settings_app_language">Dil</string>
     <string name="system_default">Sistem varsayılanı</string>
     <string name="patch">Yamala</string>
     <string name="settings_global_namespace_mode">Küresel ad alanı modu</string>
     <string name="settings_global_namespace_mode_summary">Tüm root oturumları global bağlama ad alanını kullanır</string>
-    <string name="settings_clear_super_key_dialog">Gerçekten devam etmek istiyor musunuz?</string>
     <string name="kpatch_version_update">Sürüm: %s -&gt; %s</string>
     <string name="kpatch_shadow_path_title">kpatch</string>
     <string name="home_ap_cando_reboot">Yeniden başlat</string>
@@ -138,8 +136,6 @@
     <string name="setting_reset_su_new_path">Yeni tam yol</string>
     <string name="success">Başarılı</string>
     <string name="failure">Başarısız</string>
-    <string name="home_new_apatch_found">Yeni sürüm var: %s, Yükseltmek için tıklayın</string>
-    <string name="settings_check_update">Güncellemeleri denetle</string>
     <string name="patch_mode_install_to_next_slot">Mod: Aktif olmayan yuvaya kur (OTA\'dan sonra)</string>
     <string name="mode_select_page_patch_and_install">Yama ve Kur</string>
     <string name="mode_select_page_select_file">Yama yapılacak bir boot (önyükleme) imajı seçin.</string>
@@ -152,11 +148,8 @@
 \nBu seçeneği yalnızca OTA tamamlandıktan sonra kullanın.
 \nDevam edilsin mi?</string>
     <string name="home_dialog_auth_fail_content">SuperKey doğrulanamadığından APatch düzgün çalışamıyor.\nDoğrulama başarısızlığının bazı olası nedenleri şunlardır:\n1. boot.img dosyasını KernelPatch ile yamalamadınız.\n2. Yamalı boot.img dosyası yazılmadı.\n3. SuperKey hatalı ya da özel karakterler içeriyor.\n4. Cihazınız APatch ve KernelPatch desteklemiyor.\n\nLütfen bu maddeleri gözden geçirin ve tekrar deneyin. Hala sorun varsa, resmi deponun sorunlar sayfasından her zaman soru sorabilirsiniz.</string>
-    <string name="settings_check_update_summary">Uygulama açıldığında güncellemeleri otomatik olarak denetle</string>
     <string name="apm_webui_open">Aç</string>
-    <string name="enable_web_debugging">Web Görünümü Hata Ayıklamayı Etkinleştir</string>
     <string name="settings_donot_store_superkey_summary">SuperKey her zaman yönetici başlar</string>
-    <string name="enable_web_debugging_summary">Web arayüzünde hata ayıklamak için kullanılabilir, lütfen yalnızca gerektiğinde etkinleştirin.</string>
     <string name="settings_donot_store_superkey">Süper anahtarı yerel olarak saklama</string>
     <string name="home_system_version">Sistem sürümü</string>
     <string name="home_dialog_uninstall_all">Hepsini kaldır</string>

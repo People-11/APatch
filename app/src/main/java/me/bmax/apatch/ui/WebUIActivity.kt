@@ -115,9 +115,6 @@ class WebUIActivity : ComponentActivity() {
             setTaskDescription(taskDescription)
         }
 
-        val prefs = APApplication.sharedPreferences
-        WebView.setWebContentsDebuggingEnabled(prefs.getBoolean("enable_web_debugging", false))
-
         val webRoot = File("/data/adb/modules/${moduleId}/webroot")
         insets = Insets(0, 0, 0, 0)
 

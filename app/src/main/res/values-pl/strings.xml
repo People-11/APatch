@@ -73,7 +73,6 @@
     <string name="home_selinux_status_unknown">Nieznany</string>
     <string name="su_pkg_excluded_setting_title">Wyklucz modyfikacje</string>
     <string name="kpm_kp_not_installed">KernelPatch jest niezainstalowany</string>
-    <string name="clear_super_key">Wyczyść SuperKey</string>
     <string name="patch_warnning">Instalacja wiąże się z ryzykiem. Upewnij się, że utworzono kopię zapasową danych.</string>
     <string name="safe_mode">Tryb bezpieczny</string>
     <string name="home_install_unknown">Nie zainstalowano lub nie uwierzytelniono</string>
@@ -93,7 +92,6 @@
     <string name="patch">Załataj</string>
     <string name="settings_global_namespace_mode">Tryb globalnej przestrzeni nazw</string>
     <string name="settings_global_namespace_mode_summary">Wszystkie sesje root korzystają z globalnej przestrzeni montowania nazw</string>
-    <string name="settings_clear_super_key_dialog">Czy na pewno chcesz kontynuować?</string>
     <string name="kpatch_version_update">Wersja: %s -&gt; %s</string>
     <string name="home_kpatch_info_title">Informacje</string>
     <string name="patch_select_bootimg_btn">Wybierz rozruch</string>
@@ -130,11 +128,8 @@
     <string name="hide_apatch_dialog_new_manager_name">Nowa nazwa menedżera</string>
     <string name="hide_apatch_dialog_summary">Będzie używana jako nowa nazwa aplikacji pokazana w Launcherze</string>
     <string name="setting_reset_su_path">Zresetuj ścieżkę su</string>
-    <string name="enable_web_debugging">Włącz debugowanie WebView</string>
     <string name="mode_select_page_select_file">Wybierz obraz boot do załatania</string>
     <string name="mode_select_page_patch_and_install">Załataj i zainstaluj</string>
-    <string name="settings_check_update">Sprawdź dostępność aktualizacji</string>
-    <string name="settings_check_update_summary">Automatycznie sprawdzaj dostępność aktualizacji podczas otwierania aplikacji</string>
     <string name="home_install_unknown_summary">Kliknij, aby zainstalować</string>
     <string name="patch_mode_install_to_next_slot">Tryb: Instaluj do nieaktywnego slotu (po aktualizacji OTA)</string>
     <string name="kpm_add_kpm">Dodaj KPM</string>
@@ -182,10 +177,8 @@
     <string name="lime_theme">Limonkowy</string>
     <string name="orange_theme">Pomarańczowy</string>
     <string name="hide_apatch_manager_failure">Nie udało się ukryć. Zgłoś błąd!</string>
-    <string name="enable_web_debugging_summary">Może być używane do debugowania WebUI. Włącz tylko w razie potrzeby.</string>
     <string name="settings_donot_store_superkey">Nie przechowuj SuperKey lokalnie</string>
     <string name="settings_donot_store_superkey_summary">Uwierzytelniaj SuperKey przy każdym uruchomieniu menadżera</string>
-    <string name="home_new_apatch_found">Dostępna jest nowa wersja %s. Kliknij, aby uaktualnić.</string>
     <string name="mode_select_page_title">Zainstaluj</string>
     <string name="mode_select_page_install_inactive_slot">Zainstaluj do nieaktywnego slotu (po aktualizacji OTA)</string>
     <string name="sakura_theme">Sakura</string>

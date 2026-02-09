@@ -61,13 +61,11 @@
     <string name="reboot_bootloader">Újraindítás a Bootloaderbe</string>
     <string name="settings_global_namespace_mode_summary">Minden gyökérmunka a globális hegyi neveket használja</string>
     <string name="home_learn_apatch">APatch tanulása</string>
-    <string name="settings_clear_super_key_dialog">Biztos folytatni akarod?</string>
     <string name="home_click_to_learn_apatch">Ismerd meg az APatch funkcióit és használatát</string>
     <string name="about_source_code"><![CDATA[<p>Forráskód megtekintése %1$s-on<p/>Csatlakozz a %2$s csatornánkhoz<p/>Csatlakozz a %3$s csoportunkhoz]]></string>
     <string name="send_log">Naplók küldése</string>
     <string name="safe_mode">Biztonságos mód</string>
     <string name="super_key">SzuperKulcs</string>
-    <string name="clear_super_key">SzuperKulcs tisztítása</string>
     <string name="patch_set_superkey">SzuperKulcs beállítása</string>
     <string name="home_patch_set_key_desc">Kizárólag a KernelPatch hitelesítéséhez</string>
     <string name="kpatch_version_update">Verzió: %s -&gt; %s</string>
@@ -127,8 +125,6 @@
     <string name="su_title">Superuser</string>
     <string name="success">Sikeres</string>
     <string name="failure">Hiba</string>
-    <string name="settings_check_update_summary">Frissítések automatikus keresése minden induláskor</string>
-    <string name="settings_check_update">Frissítés ellenőrzése</string>
     <string name="home_device_info">Eszköz</string>
     <string name="home_system_version">Rendszer verziója</string>
     <string name="kpm_control">Control</string>
@@ -144,12 +140,10 @@
     <string name="hide_apatch_manager_failure">Nem sikerült elrejteni. Kérlek jelentsd a hibát!</string>
     <string name="setting_reset_su_path">a \'su\' elérési útjának visszaállítása</string>
     <string name="apm_webui_open">Megnyitás</string>
-    <string name="enable_web_debugging">A WebView hibakeresés engedélyezése</string>
     <string name="patch_mode_patch_and_install">Mód: Javítás és telepítés</string>
     <string name="home_install_unknown_summary">Kattints a telepítéshez</string>
     <string name="log_saved">Napló elmentve</string>
     <string name="apm_action">Művelet</string>
     <string name="patch_mode_install_to_next_slot">Mód:Telepítés inaktív helyre (OTA után)</string>
     <string name="settings_donot_store_superkey">Ne mentse a Szuper kulcsot helyileg</string>
-    <string name="enable_web_debugging_summary">Nem használható a WebUI hibakereséséhez. Csak akkor engedélyezze ha szüksége van rá.</string>
 </resources>

@@ -86,14 +86,12 @@
     <string name="super_key">Superchiave</string>
     <string name="app_name" translatable="false">APatch</string>
     <string name="kpm">KPModule</string>
-    <string name="clear_super_key">Elimina Superchiave</string>
     <string name="apm_not_installed">AndroidPatch non installato</string>
     <string name="system_default">Predefinito di sistema</string>
     <string name="settings_app_language">Lingua</string>
     <string name="patch">Applica una patch</string>
     <string name="settings_global_namespace_mode">Modalità namespace globale</string>
     <string name="settings_global_namespace_mode_summary">Tutte le sessioni di root erediteranno il namespace globale</string>
-    <string name="settings_check_update">Controlla aggiornamenti</string>
     <string name="home_ap_cando_reboot">Riavvia</string>
     <string name="patch_config_title">Patch</string>
     <string name="patch_mode_uninstall_patch">Modalità: Disinstalla KPatch</string>
@@ -119,7 +117,6 @@
     <string name="kpm_add_kpm">Aggiungi KPM</string>
     <string name="hide_apatch_manager_summary">Installa una nuova app di gestione con un ID pacchetto casuale e nome applicazione personalizzato</string>
     <string name="setting_reset_su_new_path">Nuovo percorso</string>
-    <string name="home_new_apatch_found">Clicca per aggiornare alla nuova versione disponibile %s</string>
     <string name="mode_select_page_title">Installa</string>
     <string name="mode_select_page_patch_and_install">Applica patch e installa</string>
     <string name="kpm_embed">Incorpora</string>
@@ -129,9 +126,7 @@
     <string name="kpatch_shadow_path_title">Kpatch</string>
     <string name="patch_item_kpimg_config">Configurazione:</string>
     <string name="hide_apatch_dialog_new_manager_name">Nuovo nome del gestore</string>
-    <string name="settings_check_update_summary">Cerca aggiornamenti automaticamente all\'avvio dell\'app</string>
     <string name="patch_mode_install_to_next_slot">Modalità: Installa nello slot successivo (Dopo OTA)</string>
-    <string name="enable_web_debugging">Attiva debug di WebView</string>
     <string name="settings_donot_store_superkey_summary">Richiedi la SuperKey ogni volta che il gestore viene avviato</string>
     <string name="patch_item_extra_version">Versione:</string>
     <string name="patch_item_extra_author">Autore:</string>
@@ -150,10 +145,8 @@
     <string name="patch_item_set_skey_label">La super chiave dovrebbe essere di almeno 8 caratteri e includere sia numeri sia lettere, ma non caratteri speciali</string>
     <string name="setting_reset_su_path">Reimposta il percorso su</string>
     <string name="home_kpatch_info_title">Informazioni</string>
-    <string name="settings_clear_super_key_dialog">Sei sicuro di voler procedere?</string>
     <string name="kpatch_version_update">Versione: %s -&gt; %s</string>
     <string name="apm_webui_open">Apri</string>
-    <string name="enable_web_debugging_summary">Può essere usato per il Debug di WebUI, attiva solo se necessario.</string>
     <string name="patch_mode_bootimg_patch">Modalità: Applica patch</string>
     <string name="patch_item_error">!!ERRORE!!</string>
     <string name="patch_item_extra_name">Nome:</string>

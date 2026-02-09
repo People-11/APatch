@@ -145,12 +145,6 @@ fun SettingScreen() {
     ) { paddingValues ->
 
         val loadingDialog = rememberLoadingDialog()
-        val clearKeyDialog = rememberConfirmDialog(
-            onConfirm = {
-                APatchKeyHelper.clearConfigKey()
-                APApplication.superKey = ""
-            }
-        )
 
         val showLanguageDialog = rememberSaveable { mutableStateOf(false) }
         LanguageDialog(showLanguageDialog)
@@ -198,27 +192,6 @@ fun SettingScreen() {
             val scope = rememberCoroutineScope()
             val prefs = APApplication.sharedPreferences
 
-            // clear key
-            if (kPatchReady) {
-                val clearKeyDialogTitle = stringResource(id = R.string.clear_super_key)
-                val clearKeyDialogContent =
-                    stringResource(id = R.string.settings_clear_super_key_dialog)
-                ListItem(
-                    leadingContent = {
-                        Icon(
-                            Icons.Filled.Key, stringResource(id = R.string.super_key)
-                        )
-                    },
-                    headlineContent = { Text(stringResource(id = R.string.clear_super_key)) },
-                    modifier = Modifier.clickable {
-                        clearKeyDialog.showConfirm(
-                            title = clearKeyDialogTitle,
-                            content = clearKeyDialogContent,
-                            markdown = false,
-                        )
-
-                    })
-            }
 
             // store key local?
             SwitchItem(
@@ -299,42 +272,7 @@ fun SettingScreen() {
 
             }
 
-            // WebView Debug
-            if (aPatchReady) {
-                var enableWebDebugging by rememberSaveable {
-                    mutableStateOf(
-                        prefs.getBoolean("enable_web_debugging", false)
-                    )
-                }
-                SwitchItem(
-                    icon = Icons.Filled.DeveloperMode,
-                    title = stringResource(id = R.string.enable_web_debugging),
-                    summary = stringResource(id = R.string.enable_web_debugging_summary),
-                    checked = enableWebDebugging
-                ) {
-                    APApplication.sharedPreferences.edit {
-                        putBoolean("enable_web_debugging", it)
-                    }
-                    enableWebDebugging = it
-                }
-            }
 
-            // Check Update
-            var checkUpdate by rememberSaveable {
-                mutableStateOf(
-                    prefs.getBoolean("check_update", true)
-                )
-            }
-
-            SwitchItem(
-                icon = Icons.Filled.Update,
-                title = stringResource(id = R.string.settings_check_update),
-                summary = stringResource(id = R.string.settings_check_update_summary),
-                checked = checkUpdate
-            ) {
-                prefs.edit { putBoolean("check_update", it) }
-                checkUpdate = it
-            }
 
             // Night Mode Follow System
             var nightFollowSystem by rememberSaveable {

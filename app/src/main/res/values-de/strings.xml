@@ -50,7 +50,6 @@
     <string name="home_selinux_status_enforcing">Erzwingt</string>
     <string name="home_selinux_status_permissive">Zulässig</string>
     <string name="super_key">SuperKey</string>
-    <string name="clear_super_key">Superschlüssel löschen</string>
     <string name="patch_set_superkey">Superschlüssel festlegen</string>
     <string name="home_installing">Installiert</string>
     <string name="home_auth_key_title">Superschlüssel eingeben</string>
@@ -95,7 +94,6 @@
     <string name="settings_global_namespace_mode_summary">Alle Root-Sitzungen verwenden den globalen Mount-Namespace</string>
     <string name="kpatch_shadow_path_title">kpatch</string>
     <string name="home_kpatch_info_title">Info</string>
-    <string name="settings_clear_super_key_dialog">Wollen Sie wirklich fortfahren?</string>
     <string name="kpatch_version_update">Version: %s -&gt; %s</string>
     <string name="patch_config_title">Korrekturen</string>
     <string name="patch_mode_bootimg_patch">Modus: Korrektur</string>
@@ -125,10 +123,8 @@
     <string name="patch_item_kernel">Kernel</string>
     <string name="patch_item_existed_extra_kpm">existiert</string>
     <string name="patch_item_set_skey_label">Der SuperKey sollte 8 bis 63 Zeichen lang sein und Zahlen sowie Buchstaben enthalten, jedoch keine Sonderzeichen.</string>
-    <string name="settings_check_update">Auf Updates prüfen</string>
     <string name="home_install_unknown_summary">Klicke zum Installieren</string>
     <string name="patch_mode_patch_and_install">Modus: Patchen und installieren</string>
-    <string name="enable_web_debugging">WebView-Debugging aktivieren</string>
     <string name="blue_grey_theme">Blaugrau</string>
     <string name="amber_theme">Bernstein</string>
     <string name="blue_theme">Blau</string>
@@ -136,8 +132,6 @@
     <string name="green_theme">Grün</string>
     <string name="about_telegram_group">Telegram-Gruppe</string>
     <string name="about_telegram_channel">Telegram-Kanal</string>
-    <string name="settings_check_update_summary">Beim Öffnen der App automatisch nach Updates suchen</string>
-    <string name="enable_web_debugging_summary">Kann zum debuggen von WebUI benutzt werden. Bitte nur bei Bedarf aktivieren.</string>
     <string name="apm_webui_open">Öffnen</string>
     <string name="failure">Fehler</string>
     <string name="success">Erfolg</string>
@@ -173,7 +167,6 @@
     <string name="setting_reset_su_path">su-Pfad zurücksetzen</string>
     <string name="hide_apatch_manager_failure">Verstecken fehlgeschlagen. Bitte melde den Fehler!</string>
     <string name="settings_donot_store_superkey">Superschlüssel nicht lokal speichern</string>
-    <string name="home_new_apatch_found">Eine neue Version %s ist verfügbar, klicken Sie hier, um zu aktualisieren.</string>
     <string name="mode_select_page_install_inactive_slot">Auf inaktiven Slot installieren (Nach OTA)</string>
     <string name="hide_apatch_manager_summary">Installieren Sie eine Proxy-App mit einer zufälligen Paket-ID und einer benutzerdefinierten App-Bezeichnung</string>
     <string name="hide_apatch_dialog_summary">Wird als App-Bezeichnung auf dem Home-Screen genutzt</string>

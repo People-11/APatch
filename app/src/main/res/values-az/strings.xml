@@ -15,7 +15,6 @@
     <string name="system_default">Sistem defoltu</string>
     <string name="send_log">Günlükü göndərin</string>
     <string name="safe_mode">Təhlükəsiz rejim</string>
-    <string name="clear_super_key">Açarı silin</string>
     <string name="super_key">SuperAçar</string>
     <string name="patch_set_superkey">SuperAçar təyin edin</string>
     <string name="home_patch_set_key_desc">Yalnız NüvəYamağı üçün etimadnamə</string>
@@ -95,9 +94,6 @@
     <string name="apm_not_installed">AndroidYamağı quraşdırılmayıb</string>
     <string name="settings_global_namespace_mode">Global namespace mode</string>
     <string name="settings_global_namespace_mode_summary">Bütün kök sessiyaları qlobal bağlama adməkanından istifadə edir</string>
-    <string name="settings_clear_super_key_dialog">Həqiqətən davam etmək istəyirsən?</string>
-    <string name="settings_check_update">Yeniləməni yoxlayın</string>
-    <string name="settings_check_update_summary">Proqramı açarkən avtomatik olaraq yeniləmələri yoxlayın</string>
     <string name="home_install_unknown_summary">Quraşdırmaq üçün kliklə</string>
     <string name="kpatch_version_update">Versiya: %s -&gt; %s</string>
     <string name="kpatch_shadow_path_title">kpatch</string>
@@ -145,11 +141,8 @@
     <string name="hide_apatch_manager_summary">Təsadüfi paket ID-si və fərdi tətbiq etiketi ilə yeni menecer tətbiqini quraşdırın</string>
     <string name="hide_apatch_dialog_new_manager_name">Yeni Menecer Adı</string>
     <string name="hide_apatch_manager_failure">Gizlətmək alınmadı, lütfən, proqram açığını bildirin!</string>
-    <string name="enable_web_debugging_summary">WebUI-ni sazlamaq üçün istifadə edilə bilər, zəhmət olmasa, yalnız lazım olduqda aktivləşdirin.</string>
     <string name="setting_reset_su_new_path">yeni tam yol</string>
-    <string name="enable_web_debugging">Webgörüntələmə Xəta Çeşidləməyi aktivləşdirin</string>
     <string name="settings_donot_store_superkey">Super açarı local cihazda saxlamayın</string>
-    <string name="home_new_apatch_found">Yeni versiya mövcuddur: %s, Güncəlləmək üçün mənə klikləyin</string>
     <string name="settings_donot_store_superkey_summary">Menecer hər dəfə açılanda super açarı təsdiq edin</string>
     <string name="mode_select_page_title">Quraşdır</string>
     <string name="mode_select_page_select_file">Yamaq üçün boot image-i seçin</string>

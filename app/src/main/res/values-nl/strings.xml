@@ -87,11 +87,8 @@
     <string name="apm_start_downloading">Begin met downloaden %s</string>
     <string name="apm_new_version_available">Een nieuwe versie %s is beschikbaar, klik om te upgraden.</string>
     <string name="apm_magisk_conflict">Modules zijn niet beschikbaar door een conflict met Magisk!</string>
-    <string name="settings_clear_super_key_dialog">Wil je zeker verder gaan?</string>
     <string name="success">Succes</string>
     <string name="failure">Mislukking</string>
-    <string name="settings_check_update">Naar updates zoeken</string>
-    <string name="settings_check_update_summary">Automatisch controleren op updates als je de app opent</string>
     <string name="blue_theme">Blauw Theme</string>
     <string name="brown_theme">Brown Theme</string>
     <string name="cyan_theme">Cyan Theem</string>
@@ -110,7 +107,6 @@
     <string name="save_log">Logboek opslaan</string>
     <string name="log_saved">Logboek opgeslagen</string>
     <string name="kpatch_version_update">Versie: %s -&gt; %s</string>
-    <string name="clear_super_key">SuperKey verwijderen</string>
     <string name="kpatch_shadow_path_title">kpatch</string>
     <string name="home_kpatch_info_title">Info</string>
     <string name="home_install_unknown_summary">Klik om te installeren</string>
@@ -164,10 +160,7 @@
     <string name="setting_reset_su_new_path">Nieuwe volle pad</string>
     <string name="hide_apatch_manager_failure">Verbergen gefaald, gelieve deze fout te melden!</string>
     <string name="setting_reset_su_path">su pad opnieuw instellen</string>
-    <string name="enable_web_debugging">Webview Debuggen Inschakelen</string>
-    <string name="enable_web_debugging_summary">Kan gebruikt worden om WebUI te debuggen, gelieve in te schakelen enkel wanneer nodig.</string>
     <string name="settings_donot_store_superkey">Super sleutel niet opslaan in lokaal</string>
-    <string name="home_new_apatch_found">Nieuwe versie beschikbaar:%s, klik mij en upgrade nu.</string>
     <string name="mode_select_page_title">Installeer</string>
     <string name="mode_select_page_patch_and_install">Oplappen en Installeren</string>
     <string name="home_more_menu_feedback_or_suggestion">Feedback of suggestie</string>

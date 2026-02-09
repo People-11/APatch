@@ -30,10 +30,7 @@
     <string name="system_default">System default</string>
     <string name="settings_global_namespace_mode">Global namespace mode</string>
     <string name="settings_global_namespace_mode_summary">All root sessions use the global mount namespace</string>
-    <string name="settings_clear_super_key_dialog">Do you really want to proceed?</string>
 
-    <string name="settings_check_update">Check for updates</string>
-    <string name="settings_check_update_summary">Automatically check for updates when opening the app</string>
 
     <string name="home_learn_apatch">Learn APatch</string>
     <string name="home_click_to_learn_apatch">Learn about the features of APatch and how to use</string>
@@ -45,7 +42,6 @@
     <string name="safe_mode">Safe mode</string>
 
     <string name="super_key">SuperKey</string>
-    <string name="clear_super_key">Clear SuperKey</string>
     <string name="patch_set_superkey">Set SuperKey</string>
     <string name="home_patch_set_key_desc">Only credential for KernelPatch</string>
     <string name="home_patch_next_step">Next step</string>
@@ -186,13 +182,10 @@
 
     <string name="apm_webui_open">Open</string>
     <string name="apm_action">Action</string>
-    <string name="enable_web_debugging">Enable WebView debugging</string>
-    <string name="enable_web_debugging_summary">Can be used to debug WebUI, please enable only when needed</string>
 
     <string name="settings_donot_store_superkey">Don\'t store SuperKey in local</string>
     <string name="settings_donot_store_superkey_summary">Authenticate the SuperKey every time the manager starts</string>
 
-    <string name="home_new_apatch_found">New version %s is available, click to upgrade</string>
 
     <string name="mode_select_page_title">Install</string>
     <string name="mode_select_page_patch_and_install">Patch and install</string>

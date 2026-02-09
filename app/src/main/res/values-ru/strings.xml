@@ -86,7 +86,6 @@
     <string name="home_ap_cando_update">Обновить</string>
     <string name="home_ap_cando_uninstall">Деинсталлировать</string>
     <string name="kpm_unload_confirm">Выгрузить модуль \"%s\"?</string>
-    <string name="clear_super_key">Стереть СуперКлюч</string>
     <string name="apm_not_installed">AndroidPatch не установлен</string>
     <string name="settings_app_language">Язык</string>
     <string name="system_default">Как в системе</string>
@@ -124,7 +123,6 @@
     <string name="patch_item_extra_version">"Версия:"</string>
     <string name="patch_item_extra_author">"Автор:"</string>
     <string name="patch_item_extra_kpm_license">"Лицензия:"</string>
-    <string name="settings_clear_super_key_dialog">Вы действительно хотите продолжить?</string>
     <string name="patch_item_set_skey_label">Длина СуперКлюч должна быть не менее 8 символов и включать только цифры и буквы.</string>
     <string name="failure">Ошибка</string>
     <string name="kpm_install">Установить</string>
@@ -160,7 +158,6 @@
     <string name="about_powered_by">Основано на %1$s</string>
     <string name="home_install_unknown_summary">Нажмите, чтобы установить</string>
     <string name="home_kpatch_version">Версия KernelPatch</string>
-    <string name="home_new_apatch_found">Доступна новая версия: %s, Нажмите здесь для обновления.</string>
     <string name="mode_select_page_title">Установить</string>
     <string name="mode_select_page_install_inactive_slot">Установить в неактивный слот (после OTA)</string>
     <string name="home_dialog_auth_fail_title">Ошибка авторизации</string>
@@ -189,17 +186,13 @@
     <string name="patch_mode_install_to_next_slot">Режим: Установить в неактивный слот (После OTA)</string>
     <string name="about_app_version">Версия %1$s</string>
     <string name="apm_webui_open">Открыть</string>
-    <string name="settings_check_update">Проверьте наличие обновлений</string>
-    <string name="settings_check_update_summary">Автоматическая проверка обновлений при открытии приложения</string>
     <string name="home_device_info">Устройство</string>
     <string name="home_system_version">Версия системы</string>
     <string name="settings_night_theme_enabled">Включить темную тему</string>
-    <string name="enable_web_debugging">Включить отладку WebView</string>
     <string name="amber_theme">Янтарная</string>
     <string name="brown_theme">Коричневая</string>
     <string name="blue_grey_theme">Сине-серая</string>
     <string name="blue_theme">Синяя</string>
-    <string name="enable_web_debugging_summary">Используется для отладки WebUI. Пожалуйста, включайте только при необходимости.</string>
     <string name="save_log">Сохранить журналы</string>
     <string name="apm_action">Действие</string>
     <string name="crash_handle_copy">Скопировать журнал сбоев</string>
