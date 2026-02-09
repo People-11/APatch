@@ -69,7 +69,6 @@
     <string name="su_hide_system_apps">Skjul systemprogrammer</string>
     <string name="apm_empty">Ingen modul installert</string>
     <string name="apm_uninstall_failed">Kunne ikke avinstallere: %s</string>
-    <string name="clear_super_key">Fjern tast</string>
     <string name="home_kpatch_info_title">Info</string>
     <string name="kpatch_version_update">Versjon: %s → %s</string>
     <string name="success">Vellykket</string>
@@ -84,7 +83,6 @@
     <string name="apm_failed_to_enable">Kunne ikke skru på «%s»-modulen</string>
     <string name="apm_failed_to_disable">Kunne ikke skru av «%s»-modulen</string>
     <string name="apm_uninstall_confirm">Avinstaller «%s»-modulen?</string>
-    <string name="home_new_apatch_found">Klikk for å installere ny versjon %s.</string>
     <string name="apm_downloading">Laster ned \"%s\" modul…</string>
     <string name="settings_night_mode_follow_sys">Følg systemets mørke tema</string>
     <string name="apm_update">Oppdater</string>
@@ -92,9 +90,6 @@
     <string name="apm_new_version_available">Ny versjon %s er tilgjengelig, trykk for å oppgradere.</string>
     <string name="settings_night_theme_enabled">Aktiver mørkt tema</string>
     <string name="system_default">Systemstandard</string>
-    <string name="settings_clear_super_key_dialog">Er du sikker på at du vil fortsette?</string>
-    <string name="settings_check_update">Sjekk oppdatering</string>
-    <string name="settings_check_update_summary">Sjekk automatisk etter oppdateringer når programmet åpnes</string>
     <string name="patch_start_patch_btn">Start</string>
     <string name="patch_item_extra_kpm_license">Lisens:</string>
     <string name="save_log">Lagre loggen</string>

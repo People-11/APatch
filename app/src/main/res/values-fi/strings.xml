@@ -19,7 +19,6 @@
     <string name="home_ap_cando_update">Päivitä</string>
     <string name="patch">Korjaus</string>
     <string name="patch_item_set_skey_label">SuperKeyn tulee olla 8–63 merkkiä pitkä ja sisältää numeroita ja kirjaimia, mutta ei erikoismerkkejä.</string>
-    <string name="clear_super_key">Tyhjennä SuperKey</string>
     <string name="home_device_info">Laite</string>
     <string name="patch_mode_patch_and_install">Tila: Korjaa ja asenna</string>
     <string name="apm_update">Päivitä</string>
@@ -29,9 +28,6 @@
     <string name="kpm">KPModule</string>
     <string name="success">Menestys</string>
     <string name="settings_global_namespace_mode_summary">Kaikki juuriistunnot käyttävät yleisesti pätevää liitosnimiavaruutta</string>
-    <string name="settings_clear_super_key_dialog">Haluatko todella edetä?</string>
-    <string name="settings_check_update">Tarkista päivityksen varalta</string>
-    <string name="settings_check_update_summary">Tarkista päivitysten varalta automaattisesti sovelluksen avaamisen yhteydessä</string>
     <string name="home_learn_apatch">Opettele APatch</string>
     <string name="home_click_to_learn_apatch">Tutustu APatchin ominaisuuksiin ja sen käyttöön</string>
     <string name="about_source_code"><![CDATA[<p>Tarkastele lähdekoodia %1$s<p/>Liity %2$s-kanavallemme<p/>Liity %3$s-ryhmäämme]]>:ssa</string>
@@ -116,7 +112,6 @@
     <string name="apm_downloading">Ladataan \"%s\" -moduulia…</string>
     <string name="kpm_args">Args</string>
     <string name="hide_apatch_manager_summary">Asenna uusi hallintasovellus satunnaisen tunnuksen ja mukautetun nimikkeen kanssa</string>
-    <string name="enable_web_debugging">Ota WebView-viankorjaus käyttöön</string>
     <string name="settings_donot_store_superkey_summary">Todenna SuperKey aina, kun hallinta käynnistyy</string>
     <string name="mode_select_page_install_inactive_slot_warning">Laitteesi **pakottaa** käynnistymään nykyiseen ei-aktiiviseen kiinnittimeen uudelleenkäynnistyksen jälkeen!\nKäytä tätä vaihtoehtoa vasta OTA:n jälkeen.\nJatketaanko?</string>
     <string name="kpm_control_outMsg">Viesti</string>
@@ -158,9 +153,7 @@
     <string name="setting_reset_su_new_path">Uusi täydellinen polku</string>
     <string name="apm_webui_open">Avaa</string>
     <string name="apm_action">Toiminta</string>
-    <string name="enable_web_debugging_summary">Voidaan käyttää WebUI-viankorjaukseen. Ota käyttöön vain tarvittaessa.</string>
     <string name="settings_donot_store_superkey">Älä säilytä SuperKeyä paikallisesti</string>
-    <string name="home_new_apatch_found">Uusi versio %s on saatavilla, päivitä napsauttamalla.</string>
     <string name="mode_select_page_title">Asenna</string>
     <string name="mode_select_page_patch_and_install">Korjaa ja asenna</string>
     <string name="mode_select_page_select_file">Valitse korjattava käynnistyskuva</string>

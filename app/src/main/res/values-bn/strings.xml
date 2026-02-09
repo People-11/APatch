@@ -90,12 +90,8 @@
     <string name="system_default">সিস্টেম ডিফল্ট</string>
     <string name="settings_global_namespace_mode">গ্লোবাল নেমস্পেস মোড</string>
     <string name="settings_global_namespace_mode_summary">সব রুট সেশনগুলো গ্লোবাল নেমস্পেসে ব্যবহার করবে</string>
-    <string name="settings_clear_super_key_dialog">আপনি কি সত্যিই চালিয়ে যেতে চান?</string>
-    <string name="settings_check_update">হালনাগাদ চেক করুন</string>
-    <string name="settings_check_update_summary">অ্যাপ খোলার সময় স্বয়ংক্রিয়ভাবে হালনাগাদ চেক করুন</string>
     <string name="kpatch_shadow_path_title">কেপ্যাচ</string>
     <string name="kpatch_version_update">সংস্করণ %s → %s</string>
-    <string name="clear_super_key">সুপার_কি মুছুন</string>
     <string name="home_install_unknown_summary">ইন্সটল করতে ক্লিক করুন</string>
     <string name="home_kpatch_info_title">তথ্য</string>
     <string name="patch_config_title">প্যাচসমূহ</string>
@@ -136,14 +132,11 @@
     <string name="hide_apatch_manager_failure">লুকাতে ব্যর্থ হয়েছে, দয়া করে এই সমস্যা অভিযোগ করুন!</string>
     <string name="setting_reset_su_path">su path কে পুনরায় চালু করুন</string>
     <string name="setting_reset_su_new_path">নতুন full path</string>
-    <string name="enable_web_debugging">ওয়েবভিউ ডিবাগিং চালু করুন</string>
     <string name="mode_select_page_title">ইন্সটল</string>
     <string name="mode_select_page_patch_and_install">প্যাচ এবং ইন্সটল</string>
     <string name="settings_donot_store_superkey_summary">প্রতিবার ম্যানেজার চালু করার সময় সুপার কি দিন</string>
-    <string name="home_new_apatch_found">আপডেট সংস্করণ এসে গেছে %s, আপগ্রেড করতে এখানে ক্লিক করুন।</string>
     <string name="mode_select_page_install_inactive_slot">নিষ্ক্রিয় স্লটে ইনস্টল করুন (OTA এর পরে)</string>
     <string name="home_dialog_auth_fail_title">প্রমান করতে ব্যর্থ হয়েছে</string>
-    <string name="enable_web_debugging_summary">WebUI ডিবাগ করতে ব্যবহার করা যেতে পারে, অনুগ্রহ করে শুধুমাত্র প্রয়োজন হলেই চালু করুন।</string>
     <string name="home_more_menu_feedback_or_suggestion">ফিডব্যাক অথবা পরামর্শ</string>
     <string name="settings_donot_store_superkey">ফোন এর সিষ্টেমে সুপার কী সংরক্ষণ করবেন না</string>
     <string name="home_dialog_uninstall_ap_only">এন্ড্রয়েডপ্যাচ দূর করুন</string>

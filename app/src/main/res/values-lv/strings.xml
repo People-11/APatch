@@ -72,6 +72,4 @@
     <string name="yellow_theme">Dzeltens</string>
     <string name="about_app_version">Versija %1$s</string>
     <string name="lime_theme">Dzeltenzaļa, laima</string>
-    <string name="settings_check_update">Pārbaudīt atjauninājumu</string>
-    <string name="settings_clear_super_key_dialog">Vai tiešām vēlaties turpināt?</string>
 </resources>

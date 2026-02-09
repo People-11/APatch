@@ -28,7 +28,6 @@
     <string name="home_click_to_learn_apatch">මෙතන Click කරන්න</string>
     <string name="patch_warnning">Install කරද්දි මොකක්ම හරි අවුලක් ආවොත් ඔයාගේ Data lost වේවි. ඒක නිසා වැදගත් දේවල් Backup කරගෙනම ඉන්න.</string>
     <string name="send_log">Log යවන්න</string>
-    <string name="clear_super_key">මුරපදය මකා දමන්න</string>
     <string name="home_install_unknown">හඳුනා ගැනීමට නොහැක</string>
     <string name="home_auth_key_desc">මුරපදය ඇතුළත් කරන්න</string>
     <string name="home_working">වැඩ කරමින් තිබේ</string>
@@ -105,10 +104,7 @@
     <string name="success">සාර්ථකයි</string>
     <string name="failure">අසාර්ථක වීම</string>
     <string name="settings_global_namespace_mode">Global නාම අවකාශයේ Mode</string>
-    <string name="settings_clear_super_key_dialog">ඇත්තටම ඉදිරියට යාමට අවශ්‍යද?</string>
     <string name="settings_global_namespace_mode_summary">සියලුම root සැසි ගෝලීය මවුන්ට් නාම අවකාශය භාවිතා කරයි</string>
-    <string name="settings_check_update">අප්ඩේට් චෙක් කරන්න</string>
-    <string name="settings_check_update_summary">යෙදුම open කිරීමේදී Update සඳහා ස්වයංක්‍රීයව පරීක්ෂා කරන්න</string>
     <string name="patch_select_bootimg_btn">Boot කරන්න තෝරන්න</string>
     <string name="patch_embed_kpm_btn">KPM යොදන්න</string>
     <string name="patch_start_patch_btn">"යං "</string>
@@ -162,7 +158,6 @@
     <string name="hide_apatch_manager_failure">හංගන්න බෑ වගේනේ, කරුණාකර අවුල වාර්තා කරන්න!</string>
     <string name="setting_reset_su_path">Su patch රීසෙට් කරන්න</string>
     <string name="settings_donot_store_superkey">Super Key එක phone එකේ කොහේවත් තියාගන්න එපා</string>
-    <string name="home_new_apatch_found">නව අනුවාදයක් තිබේ: %s, උත්ශ්‍රේණියට ඔබන්න</string>
     <string name="home_dialog_auth_fail_title">සත්‍යාපනය වැරදි වගේ</string>
     <string name="kpm_control_dialog_content">ඉන්පුට් control parameters:</string>
     <string name="kpm_control_ok">වැඩේ ගොඩ ලොක්කා!</string>
@@ -193,9 +188,7 @@
     <string name="deep_purple_theme">Deep Purple Theme</string>
     <string name="green_theme">කොළ Theme</string>
     <string name="hide_apatch_manager">APatch මැනේජර් හංගන්න</string>
-    <string name="enable_web_debugging">WebView නිදොස්කරණය දාන්න</string>
     <string name="apm_webui_open">බලමු</string>
-    <string name="enable_web_debugging_summary">WebUI නිදොස් කිරීමට භාවිතා කළ හැක, කරුණාකර අවශ්‍ය විට විතරක් දාගන්න.</string>
     <string name="mode_select_page_install_inactive_slot">අක්‍රිය ස්ලොට් වලට දාන්න (OTA පස්සේ)</string>
     <string name="settings_night_mode_follow_sys">සිස්ටම් dark theme වගේ වෙන්න</string>
 </resources>

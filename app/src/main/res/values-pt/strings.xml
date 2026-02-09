@@ -56,7 +56,6 @@
     <string name="kpm_version">Versão</string>
     <string name="apm_downloading">Baixando o módulo \"%s\"…</string>
     <string name="about_source_code"><![CDATA[<p>Veja o código-fonte em %1$s<p/>Participe do nosso canal %2$s<p/>Participe do nosso grupo %3$s]]></string>
-    <string name="clear_super_key">Limpar chave</string>
     <string name="home_apatch_version">Versão APatch</string>
     <string name="kpm_license">Licença</string>
     <string name="kpm_author">Autor</string>
@@ -93,11 +92,8 @@
     <string name="patch">Patch</string>
     <string name="settings_global_namespace_mode">Modo de namespace global</string>
     <string name="settings_global_namespace_mode_summary">Todas as sessões root usam o Global Mount Namespace</string>
-    <string name="settings_check_update">Verificar atualizações</string>
     <string name="success">Sucesso</string>
     <string name="failure">Falha</string>
-    <string name="settings_clear_super_key_dialog">Você realmente quer prosseguir?</string>
-    <string name="settings_check_update_summary">Verifique automaticamente as atualizações ao abrir o aplicativo</string>
     <string name="home_install_unknown_summary">Clique para instalar</string>
     <string name="kpatch_version_update">Versão: %s -&gt; %s</string>
     <string name="home_kpatch_info_title">Informação</string>
@@ -159,7 +155,6 @@
     <string name="hide_apatch_manager_failure">Falha ao ocultar. Por favor, reporte o bug!</string>
     <string name="setting_reset_su_path">Desfazer o acesso ao su</string>
     <string name="setting_reset_su_new_path">Novo caminho completo</string>
-    <string name="enable_web_debugging">Ativar depuração do WebView</string>
     <string name="settings_donot_store_superkey">Não armazenar a SuperKey no local</string>
     <string name="settings_donot_store_superkey_summary">Autentique a SuperKey sempre que o gestor iniciar</string>
     <string name="mode_select_page_install_inactive_slot">Instalar no slot inativo (após o OTA)</string>
@@ -185,8 +180,6 @@
     <string name="kpm_embed">Embutido</string>
     <string name="kpm_control">Control</string>
     <string name="apm_webui_open">Abrir</string>
-    <string name="enable_web_debugging_summary">Pode ser usado para depurar o WebUI. Por favor, ative somente quando necessário.</string>
-    <string name="home_new_apatch_found">Nova versão %s está disponível, clique para atualizar.</string>
     <string name="mode_select_page_select_file">Selecione uma imagem de inicialização para corrigir</string>
     <string name="mode_select_page_patch_and_install">Patch e instalação</string>
     <string name="home_more_menu_feedback_or_suggestion">Feedback ou sugestão</string>

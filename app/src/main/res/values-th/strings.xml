@@ -79,7 +79,6 @@
     <string name="home_kernel">Kernel</string>
     <string name="kpm_args">Args</string>
     <string name="su_title">Superuser</string>
-    <string name="clear_super_key">ล้าง คีย์</string>
     <string name="home_su_path">su: %s</string>
     <string name="home_auth_key_title">ใส่ SuperKey</string>
     <string name="home_selinux_status_enforcing">Enforcing</string>
@@ -110,9 +109,6 @@
     <string name="patch_item_bootimg_dev">อุปกรณ์ :</string>
     <string name="patch_item_kernel">เคอเนล</string>
     <string name="patch_mode_install_to_next_slot">โหมด: ติดตั้งในช่องถัดไป (หลังจาก OTA)</string>
-    <string name="settings_clear_super_key_dialog">คุณต้องการดำเนินการต่อหรือไม่?</string>
-    <string name="settings_check_update_summary">ตรวจสอบการอัปเดตโดยอัตโนมัติเมื่อเปิดแอป</string>
-    <string name="settings_check_update">ตรวจสอบการอัพเดท</string>
     <string name="home_install_unknown_summary">คลิกเพื่อติดตั้ง</string>
     <string name="kpatch_version_update">เวอร์ชั่น: %s -&gt; %s</string>
     <string name="kpatch_shadow_path_title">แพทซ์ เคอเนล</string>
@@ -149,7 +145,6 @@
     <string name="patch_item_extra_author">ผู้เขียน:</string>
     <string name="patch_item_skey">สุดยอดกุญแจ</string>
     <string name="kpm_embed">ฝัง</string>
-    <string name="enable_web_debugging_summary">สามารถใช้เพื่อดีบัก WebUI ได้ โปรดเปิดใช้งานเฉพาะเมื่อจำเป็นเท่านั้น</string>
     <string name="patch_item_extra_event">เหตุการณ์:</string>
     <string name="home_system_version">เวอร์ชันระบบ</string>
     <string name="hide_apatch_manager">ซ่อนตัวจัดการ APatch</string>
@@ -158,7 +153,6 @@
     <string name="settings_donot_store_superkey">ห้ามเก็บซุปเปอร์คีย์ไว้ในเครื่อง</string>
     <string name="mode_select_page_title">ติดตั้ง</string>
     <string name="mode_select_page_patch_and_install">ยืนยันและติดตั้ง</string>
-    <string name="home_new_apatch_found">มีเวอร์ชันใหม่แล้ว: ,คลิกเพื่ออัปเกรด</string>
     <string name="about_powered_by">ปฎิบัติการโดย %1$s</string>
     <string name="patch_item_kpimg">เคพิงค์</string>
     <string name="patch_item_existed_extra_kpm">มีอยู่</string>
@@ -198,7 +192,6 @@
     <string name="hide_apatch_dialog_new_manager_name">ชื่อผู้จัดการคนใหม่</string>
     <string name="hide_apatch_dialog_summary">จะถูกใช้เป็นป้ายแอปใหม่ที่แสดงในตัวเรียกใช้งาน</string>
     <string name="apm_webui_open">เปิด</string>
-    <string name="enable_web_debugging">เปิดใช้งานการดีบักเว็บวิว</string>
     <string name="mode_select_page_install_inactive_slot">ติดตั้งลงในพื้นที่ที่ไม่ได้ใช้งาน (หลัง OTA)</string>
     <string name="mode_select_page_install_inactive_slot_warning">อุปกรณ์ของคุณจะถูก **บังคับ** ให้รีเซ็ตไปยังพื้นที่ไม่ได้ใช้งานปัจจุบันหลังจากรีเซ็ต!\n\nใช้ตัวเลือกนี้เฉพาะหลังจาก OTA เสร็จสิ้นเท่านั้น\n\nดำเนินการต่อหรือไม่</string>
     <string name="settings_use_system_color_theme_summary">ใช้ธีมสีที่สร้างโดยระบบด้วยวอลเปเปอร์ปัจจุบัน</string>
