@@ -35,7 +35,6 @@
     <string name="kpm_args">引數</string>
     <string name="home_fingerprint">指紋</string>
     <string name="apatch_version">版本：%s</string>
-    <string name="apm_overlay_fs_not_available">裝置核心停用了 OverlayFS，你無法使用模組功能!</string>
     <string name="kpm_version">版本</string>
     <string name="su_refresh">重新整理</string>
     <string name="su_show_system_apps">顯示系統應用程式</string>
@@ -209,5 +208,4 @@
     <string name="crash_handle_copy">複製崩潰日誌</string>
     <string name="apm_action">執行</string>
     <string name="crash_handle_copied">已將崩潰日誌複製到剪貼簿。</string>
-    <string name="settings_force_overlayfs_mode">強制使用 OverlayFS</string>
 </resources>

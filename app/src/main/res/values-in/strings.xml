@@ -47,7 +47,6 @@
     <string name="apm_remove">Hapus</string>
     <string name="apm_uninstall_confirm">Hapus modul \"%s\"?</string>
     <string name="apm_version">Versi</string>
-    <string name="apm_overlay_fs_not_available">Modul tidak tersedia karena OverlayFS dinonaktifkan oleh kernel!</string>
     <string name="apm_uninstall_failed">Gagal menghapus %s</string>
     <string name="apm_magisk_conflict">Modul tidak tersedia karena ada konflik dengan Magisk!</string>
     <string name="apm_desc">Ket.</string>
@@ -207,8 +206,4 @@
     <string name="crash_handle_copy">Salin log kerusakan</string>
     <string name="crash_handle_title">Aplikasi telah berhenti…</string>
     <string name="crash_handle_copied">Log kerusakan telah disalin.</string>
-    <string name="settings_lite_mode">Aktifkan Mode Lite</string>
-    <string name="settings_lite_mode_mode_summary">APModule mungkin gagal berfungsi setelah diaktifkan, tapi terkadang masih tetap efektif dalam menghindari deteksi. Reboot diperlukan.</string>
-    <string name="settings_force_overlayfs_mode">Penggunaan Paksa OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Jika kernel mendukung, APMount menggunakan OverlayFS dibandingkan MagicMount. Reboot dibutuhkan.</string>
 </resources>

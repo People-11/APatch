@@ -73,7 +73,6 @@
     <string name="apm_uninstall_confirm">الغاء تثبيت إضافة \"%s\"؟</string>
     <string name="apm_uninstall_success">تم الغاء التثبيت %s</string>
     <string name="apm_uninstall_failed">لا يمكن الغاء تثبيت %s</string>
-    <string name="apm_overlay_fs_not_available">الإضافات غير متاحة نظرًا لتعطيل نظام OverlayFS بواسطة النواة.</string>
     <string name="apm_magisk_conflict">الإضافات غير متاحة بسبب التعارض مع ماجيسك.</string>
     <string name="apm_reboot_to_apply">أعد التشغيل ليصبح ساري المفعول</string>
     <string name="system_default">النظام الافتراضي</string>

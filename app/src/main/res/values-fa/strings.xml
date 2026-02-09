@@ -189,7 +189,6 @@
     <string name="orange_theme">نارنجی</string>
     <string name="pink_theme">صورتی</string>
     <string name="about_app_version">نسخه %1$s</string>
-    <string name="apm_overlay_fs_not_available">ماژول ها در دسترس نیستند زیرا OverlayFS توسط هسته غیرفعال شده است!</string>
     <string name="mode_select_page_title">نصب</string>
     <string name="home_more_menu_feedback_or_suggestion">بازخورد یا پیشنهاد</string>
     <string name="apm_start_downloading">شروع بارگیری %s</string>

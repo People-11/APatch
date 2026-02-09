@@ -25,7 +25,6 @@
     <string name="su_selinux_via_hook">Aggira tramite hook</string>
     <string name="home_ap_cando_uninstall">Disinstalla</string>
     <string name="apatch_version">Versione: %s</string>
-    <string name="apm_overlay_fs_not_available">I moduli non sono disponibili poiché OverlayFS è disabilitato dal kernel</string>
     <string name="kpm_version">Versione</string>
     <string name="su_refresh">Ricarica</string>
     <string name="safe_mode">Modalità provvisoria</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_title">App chiusa in modo anomalo..</string>
     <string name="crash_handle_copy">Copia registro di arresto anomalo</string>
     <string name="apm_action">Azione</string>
-    <string name="settings_lite_mode">Abilita la modalità Lite</string>
-    <string name="settings_lite_mode_mode_summary">Le funzioni APModule potrebbero presentare errori dopo essere state abilitate, ma in alcuni casi possono comunque eludere efficacemente il rilevamento. Riavvio richiesto.</string>
-    <string name="settings_force_overlayfs_mode">Forza l\'uso di OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Utilizzare OverlayFS per montare gli APModuli invece di Magic Mount quando il supporto del kernel è disponibile. Riavviare il sistema.</string>
 </resources>

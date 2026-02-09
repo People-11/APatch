@@ -361,3 +361,27 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
     }
     return fileName
 }
+
+// Mount mode constants
+const val MOUNT_MODE_MAGIC = "magic"
+const val MOUNT_MODE_METAMODULE = "metamodule"
+const val MOUNT_MODE_DISABLED = "disabled"
+const val MOUNT_MODE_FILE = "/data/adb/.mount_mode"
+
+fun getMountMode(): String {
+    val shell = getRootShell()
+    val result = ShellUtils.fastCmd(shell, "cat $MOUNT_MODE_FILE 2>/dev/null || echo magic")
+    val mode = result.trim()
+    Log.i(TAG, "getMountMode: $mode")
+    return when (mode) {
+        MOUNT_MODE_MAGIC, MOUNT_MODE_METAMODULE, MOUNT_MODE_DISABLED -> mode
+        else -> MOUNT_MODE_MAGIC  // Default to magic mount
+    }
+}
+
+fun setMountMode(mode: String) {
+    getRootShell().newJob().add("echo $mode > $MOUNT_MODE_FILE")
+        .submit { result ->
+            Log.i(TAG, "setMountMode($mode) result: ${result.isSuccess}")
+        }
+}

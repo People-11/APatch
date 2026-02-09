@@ -9,6 +9,12 @@ pub const AP_RC_PATH: &str = concatcp!(WORKING_DIR, ".aprc");
 pub const GLOBAL_NAMESPACE_FILE: &str = concatcp!(ADB_DIR, ".global_namespace_enable");
 pub const DAEMON_PATH: &str = concatcp!(ADB_DIR, "apd");
 
+// Mount mode configuration
+pub const MOUNT_MODE_FILE: &str = concatcp!(ADB_DIR, ".mount_mode");
+pub const MOUNT_MODE_MAGIC: &str = "magic";
+pub const MOUNT_MODE_METAMODULE: &str = "metamodule";
+pub const MOUNT_MODE_DISABLED: &str = "disabled";
+
 pub const MODULE_DIR: &str = concatcp!(ADB_DIR, "modules/");
 
 // warning: this directory should not change, or you need to change the code in module_installer.sh!!!
@@ -22,6 +28,7 @@ pub const MODULE_ACTION_SH: &str = "action.sh";
 pub const DISABLE_FILE_NAME: &str = "disable";
 pub const UPDATE_FILE_NAME: &str = "update";
 pub const REMOVE_FILE_NAME: &str = "remove";
+pub const SKIP_MOUNT_FILE_NAME: &str = "skip_mount";
 
 // Metamodule support
 pub const METAMODULE_MOUNT_SCRIPT: &str = "metamount.sh";

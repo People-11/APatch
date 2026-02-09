@@ -132,7 +132,6 @@
     <string name="apm_version">பதிப்பு</string>
     <string name="apm_author">நூலாசிரியர்</string>
     <string name="apm_desc">டெச்க்</string>
-    <string name="apm_overlay_fs_not_available">கர்னலால் மேலடுக்குகள் முடக்கப்பட்டிருப்பதால் தொகுதிகள் கிடைக்கவில்லை!</string>
     <string name="apm_magisk_conflict">மேகிசுடனான மோதல் காரணமாக தொகுதிகள் கிடைக்கவில்லை!</string>
     <string name="apm_reboot_to_apply">நடைமுறைக்கு வர மறுதொடக்கம் செய்யுங்கள்</string>
     <string name="apm_changelog">மாற்றபதிவு</string>

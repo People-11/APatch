@@ -77,7 +77,6 @@
     <string name="su_pkg_excluded_setting_summary">এই অপশনটি দ্বারা APatch App এর ভিতরে মডিউল দ্বারা পরিবর্তন হওয়া ফাইল পুনরুদ্ধার করতে পারবে।</string>
     <string name="su_show_system_apps">সিস্টেম অ্যাপ দেখাও</string>
     <string name="kpm_apm_empty">কোনো মডিউল লোড করা হয়নি</string>
-    <string name="apm_overlay_fs_not_available">কার্নেল দ্বারা OverlayFS বন্ধ হওয়ার কারণে মডিউলগুলি পাওয়া যায়নি!</string>
     <string name="apm_magisk_conflict">মডিউলগুলো পাওয়া যায়নি কারণ Magisk এর ভিতর ও একই মডিউল আছে যা সাংঘর্ষিক!</string>
     <string name="apm_new_version_available">নতুন ভার্সনটি ইনস্টল করতে ক্লিক করুন, %s।</string>
     <string name="su_pkg_excluded_setting_title">পরিবর্তন যা আছে তা বাদ দিন</string>
@@ -207,8 +206,4 @@
     <string name="deep_purple_theme">গাড় বেগুনি</string>
     <string name="crash_handle_copy">ক্রাশ এর লগ কপি করুন</string>
     <string name="sakura_theme">সাকুরা</string>
-    <string name="settings_lite_mode">লাইট মোড চালু করুন</string>
-    <string name="settings_lite_mode_mode_summary">APModule ফাংশনগুলি সক্রিয় করার পরে ক্ষতির সম্মুখীন হতে পারে, কিন্তু মাঝে মধ্যে এটি কার্যকরভাবে সনাক্তকরণ এড়াতে পারে, রিবুট প্রয়োজন।</string>
-    <string name="settings_force_overlayfs_mode">জোর পুর্বক OverlayFS ব্যাবহার করুন</string>
-    <string name="settings_force_overlayfs_mode_summary">OverlayFS ব্যাবহার করে APModules মাউন্ট করুন ম্যাজিক মাউন্ট এর পরিবর্তে যদি কার্নেল এটা সাপোর্ট করে, রিবুট আবশ্যক।</string>
 </resources>

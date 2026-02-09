@@ -75,7 +75,6 @@
     <string name="apm_new_version_available">Versiunea noua disponibila: %s, apasă pentru a actualiza.</string>
     <string name="apm_author">Autor</string>
     <string name="apm_desc">Descriere</string>
-    <string name="apm_overlay_fs_not_available">Modulele nu sunt disponibile deoarece OverlayFS este dezactivat de kernel!</string>
     <string name="apm_magisk_conflict">Modulele nu sunt disponibile din cauza unui conflict cu Magisk!</string>
     <string name="apm_reboot_to_apply">Repornește pentru a intra în vigoare</string>
     <string name="apm_changelog">Jurnalul modificărilor</string>
@@ -211,8 +210,4 @@
     <string name="crash_handle_title">Aplicația s-a blocat…</string>
     <string name="crash_handle_copy">Copiază jurnalul de eroare</string>
     <string name="crash_handle_copied">Jurnal de eroare copiat în clipboard.</string>
-    <string name="settings_lite_mode">Activați mod Lite</string>
-    <string name="settings_lite_mode_mode_summary">Funcții APModule pot prezenta eșecuri după ce sunt pornite, dar în câteva cazuri ele pot în continuare sa evadeze detecție. Repornire nevoită.</string>
-    <string name="settings_force_overlayfs_mode">Forțează utilizarea de OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Utilizați OverlayFS sa montați APModules în loc de Magic Mount când suport de kernel este disponibil. Repornire nevoită.</string>
 </resources>

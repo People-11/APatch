@@ -145,7 +145,6 @@
     <string name="apm_uninstall_failed">%s:n asennusta ei voitu poistaa</string>
     <string name="apm_version">Versio</string>
     <string name="apm_author">Tekijä</string>
-    <string name="apm_overlay_fs_not_available">Moduulit eivät ole saatavilla, koska Kernel on poistanut OverlayFS:n käytöstä!</string>
     <string name="apm_magisk_conflict">Moduuleja ei ole saatavilla ristiriidan vuoksi Magiskin kanssa!</string>
     <string name="apm_reboot_to_apply">Käynnistä uudelleen, jotta se tulee voimaan</string>
     <string name="apm_changelog">Muutosloki</string>

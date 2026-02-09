@@ -70,7 +70,6 @@
     <string name="apm_version">Versión</string>
     <string name="apm_start_downloading">Descargar %s</string>
     <string name="home_ap_cando_uninstall">Desinstalar</string>
-    <string name="apm_overlay_fs_not_available">¡Los módulos no están disponibles ya que OverlayFS está desactivado por el kernel!</string>
     <string name="su_refresh">Actualizar</string>
     <string name="apm_failed_to_disable">No se pudo desactivar el módulo «%s»</string>
     <string name="kernel_patch">KernelPatch</string>
@@ -207,8 +206,4 @@
     <string name="crash_handle_copy">Copiar registro de fallos</string>
     <string name="crash_handle_title">La aplicación ha fallado…</string>
     <string name="crash_handle_copied">Se copió el registro de fallos al portapapeles.</string>
-    <string name="settings_lite_mode">Activar el modo ligero</string>
-    <string name="settings_lite_mode_mode_summary">Puede que no todas las funciones de los APModules funcionen en este modo, pero se evitan posibles detecciones. Es necesario reiniciar para que surta efecto.</string>
-    <string name="settings_force_overlayfs_mode">Forzar el uso de OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Si el kernel lo admite, se utilizará OverlayFS para montar las carpetas de los APModules en vez de Magic Mount. Es necesario reiniciar para que surta efecto.</string>
 </resources>

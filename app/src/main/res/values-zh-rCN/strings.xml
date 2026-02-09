@@ -8,7 +8,7 @@
     <string name="save_log">保存日志</string>
     <string name="log_saved">日志已保存</string>
     <string name="send_log">发送日志</string>
-    <string name="patch_warnning">安装过程存在风险，请确保您的数据已备份。</string>
+    <string name="patch_warnning">安装过程存在风险，请确保您的数据已备份</string>
     <string name="home_patch_set_key_desc">内核补丁的唯一授权凭证</string>
     <string name="home_install_unknown">未安装或未鉴权</string>
     <string name="home_install_unknown_summary">点此安装</string>
@@ -68,7 +68,7 @@
     <string name="kpm_apm_empty">尚未加载模块</string>
     <string name="kpm_load_toast_succ">加载成功</string>
     <string name="su_pkg_excluded_setting_title">排除修改</string>
-    <string name="su_pkg_excluded_setting_summary">针对此应用还原被模块改动的文件。</string>
+    <string name="su_pkg_excluded_setting_summary">针对此应用还原被模块改动的文件</string>
     <string name="su_pkg_excluded_label">排除模块</string>
     <string name="su_title">超级用户</string>
     <string name="kpm_desc">描述</string>
@@ -93,7 +93,6 @@
     <string name="no_meta_module_installed">模块未挂载，因为未安装元模块</string>
     <string name="apm_version">版本</string>
     <string name="apm_start_downloading">开始下载 %s</string>
-    <string name="apm_overlay_fs_not_available">模块功能不可用，因为内核禁用了 OverlayFS！</string>
     <string name="apm_changelog">更新日志</string>
     <string name="apm_uninstall_failed">无法卸载 %s</string>
     <string name="apm_downloading">正在下载“%s”模块……</string>
@@ -221,5 +220,12 @@
     <string name="apm_action">执行</string>
     <string name="crash_handle_title">应用崩溃了…</string>
     <string name="crash_handle_copy">复制崩溃日志</string>
-    <string name="crash_handle_copied">崩溃日志已复制到剪贴板。</string>
+    <string name="crash_handle_copied">崩溃日志已复制到剪贴板</string>
+    <string name="mount_mode">挂载模式</string>
+    <string name="mount_mode_magic">Magic Mount（内置）</string>
+    <string name="mount_mode_metamodule">Metamodule（元模块）</string>
+    <string name="mount_mode_disabled">禁用挂载（Lite 模式）</string>
+    <string name="mount_mode_magic_desc">使用 APatch 内置的模块挂载系统（推荐）</string>
+    <string name="mount_mode_metamodule_desc">使用元模块管理挂载</string>
+    <string name="mount_mode_disabled_desc">禁用所有模块挂载，仅加载脚本</string>
 </resources>

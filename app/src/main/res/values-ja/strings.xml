@@ -58,7 +58,6 @@
     <string name="apm_install">インストール</string>
     <string name="apm_author">制作者</string>
     <string name="apm_desc">説明</string>
-    <string name="apm_overlay_fs_not_available">カーネルによって OverlayFS が無効なため、モジュールを使用できません。</string>
     <string name="apm_reboot_to_apply">再起動して適用する</string>
     <string name="apm_changelog">変更履歴</string>
     <string name="kpatch_version">バージョン: %s</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_copy">クラッシュログをコピー</string>
     <string name="crash_handle_copied">クラッシュ ログをクリップボードにコピーしました。</string>
     <string name="crash_handle_title">アプリがクラッシュしました。</string>
-    <string name="settings_lite_mode">Liteモードを有効にする</string>
-    <string name="settings_lite_mode_mode_summary">APModuleの機能は、有効化された後に障害を示すことがあるが、場合によっては検出を効果的に回避することができる。再起動が必要です。</string>
-    <string name="settings_force_overlayfs_mode">OverlayFSの使用を強制する</string>
-    <string name="settings_force_overlayfs_mode_summary">カーネルのサポートが利用可能な場合、Magic Mountの代わりにOverlayFSを使用してAPModuleをマウントする。再起動が必要です。</string>
 </resources>
