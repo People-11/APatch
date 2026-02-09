@@ -13,11 +13,8 @@
     <string name="about">Om</string>
     <string name="settings_app_language">Språk</string>
     <string name="system_default">Systemstandard</string>
-    <string name="settings_check_update">Sök efter uppdatering</string>
     <string name="home_learn_apatch">Lär dig APatch</string>
     <string name="reboot_edl">Starta om till EDL</string>
-    <string name="settings_clear_super_key_dialog">Vill du verkligen fortsätta?</string>
-    <string name="settings_check_update_summary">Sök automatiskt efter uppdateringar när appen öppnas</string>
     <string name="settings_global_namespace_mode_summary">Alla root-sessioner använder det globala namnutrymme</string>
     <string name="safe_mode">Säkert läge</string>
     <string name="send_log">Skicka logg</string>
@@ -115,7 +112,6 @@
     <string name="setting_reset_su_new_path">ny fullständig genväg</string>
     <string name="hide_apatch_manager_failure">Döljningen misslyckades, vänligen rapportera buggen!</string>
     <string name="hide_apatch_dialog_summary">Det kommer att användas som en ny app-etikett som visas i startprogrammet</string>
-    <string name="enable_web_debugging">Aktivera felsökning för WebView</string>
     <string name="mode_select_page_patch_and_install">Patcha och installera</string>
     <string name="home_dialog_auth_fail_title">Autentiseringen misslyckades</string>
     <string name="home_more_menu_about">Om</string>
@@ -132,7 +128,6 @@
     <string name="about_powered_by">Drivs av %1$s</string>
     <string name="apm_action">Åtgärd</string>
     <string name="mode_select_page_title">Installera</string>
-    <string name="home_new_apatch_found">Ny version tillgänglig: %s, Klicka på mig för att uppgradera</string>
     <string name="home_dialog_uninstall_title">Avinstallera</string>
     <string name="kpm_control_paramters">Parametrar</string>
     <string name="kpm_control_outMsg">Meddelande</string>
@@ -160,7 +155,6 @@
     <string name="reboot_bootloader">Starta om till Bootloader</string>
     <string name="reboot_download">Starta om till Nedladdning</string>
     <string name="super_key">SuperNyckel</string>
-    <string name="clear_super_key">Rensa SuperNyckel</string>
     <string name="patch_set_superkey">Sätt SuperNyckel</string>
     <string name="home_not_installed">Inte installerad</string>
     <string name="patch_title">Patch</string>

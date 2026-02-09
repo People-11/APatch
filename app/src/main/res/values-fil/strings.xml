@@ -85,11 +85,9 @@
     <string name="system_default">Default ng system</string>
     <string name="settings_global_namespace_mode">Pandaigdigang Namespace Mode</string>
     <string name="settings_global_namespace_mode_summary">Ginagamit ng lahat ng root session ang pandaigdigang mount namespace</string>
-    <string name="settings_clear_super_key_dialog">Gusto mo ba talagang magpatuloy?</string>
     <string name="success">Matagumpay</string>
     <string name="failure">Hindi matagumpay</string>
     <string name="log_saved">Na-save ang Log</string>
     <string name="crash_handle_copy">Kopyahin ang log sa pag-crash</string>
     <string name="crash_handle_copied">Nakopya ang log sa pag-crash sa clipboard.</string>
-    <string name="clear_super_key">Alisin ang SuperKey</string>
 </resources>

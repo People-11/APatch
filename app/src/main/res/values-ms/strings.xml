@@ -17,7 +17,6 @@
     <string name="send_log">Hantar log</string>
     <string name="safe_mode">Safe mode</string>
     <string name="super_key">SuperKey</string>
-    <string name="clear_super_key">Clear Key</string>
     <string name="settings_app_language">Bahasa</string>
     <string name="home_click_to_learn_apatch">Ketahui tentang ciri-ciri APatch dan cara menggunakannya</string>
     <string name="system_default">Lalai sistem</string>
@@ -34,9 +33,6 @@
     <string name="success">Berjaya</string>
     <string name="failure">Gagal</string>
     <string name="settings_global_namespace_mode">Mod ruang nama global</string>
-    <string name="settings_clear_super_key_dialog">Adakah anda benar-benar mahu meneruskan?</string>
-    <string name="settings_check_update">Semak kemas kini</string>
-    <string name="settings_check_update_summary">Semak kemas kini secara automatik apabila membuka aplikasi</string>
     <string name="kpm_desc">Penerangan</string>
     <string name="patch_item_error">!!RALAT!!</string>
     <string name="patch_start_unpatch_btn">Menanggalkan tampalan</string>

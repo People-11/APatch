@@ -23,7 +23,6 @@
     <string name="home_patch_next_step">Suivant</string>
     <string name="home_install_unknown">Non installé ou authentifié</string>
     <string name="kpatch_version">Version : %s</string>
-    <string name="clear_super_key">Effacer la clé</string>
     <string name="home_su_path">Exécutable su</string>
     <string name="home_apatch_version">Version d\'APatch</string>
     <string name="apatch_version_update">Version : %s -&gt; %s</string>
@@ -93,7 +92,6 @@
     <string name="system_default">Système par défaut</string>
     <string name="settings_global_namespace_mode">Mode espace de nommage global</string>
     <string name="settings_global_namespace_mode_summary">Toutes les sessions root utilisent l\'espace de nommage global</string>
-    <string name="settings_clear_super_key_dialog">Voulez-vous vraiment continuer ?</string>
     <string name="kpatch_version_update">Version : %s -&gt; %s</string>
     <string name="home_kpatch_info_title">Info</string>
     <string name="home_ap_cando_reboot">Redémarrer</string>
@@ -140,15 +138,11 @@
     <string name="settings_donot_store_superkey_summary">Authentifier la clé à chaque démarrage du gestionnaire</string>
     <string name="mode_select_page_select_file">Sélectionner une image boot à patcher</string>
     <string name="mode_select_page_patch_and_install">Patcher et installer</string>
-    <string name="settings_check_update">Vérifier les mises à jour</string>
-    <string name="settings_check_update_summary">Vérifier automatiquement les mises à jour à l\'ouverture de l\'application</string>
     <string name="home_more_menu_about">À propos</string>
     <string name="home_install_unknown_summary">Cliquer pour installer</string>
     <string name="home_device_info">Appareil</string>
     <string name="home_system_version">Version du système</string>
     <string name="home_kpatch_version">Version de KernelPatch</string>
-    <string name="enable_web_debugging_summary">Peut être utilisé pour déboguer l\'interface web, n\'activer cette option qu\'en cas de besoin.</string>
-    <string name="home_new_apatch_found">Nouvelle version disponible : %s, Cliquer pour mettre à jour.</string>
     <string name="home_dialog_auth_fail_title">Echec de l\'authentification</string>
     <string name="home_dialog_uninstall_title">Désinstaller</string>
     <string name="home_dialog_uninstall_ap_only">Supprimer AndroidPatch</string>
@@ -164,7 +158,6 @@
     <string name="home_dialog_auth_fail_content">Impossible d\'authentifier la clé, par conséquent APatch ne peut pas fonctionner correctement. \nVoici quelques raisons possibles de l\'échec de l\'authentification : \n1. Vous n\'avez pas patché l\'image de démarrage avec KernelPatch. \n2. L\'image de démarrage patchée n\'a pas été flashée. \n3. La clé est erronée. \n4. Votre appareil ne prend pas en charge APatch et KernelPatch. \n \nVeuillez vérifier et réessayer. Si des problèmes persistent, vous pouvez toujours poser vos questions sur le dépôt officiel.</string>
     <string name="settings_donot_store_superkey">Ne pas stocker la clé localement</string>
     <string name="apm_webui_open">Ouvrir l\'interface web</string>
-    <string name="enable_web_debugging">Activer le débogage WebView</string>
     <string name="kpm_control">Contrôle</string>
     <string name="settings_night_mode_follow_sys">Suivre le thème sombre du système</string>
     <string name="teal_theme">Thème sarcelle</string>

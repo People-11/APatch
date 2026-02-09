@@ -70,7 +70,6 @@
     <string name="home_learn_apatch">APatch 알아보기</string>
     <string name="send_log">로그 보내기</string>
     <string name="super_key">SuperKey</string>
-    <string name="clear_super_key">SuperKey 지우기</string>
     <string name="patch_set_superkey">SuperKey 설정</string>
     <string name="patch_title">패치</string>
     <string name="su_title">슈퍼유저</string>
@@ -93,8 +92,6 @@
     <string name="apm_desc">설명</string>
     <string name="settings_global_namespace_mode">글로벌 네임스페이스 모드</string>
     <string name="settings_global_namespace_mode_summary">모든 루트 세션은 글로벌 마운트 세션을 사용합니다</string>
-    <string name="settings_check_update">업데이트 확인</string>
-    <string name="settings_check_update_summary">앱을 열 때 자동으로 업데이트 확인</string>
     <string name="home_kpatch_info_title">정보</string>
     <string name="kpatch_shadow_path_title">kpatch</string>
     <string name="patch_item_kpimg_comile_time">시간:</string>
@@ -110,7 +107,6 @@
     <string name="hide_apatch_dialog_new_manager_name">새 관리자 이름</string>
     <string name="hide_apatch_manager_summary">무작위 패키지 ID와 맞춤 이름으로 관리자 앱 설치하기</string>
     <string name="patch_item_extra_kpm_desciption">설명:</string>
-    <string name="home_new_apatch_found">새 버전 사용 가능: %s, 업그레이드하려면 클릭하세요</string>
     <string name="kpatch_version_update">버전: %s -&gt; %s</string>
     <string name="home_more_menu_about">정보</string>
     <string name="home_more_menu_feedback_or_suggestion">피드백 또는 제안</string>
@@ -158,12 +154,9 @@
     <string name="patch_item_bootimg_dev">장치:</string>
     <string name="setting_reset_su_path">su 경로 초기화</string>
     <string name="apm_webui_open">열기</string>
-    <string name="enable_web_debugging">WebView 디버깅 활성화</string>
-    <string name="enable_web_debugging_summary">WebUI를 디버그할 때 사용할 수 있습니다. 필요한 경우에만 활성화하세요.</string>
     <string name="settings_donot_store_superkey">기기에 SuperKey 저장하지 않기</string>
     <string name="success">성공</string>
     <string name="failure">실패</string>
-    <string name="settings_clear_super_key_dialog">정말로 계속하시겠습니까?</string>
     <string name="kpm_control_dialog_title">KPModule 제어</string>
     <string name="kpm_control_dialog_content">제어 매개 변수 입력:</string>
     <string name="kpm_control">제어</string>

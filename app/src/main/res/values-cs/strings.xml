@@ -31,16 +31,13 @@
     <string name="system_default">Systém (výchozí)</string>
     <string name="settings_global_namespace_mode">Režim globálního jmenného prostoru</string>
     <string name="settings_global_namespace_mode_summary">Všechny kořenové relace používají připojený globální jmenný prostor</string>
-    <string name="settings_clear_super_key_dialog">Opravdu chcete pokračovat?</string>
     <string name="patch_item_new_extra_kpm">Vložit nový</string>
     <string name="purple_theme">Fialové</string>
-    <string name="settings_check_update">Zkontrolovat aktualizace</string>
     <string name="patch_item_kpimg_version">Verze:</string>
     <string name="patch_item_kpimg_comile_time">Čas:</string>
     <string name="patch_item_kpimg_config">Konfigurace:</string>
     <string name="send_log">Odeslat protokoly</string>
     <string name="safe_mode">Nouzový režim</string>
-    <string name="clear_super_key">Vymazat SuperKlíč</string>
     <string name="patch_set_superkey">Nastavit SuperKlíč</string>
     <string name="home_not_installed">Nenainstalováno</string>
     <string name="home_install_unknown">Není nainstalováno nebo ověřeno</string>
@@ -50,7 +47,6 @@
     <string name="apatch_version">Verze: %s</string>
     <string name="apatch_version_update">Verze: %s -&gt; %s</string>
     <string name="patch_item_bootimg_dev">zařízení:</string>
-    <string name="settings_check_update_summary">Automaticky kontrolovat aktualizace při otevření aplikace</string>
     <string name="save_log">Uložit protokoly</string>
     <string name="log_saved">Protokoly uloženy</string>
     <string name="super_key">SuperKlíč</string>
@@ -132,12 +128,10 @@
     <string name="kpm_args">Parametry</string>
     <string name="su_title">SuperUživatel</string>
     <string name="su_selinux_via_hook">obejít přes háček</string>
-    <string name="enable_web_debugging">Povolit ladění WebView</string>
     <string name="settings_donot_store_superkey">Neukládat SuperKlíč v zařízení</string>
     <string name="kernel_patch">KernelPatch</string>
     <string name="android_patch">AndroidPatch</string>
     <string name="apm_uninstall_failed">Nelze odinstalovat %s</string>
-    <string name="enable_web_debugging_summary">Může být použito k ladění WebUI. Prosím, tuto možnost povolte pouze v případě potřeby.</string>
     <string name="apm_empty">Není nainstalován žádný modul</string>
     <string name="apm_uninstall_confirm">Odinstalovat modul \"%s?</string>
     <string name="apm_magisk_conflict">Moduly nejsou k dispozici kvůli konfliktu s Magiskem!</string>
@@ -155,7 +149,6 @@
     <string name="patch_item_kpimg">kpimg</string>
     <string name="home_more_menu_about">O projektu</string>
     <string name="patch_item_bootimg">bootimg</string>
-    <string name="home_new_apatch_found">Je k dispozici nová verze: %s, kliknutím aktualizovat.</string>
     <string name="mode_select_page_select_file">Vybrat a záplatovat bootovací obraz</string>
     <string name="kpm_control_dialog_title">Ovládání KPModulu</string>
     <string name="home_dialog_auth_fail_content">Nelze ověřit SuperKlíč, proto APatch nemůže správně fungovat.\nZde jsou některé možné důvody selhání:\n1. Bootovací obraz nebyl opraven pomocí KernelPatch.\n2. Opravený bootovací obraz nebyl flashován.\n3. SuperKlíč je špatný.\n4. Vaše zařízení nepodporuje APatch a KernelPatch.\n\nZkontrolujte prosím a zkuste to znovu. Pokud problémy přetrvávají, můžete se zeptat na stránce s problémy oficiálního úložiště.</string>
