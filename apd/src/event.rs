@@ -20,7 +20,7 @@ use notify::{
 use signal_hook::{consts::signal::*, iterator::Signals};
 
 use crate::{
-    assets, defs, lua, metamodule, module, restorecon, supercall,
+    assets, defs, lua, magic_mount, metamodule, module, restorecon, supercall,
     supercall::{
         init_load_package_uid_config, init_load_su_path, refresh_ap_package_list,
     },
@@ -38,8 +38,6 @@ pub fn report_kernel(superkey: Option<String>, event: &str, state: &str) -> Resu
     let _ = utils::run_command("truncate", &args_ref, None)?.wait()?;
     Ok(())
 }
-
-
 
 pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
     utils::umask(0);
@@ -185,8 +183,27 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
         warn!("load sepolicy.rule failed");
     }
 
-    if let Err(e) = metamodule::exec_mount_script(module_dir) {
-        warn!("execute metamodule mount failed: {e}");
+    // Mount modules based on configured mount mode
+    let mount_mode = utils::get_mount_mode();
+    info!("Current mount mode: {}", mount_mode);
+
+    match mount_mode.as_str() {
+        defs::MOUNT_MODE_DISABLED => {
+            info!("Mount disabled (lite mode), skipping all module mounts");
+        }
+        defs::MOUNT_MODE_METAMODULE => {
+            // Use metamodule's custom mount script
+            if let Err(e) = metamodule::exec_mount_script(module_dir) {
+                warn!("execute metamodule mount failed: {e}");
+            }
+        }
+        defs::MOUNT_MODE_MAGIC | _ => {
+            // Use built-in magic mount (bind mount) (default for backwards compatibility)
+            info!("Using Magic Mount (bind mount) mode");
+            if let Err(e) = magic_mount::magic_mount() {
+                warn!("magic mount failed: {}", e);
+            }
+        }
     }
 
     // exec modules post-fs-data scripts
@@ -228,9 +245,11 @@ fn run_stage(stage: &str, superkey: Option<String>, block: bool) {
         return;
     }
 
-    // execute metamodule stage script first (priority)
-    if let Err(e) = metamodule::exec_stage_script(stage, block) {
-        warn!("Failed to exec metamodule {stage} script: {e}");
+    // execute metamodule stage script first (priority) (only in metamodule mode)
+    if utils::get_mount_mode() == defs::MOUNT_MODE_METAMODULE {
+        if let Err(e) = metamodule::exec_stage_script(stage, block) {
+            warn!("Failed to exec metamodule {stage} script: {e}");
+        }
     }
 
     if let Err(e) = module::exec_common_scripts(&format!("{stage}.d"), block) {

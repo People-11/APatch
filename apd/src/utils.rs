@@ -157,3 +157,19 @@ pub fn get_tmp_path() -> &'static str {
     }
     ""
 }
+pub fn get_mount_mode() -> String {
+    let mode_file = Path::new(defs::MOUNT_MODE_FILE);
+    if mode_file.exists() {
+        if let Result::Ok(content) = std::fs::read_to_string(mode_file) {
+            let mode = content.trim();
+            match mode {
+                defs::MOUNT_MODE_MAGIC | defs::MOUNT_MODE_METAMODULE | defs::MOUNT_MODE_DISABLED => {
+                    return mode.to_string();
+                }
+                _ => {}
+            }
+        }
+    }
+    // Default to magic mount for backwards compatibility
+    defs::MOUNT_MODE_MAGIC.to_string()
+}

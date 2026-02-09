@@ -63,7 +63,6 @@
     <string name="apm_not_installed">AndroidPatch nicht installiert</string>
     <string name="apm_empty">Kein Modul installiert</string>
     <string name="apm_uninstall_confirm">Modul \"%s\" deinstallieren?</string>
-    <string name="apm_overlay_fs_not_available">Module sind nicht verfügbar, da OverlayFS vom Kernel deaktiviert ist!</string>
     <string name="apm_reboot_to_apply">Neustarten, um Änderungen zu speichern</string>
     <string name="apm_new_version_available">Neue Version %s ist verfügbar, klicken Sie zum Aktualisieren.</string>
     <string name="apm_uninstall_success">%s deinstalliert</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_copy">Absturzprotokoll kopieren</string>
     <string name="crash_handle_copied">Absturzprotokoll in die Zwischenablage kopiert.</string>
     <string name="crash_handle_title">App ist abgestürzt…</string>
-    <string name="settings_lite_mode">Lite-Modus einschalten</string>
-    <string name="settings_lite_mode_mode_summary">APModul-Funktionen können nach ihrer Aktivierung Fehler aufweisen, aber in einigen Fällen können sie immer noch effektiv die Erkennung vermeiden. Neustart erforderlich.</string>
-    <string name="settings_force_overlayfs_mode">Verwendung von OverlayFS erzwingen</string>
-    <string name="settings_force_overlayfs_mode_summary">Verwende, wenn Kernel-Unterstützung verfügbar ist, OverlayFS zum Einhängen von APModulen anstelle von Magic Mount. Neustart erforderlich.</string>
 </resources>

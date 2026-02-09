@@ -62,7 +62,6 @@
     <string name="home_learn_apatch">Prozkoumat APatch</string>
     <string name="patch_start_unpatch_btn">Odstranit záplatu</string>
     <string name="apm_uninstall_success">%s odinstalován</string>
-    <string name="apm_overlay_fs_not_available">Moduly nejsou k dispozici, protože OverlayFS je zakázáno jádrem!</string>
     <string name="kpatch_shadow_path_title">kpatch</string>
     <string name="home_kpatch_info_title">Informace</string>
     <string name="home_auth_key_desc">Spustit po ověření</string>

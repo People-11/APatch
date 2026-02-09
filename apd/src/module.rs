@@ -47,9 +47,12 @@ fn exec_install_script(module_file: &str, is_metamodule: bool) -> Result<()> {
     let realpath = std::fs::canonicalize(module_file)
         .with_context(|| format!("realpath: {module_file} failed"))?;
 
-    // Get install script from metamodule module
-    let install_script =
-        metamodule::get_install_script(is_metamodule, INSTALLER_CONTENT, INSTALL_MODULE_SCRIPT)?;
+    // Get install script from metamodule module if in metamodule mode
+    let install_script = if get_mount_mode() == defs::MOUNT_MODE_METAMODULE {
+        metamodule::get_install_script(is_metamodule, INSTALLER_CONTENT, INSTALL_MODULE_SCRIPT)?
+    } else {
+        INSTALL_MODULE_SCRIPT.to_string()
+    };
 
     let result = Command::new(assets::BUSYBOX_PATH)
         .args(["sh", "-c", &install_script])
@@ -304,13 +307,15 @@ pub fn prune_modules() -> Result<()> {
             .map(|props| metamodule::is_metamodule(&props))
             .unwrap_or(false);
 
-        if is_metamodule {
-            info!("Removing metamodule symlink");
-            if let Err(e) = metamodule::remove_symlink() {
-                warn!("Failed to remove metamodule symlink: {e}");
+        if get_mount_mode() == defs::MOUNT_MODE_METAMODULE {
+            if is_metamodule {
+                info!("Removing metamodule symlink");
+                if let Err(e) = metamodule::remove_symlink() {
+                    warn!("Failed to remove metamodule symlink: {e}");
+                }
+            } else if let Err(e) = metamodule::exec_metauninstall_script(module_id) {
+                warn!("Failed to exec metamodule uninstall for {module_id}: {e}",);
             }
-        } else if let Err(e) = metamodule::exec_metauninstall_script(module_id) {
-            warn!("Failed to exec metamodule uninstall for {module_id}: {e}",);
         }
 
         // Then execute module's own uninstall.sh
@@ -385,8 +390,12 @@ fn _install_module(zip: &str) -> Result<()> {
         has_system && !has_skip_mount
     };
 
-    // Check if it's safe to install regular module
-    if !is_metamodule && needs_mount && let Err(is_disabled) = metamodule::check_install_safety() {
+    // Check if it's safe to install regular module (only in metamodule mode)
+    if get_mount_mode() == defs::MOUNT_MODE_METAMODULE
+        && !is_metamodule
+        && needs_mount
+        && let Err(is_disabled) = metamodule::check_install_safety()
+    {
         println!("\n❌ Installation Blocked");
         println!("┌────────────────────────────────");
         println!("│ A metamodule with custom installer is active");

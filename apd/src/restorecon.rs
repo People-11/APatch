@@ -11,7 +11,6 @@ use crate::defs;
 
 pub const SYSTEM_CON: &str = "u:object_r:system_file:s0";
 pub const ADB_CON: &str = "u:object_r:adb_data_file:s0";
-pub const UNLABEL_CON: &str = "u:object_r:unlabeled:s0";
 
 const SELINUX_XATTR: &str = "security.selinux";
 
@@ -35,7 +34,7 @@ pub fn lgetfilecon<P: AsRef<Path>>(path: P) -> Result<String> {
         )
     })?;
     let con = String::from_utf8_lossy(&con);
-    Ok(con.to_string())
+    Ok(con.trim_matches('\0').to_string())
 }
 
 #[cfg(any(target_os = "linux", target_os = "android"))]
@@ -53,30 +52,34 @@ pub fn lgetfilecon<P: AsRef<Path>>(path: P) -> Result<String> {
     unimplemented!()
 }
 
+pub fn ensure_con<P: AsRef<Path>>(path: P, target_con: &str) -> Result<()> {
+    #[cfg(any(target_os = "linux", target_os = "android"))]
+    {
+        // Optimization: Only set context if it is incorrect.
+        // Reading xattr is much cheaper than writing it.
+        match lgetfilecon(&path) {
+            Result::Ok(con) if con == target_con => return Ok(()),
+            _ => lsetfilecon(&path, target_con)?,
+        }
+    }
+    Ok(())
+}
+
+pub fn ensure_syscon<P: AsRef<Path>>(path: P) -> Result<()> {
+    ensure_con(path, SYSTEM_CON)
+}
+
 pub fn restore_syscon<P: AsRef<Path>>(dir: P) -> Result<()> {
     for dir_entry in WalkDir::new(dir).parallelism(Serial) {
         if let Some(path) = dir_entry.ok().map(|dir_entry| dir_entry.path()) {
-            setsyscon(&path)?;
+            ensure_syscon(&path)?;
         }
     }
     Ok(())
 }
 
-fn restore_syscon_if_unlabeled<P: AsRef<Path>>(dir: P) -> Result<()> {
-    for dir_entry in WalkDir::new(dir).parallelism(Serial) {
-        if let Some(path) = dir_entry.ok().map(|dir_entry| dir_entry.path()) {
-            if let Result::Ok(con) = lgetfilecon(&path) {
-                if con == UNLABEL_CON || con.is_empty() {
-                    lsetfilecon(&path, SYSTEM_CON)?;
-                }
-            }
-        }
-    }
-    Ok(())
-}
 
 pub fn restorecon() -> Result<()> {
-    lsetfilecon(defs::DAEMON_PATH, ADB_CON)?;
-    restore_syscon_if_unlabeled(defs::MODULE_DIR)?;
+    ensure_con(defs::DAEMON_PATH, ADB_CON)?;
     Ok(())
 }

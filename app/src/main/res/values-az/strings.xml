@@ -93,7 +93,6 @@
     <string name="kpm_version">Versiya</string>
     <string name="apm_install">Quraşdır</string>
     <string name="apm_not_installed">AndroidYamağı quraşdırılmayıb</string>
-    <string name="apm_overlay_fs_not_available">OverlayFS nüvə tərəfindən deaktiv edildiyi üçün modullar əlçatan deyil.</string>
     <string name="settings_global_namespace_mode">Global namespace mode</string>
     <string name="settings_global_namespace_mode_summary">Bütün kök sessiyaları qlobal bağlama adməkanından istifadə edir</string>
     <string name="settings_clear_super_key_dialog">Həqiqətən davam etmək istəyirsən?</string>
