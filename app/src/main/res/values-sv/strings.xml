@@ -107,7 +107,6 @@
     <string name="apm_changelog">Ändringslogg</string>
     <string name="apm_update">Uppdatering</string>
     <string name="apm_magisk_conflict">Modulerna är otillgängliga på grund av en konflikt med Magisk.</string>
-    <string name="apm_overlay_fs_not_available">Modulerna är otillgängliga eftersom att OverlayFS är inaktiverat av kärnan.</string>
     <string name="apm_downloading">Hämtar modulen \"%s\"…</string>
     <string name="apm_start_downloading">Påbörja hämtningen av %s</string>
     <string name="apm_new_version_available">Klicka för att installera den nya versionen, %s.</string>

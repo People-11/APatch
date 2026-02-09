@@ -88,7 +88,6 @@
     <string name="su_pkg_excluded_setting_summary">L\'activation de cette option permettra à APatch de restaurer tous les fichiers modifiés par les modules de cette application.</string>
     <string name="apm_remove">Désinstaller</string>
     <string name="su_pkg_excluded_setting_title">Exclure les modifications</string>
-    <string name="apm_overlay_fs_not_available">Les modules sont indisponibles car OverlayFS est désactivé par le noyau !</string>
     <string name="patch">Patcher</string>
     <string name="settings_app_language">Langue</string>
     <string name="system_default">Système par défaut</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_title">L\'application a planté…</string>
     <string name="crash_handle_copy">Copier le rapport de plantage</string>
     <string name="crash_handle_copied">Rapport de plantage copié dans le presse-papiers.</string>
-    <string name="settings_lite_mode">Activer le mode Lite</string>
-    <string name="settings_lite_mode_mode_summary">Les fonctions APModule peuvent présenter des défaillances après avoir été activées, mais dans certains cas, elles peuvent toujours éviter la détection. Redémarrage requis.</string>
-    <string name="settings_force_overlayfs_mode">Utilisation forcée de OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Utilisez OverlayFS pour monter APModules au lieu de Magic Mount lorsque le support du noyau est disponible. Redémarrage requis.</string>
 </resources>

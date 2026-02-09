@@ -86,7 +86,6 @@
     <string name="apm_downloading">Downloaden \"%s\" module…</string>
     <string name="apm_start_downloading">Begin met downloaden %s</string>
     <string name="apm_new_version_available">Een nieuwe versie %s is beschikbaar, klik om te upgraden.</string>
-    <string name="apm_overlay_fs_not_available">Modules zijn onbereikbaar als OverlayFS wordt uitgeschakeld door de kern!</string>
     <string name="apm_magisk_conflict">Modules zijn niet beschikbaar door een conflict met Magisk!</string>
     <string name="settings_clear_super_key_dialog">Wil je zeker verder gaan?</string>
     <string name="success">Succes</string>
@@ -207,8 +206,4 @@
     <string name="kpm_control">Controle</string>
     <string name="home_dialog_auth_fail_content">Niet in staat om de super sleutel te verifieren, daarom kan APatch niet correct werken.\nHier zijn een paar mogelijke redenen voor het falen van de verificatie:\n1. U heeft de opstart afbeelding niet opgelapt met KernLap.\n2. De opgelapte opstart afbeelding was niet geflashed.\n3. Super sleutel fout.\n4. Uw apparaat ondersteunt APatch en KernLap niet.\n\nGelieve te checken en opnieuwe te proberen. Indien er nog steeds problemen zijn, kan je steeds vragen stellen op de officiele respository\'s problemen pagina.</string>
     <string name="patch_start_unpatch_btn">Ontsnipperen</string>
-    <string name="settings_lite_mode">Lite-modus inschakelen</string>
-    <string name="settings_lite_mode_mode_summary">APModule-functies kunnen fouten vertonen nadat ze zijn ingeschakeld, maar in sommige gevallen kunnen ze detectie nog steeds effectief vermijden. Opnieuw opstarten is vereist.</string>
-    <string name="settings_force_overlayfs_mode">Forceer het gebruik van OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Gebruik OverlayFS om APModules te mounten in plaats van Magic Mount wanneer kernelondersteuning beschikbaar is. Herstarten is vereist.</string>
 </resources>

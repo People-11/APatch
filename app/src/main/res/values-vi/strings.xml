@@ -59,7 +59,6 @@
     <string name="apm_version">Phiên bản</string>
     <string name="apm_author">Tác giả</string>
     <string name="apm_desc">Mô tả</string>
-    <string name="apm_overlay_fs_not_available">Module không khả dụng do OverlayFS bị vô hiệu hoá bởi kernel!</string>
     <string name="apm_reboot_to_apply">Khởi động lại để có hiệu lực</string>
     <string name="apm_changelog">Nhật ký thay đổi</string>
     <string name="apm_update">Cập nhật</string>
@@ -209,8 +208,4 @@
     <string name="crash_handle_copy">Sao chép nhật ký sự cố</string>
     <string name="crash_handle_copied">Nhật ký sự cố đã được sao chép vào bảng tạm.</string>
     <string name="apm_action">Hoạt động</string>
-    <string name="settings_lite_mode">"Bật chế độ Lite "</string>
-    <string name="settings_lite_mode_mode_summary">Các hàm APModule có thể gặp lỗi sau khi được bật, nhưng trong một số trường hợp, chúng vẫn có thể tránh bị phát hiện. Cần khởi động lại.</string>
-    <string name="settings_force_overlayfs_mode">Buộc sử dụng OverlayFS</string>
-    <string name="settings_force_overlayfs_mode_summary">Sử dụng OverlayFS để gắn APModules thay vì Magic Mount khi có hỗ trợ kernel. Cần khởi động lại.</string>
 </resources>

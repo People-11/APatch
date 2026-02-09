@@ -41,7 +41,6 @@
     <string name="apm_version">APModule</string>
     <string name="su_pkg_excluded_setting_summary">การเปิดใช้งานตัวเลือกนี้จะช่วยให้ APatch กู้คืนไฟล์ที่ถูกปรับเปลี่ยนโดยโมดูลสำหรับแอปพลิเคชันนี้</string>
     <string name="apm_start_downloading">เริ่มดาวน์โหลด: %s</string>
-    <string name="apm_overlay_fs_not_available">0.0019ไม่มี OverlayFS โมดูลไม่สามารถทำงานได้.</string>
     <string name="su_show_system_apps">แสดงแอประบบ</string>
     <string name="apm_failed_to_disable">ไม่สามารถปิดการใช้งานโมดูล: %s</string>
     <string name="apm_uninstall_failed">กำลังดาวน์โหลดโมดูล: %s…</string>

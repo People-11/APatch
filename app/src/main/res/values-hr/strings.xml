@@ -86,7 +86,6 @@
     <string name="apm_uninstall_failed">Nije bilo moguće deinstalirati %s</string>
     <string name="apm_version">Verzija</string>
     <string name="apm_author">Autor</string>
-    <string name="apm_overlay_fs_not_available">Moduli nisu dostupni jer je OverlayFS onemogućeni od strane kernela.</string>
     <string name="apm_magisk_conflict">Moduli su nedostupni radi konflikta s Magiskom!</string>
     <string name="apm_reboot_to_apply">Ponovno pokreni za promjene</string>
     <string name="apm_changelog">Lista promjene</string>
