@@ -366,7 +366,7 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
 const val MOUNT_MODE_MAGIC = "magic"
 const val MOUNT_MODE_METAMODULE = "metamodule"
 const val MOUNT_MODE_DISABLED = "disabled"
-const val MOUNT_MODE_FILE = "/data/adb/.mount_mode"
+const val MOUNT_MODE_FILE = "/data/adb/ap/mount_mode"
 
 fun getMountMode(): String {
     val shell = getRootShell()

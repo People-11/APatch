@@ -221,4 +221,9 @@
     <string name="mount_mode_magic_desc">使用 APatch 内置的模块挂载系统（推荐）</string>
     <string name="mount_mode_metamodule_desc">使用元模块管理挂载</string>
     <string name="mount_mode_disabled_desc">禁用所有模块挂载，仅加载脚本</string>
+    
+    <string name="notification_app_installed_title">你已安装 %1$s</string>
+    <string name="notification_grant_root_question">是否要授予 Root 权限？</string>
+    <string name="notification_action_grant">授予</string>
+    <string name="notification_action_exclude">排除</string>
 </resources>

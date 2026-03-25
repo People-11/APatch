@@ -256,4 +256,9 @@
     <string name="mount_mode_magic_desc">Use APatch\'s built-in mounting system (Recommended)</string>
     <string name="mount_mode_metamodule_desc">Use third-party Metamodule to manage mounts</string>
     <string name="mount_mode_disabled_desc">Disable mounts, only load scripts</string>
+    
+    <string name="notification_app_installed_title">You have installed %1$s</string>
+    <string name="notification_grant_root_question">Would you like to grant root?</string>
+    <string name="notification_action_grant">Grant</string>
+    <string name="notification_action_exclude">Exclude</string>
 </resources>

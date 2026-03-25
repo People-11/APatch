@@ -57,6 +57,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler {
         private const val APD_LINK_PATH = APATCH_BIN_FOLDER + "apd"
         const val PACKAGE_CONFIG_FILE = APATCH_FOLDER + "package_config"
         const val SU_PATH_FILE = APATCH_FOLDER + "su_path"
+        const val MANAGER_PKG_FILE = APATCH_FOLDER + "manager_pkg"
         const val SAFEMODE_FILE = "/dev/.safemode"
         private const val NEED_REBOOT_FILE = "/dev/.need_reboot"
         const val GLOBAL_NAMESPACE_FILE = "/data/adb/.global_namespace_enable"
@@ -237,10 +238,38 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler {
                         }
                     }
                     Log.d(TAG, "ap state: " + _apStateLiveData.value)
+                    
+                    // Register manager package for install notifications after root is ready
+                    registerManagerPackage()
 
                     return@thread
                 }
             }
+        
+        private fun registerManagerPackage() {
+            val packageName = apApp.packageName
+            val receiverPath = "$packageName/me.bmax.apatch.InstallReceiver"
+            
+            // Write receiver path to manager_pkg file
+            rootShellForResult("echo -n '$receiverPath' > $MANAGER_PKG_FILE").also { result ->
+                if (result.isSuccess) {
+                    Log.d(TAG, "Manager package registered: $receiverPath")
+                } else {
+                    Log.w(TAG, "Failed to register manager package: ${result.err}")
+                }
+            }
+            
+            // Grant POST_NOTIFICATIONS permission for Android 13+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                rootShellForResult("pm grant --user 0 $packageName android.permission.POST_NOTIFICATIONS").also { result ->
+                    if (result.isSuccess) {
+                        Log.d(TAG, "POST_NOTIFICATIONS permission granted")
+                    } else {
+                        Log.w(TAG, "Failed to grant POST_NOTIFICATIONS: ${result.err}")
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreate() {

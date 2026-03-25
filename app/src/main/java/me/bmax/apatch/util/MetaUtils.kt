@@ -4,7 +4,7 @@ import com.topjohnwu.superuser.io.SuFile
 import com.topjohnwu.superuser.io.SuFileInputStream
 
 fun isMetaModuleMode(): Boolean {
-    val modeFile = SuFile.open("/data/adb/.mount_mode")
+    val modeFile = SuFile.open("/data/adb/ap/mount_mode")
     return if (modeFile.exists()) {
         try {
             SuFileInputStream.open(modeFile).use { 

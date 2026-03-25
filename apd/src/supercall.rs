@@ -2,7 +2,9 @@ use std::{
     ffi::{CStr, CString},
     fs::File,
     io::{self, Read},
+    os::unix::process::CommandExt,
     process,
+    process::Command,
     sync::{Arc, Mutex},
 };
 
@@ -10,6 +12,7 @@ use libc::{EINVAL, c_long, c_void, syscall, uid_t};
 use log::{error, info, warn};
 
 use crate::package::{read_ap_package_config, synchronize_package_uid};
+use crate::utils::switch_cgroups;
 
 const MAJOR: c_long = 0;
 const MINOR: c_long = 11;
@@ -232,9 +235,13 @@ pub fn refresh_ap_package_list(skey: &CStr, mutex: &Arc<Mutex<()>>) {
         }
     }
 
-    if let Err(e) = synchronize_package_uid() {
-        error!("Failed to synchronize package UIDs: {}", e);
-    }
+    let removed_packages = match synchronize_package_uid() {
+        Ok(removed) => removed,
+        Err(e) => {
+            error!("Failed to synchronize package UIDs: {}", e);
+            Vec::new()
+        }
+    };
 
     let package_configs = read_ap_package_config();
     for config in package_configs {
@@ -244,20 +251,84 @@ pub fn refresh_ap_package_list(skey: &CStr, mutex: &Arc<Mutex<()>>) {
                 to_uid: config.to_uid,
                 scontext: convert_string_to_u8_array(&config.sctx),
             };
-            let result = sc_su_grant_uid(skey, &profile);
-            info!(
-                "[refresh_ap_package_list] Loading {}: result = {}",
-                config.pkg, result
-            );
+            sc_su_grant_uid(skey, &profile);
         }
         if config.allow == 0 && config.exclude == 1 {
-            let result = sc_set_ap_mod_exclude(skey, config.uid as i64, 1);
-            info!(
-                "[refresh_ap_package_list] Loading exclude {}: result = {}",
-                config.pkg, result
-            );
+            sc_set_ap_mod_exclude(skey, config.uid as i64, 1);
         }
     }
+    
+    let (new_packages, uninstalled_packages) = crate::package::get_package_changes();
+    
+    let receiver_target = read_receiver_target("/data/adb/ap/manager_pkg");
+    let manager_pkg = receiver_target.as_ref().and_then(|t| t.split('/').next());
+    
+    new_packages.into_iter().for_each(|pkg| notify_app_change(&pkg, true, &receiver_target, manager_pkg));
+    
+    let mut all_removed = removed_packages;
+    all_removed.extend(uninstalled_packages);
+    all_removed.sort();
+    all_removed.dedup();
+    
+    all_removed.into_iter().for_each(|pkg| notify_app_change(&pkg, false, &receiver_target, manager_pkg));
+}
+
+fn notify_app_change(pkg_name: &str, is_install: bool, receiver_target: &Option<String>, manager_pkg: Option<&str>) {
+    let receiver = match receiver_target {
+        Some(target) => target,
+        None => return,
+    };
+
+    if let Some(mgr_pkg) = manager_pkg {
+        if pkg_name == mgr_pkg {
+            return;
+        }
+    }
+
+    send_broadcast(receiver, pkg_name, is_install);
+}
+
+fn read_receiver_target(path: &str) -> Option<String> {
+    let content = std::fs::read_to_string(path)
+        .map_err(|e| warn!("[read_receiver_target] Failed to read {}: {}", path, e))
+        .ok()?
+        .trim()
+        .to_string();
+
+    if content.is_empty() {
+        return None;
+    }
+
+    Some(if content.contains('/') {
+        content
+    } else {
+        format!("{}/{}.InstallReceiver", content, content)
+    })
+}
+
+fn send_broadcast(receiver: &str, pkg_name: &str, is_install: bool) {
+    let mut args = vec![
+        "broadcast",
+        "--user", "0",
+        "--include-stopped-packages",
+        "-n", receiver,
+        "--es", "pkg", pkg_name,
+    ];
+    if !is_install {
+        args.extend_from_slice(&["-a", "me.bmax.apatch.ACTION_APP_UNINSTALLED"]);
+    }
+
+    unsafe {
+        Command::new("/system/bin/am")
+            .args(&args)
+            .process_group(0)
+            .pre_exec(|| {
+                switch_cgroups();
+                Ok(())
+            })
+            .spawn()
+    }
+    .ok();
 }
 
 pub fn privilege_apd_profile(superkey: &Option<String>) {
@@ -288,8 +359,7 @@ pub fn init_load_package_uid_config(superkey: &Option<String>) {
                         to_uid: config.to_uid,
                         scontext: convert_string_to_u8_array(&config.sctx),
                     };
-                    let result = sc_su_grant_uid(key, &profile);
-                    info!("Processed {}: result = {}", config.pkg, result);
+                    sc_su_grant_uid(key, &profile);
                 }
                 _ => {
                     warn!("Superkey is None, skipping config: {}", config.pkg);
@@ -299,8 +369,7 @@ pub fn init_load_package_uid_config(superkey: &Option<String>) {
         if config.allow == 0 && config.exclude == 1 {
             match key {
                 Some(ref key) => {
-                    let result = sc_set_ap_mod_exclude(key, config.uid as i64, 1);
-                    info!("Processed exclude {}: result = {}", config.pkg, result);
+                    sc_set_ap_mod_exclude(key, config.uid as i64, 1);
                 }
                 _ => {
                     warn!("Superkey is None, skipping config: {}", config.pkg);

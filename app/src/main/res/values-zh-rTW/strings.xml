@@ -201,4 +201,9 @@
     <string name="crash_handle_copy">複製崩潰日誌</string>
     <string name="apm_action">執行</string>
     <string name="crash_handle_copied">已將崩潰日誌複製到剪貼簿。</string>
+    
+    <string name="notification_app_installed_title">你已安裝 %1$s</string>
+    <string name="notification_grant_root_question">是否要授予 Root 權限？</string>
+    <string name="notification_action_grant">授權</string>
+    <string name="notification_action_exclude">排除</string>
 </resources>

@@ -10,7 +10,7 @@ pub const GLOBAL_NAMESPACE_FILE: &str = concatcp!(ADB_DIR, ".global_namespace_en
 pub const DAEMON_PATH: &str = concatcp!(ADB_DIR, "apd");
 
 // Mount mode configuration
-pub const MOUNT_MODE_FILE: &str = concatcp!(ADB_DIR, ".mount_mode");
+pub const MOUNT_MODE_FILE: &str = concatcp!(WORKING_DIR, "mount_mode");
 pub const MOUNT_MODE_MAGIC: &str = "magic";
 pub const MOUNT_MODE_METAMODULE: &str = "metamodule";
 pub const MOUNT_MODE_DISABLED: &str = "disabled";

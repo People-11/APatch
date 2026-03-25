@@ -20,7 +20,8 @@ use notify::{
 use signal_hook::{consts::signal::*, iterator::Signals};
 
 use crate::{
-    assets, defs, lua, magic_mount, metamodule, module, restorecon, supercall,
+    assets, defs, lua, magic_mount, metamodule, module, package::initialize_package_baseline,
+    restorecon, supercall,
     supercall::{
         init_load_package_uid_config, init_load_su_path, refresh_ap_package_list,
     },
@@ -304,6 +305,10 @@ pub fn on_boot_completed(superkey: Option<String>) -> Result<()> {
 pub fn start_uid_listener() -> Result<()> {
     info!("start_uid_listener triggered!");
     println!("[start_uid_listener] Registering...");
+
+    if let Err(e) = initialize_package_baseline() {
+        warn!("[start_uid_listener] Failed to initialize package baseline: {}", e);
+    }
 
     // create inotify instance
     const SYS_PACKAGES_LIST_TMP: &str = "/data/system/packages.list.tmp";
