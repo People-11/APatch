@@ -226,4 +226,7 @@
     <string name="notification_grant_root_question">是否要授予 Root 权限？</string>
     <string name="notification_action_grant">授予</string>
     <string name="notification_action_exclude">排除</string>
+
+    <string name="settings_factory_props">修补出厂属性</string>
+    <string name="settings_factory_props_summary">隐藏敏感属性以绕过 Root 检测</string>
 </resources>

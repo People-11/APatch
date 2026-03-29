@@ -350,6 +350,20 @@ fun setGlobalNamespaceEnabled(value: String) {
         }
 }
 
+fun isFactoryPropsEnabled(): Boolean {
+    val shell = getRootShell()
+    val result = ShellUtils.fastCmd(shell, "cat ${APApplication.FACTORY_PROPS_FILE}")
+    Log.i(TAG, "is factory props enabled: $result")
+    return result == "1"
+}
+
+fun setFactoryPropsEnabled(value: String) {
+    getRootShell().newJob().add("echo $value > ${APApplication.FACTORY_PROPS_FILE}")
+        .submit { result ->
+            Log.i(TAG, "setFactoryPropsEnabled result: ${result.isSuccess} [${result.out}]")
+        }
+}
+
 fun getFileNameFromUri(context: Context, uri: Uri): String? {
     var fileName: String? = null
     val contentResolver: ContentResolver = context.contentResolver

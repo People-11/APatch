@@ -17,6 +17,7 @@ mod mpolicy;
 mod supercall;
 mod utils;
 mod resetprop;
+mod hide;
 fn main() -> anyhow::Result<()> {
     cli::run()
 }

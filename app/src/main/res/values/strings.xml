@@ -261,4 +261,7 @@
     <string name="notification_grant_root_question">Would you like to grant root?</string>
     <string name="notification_action_grant">Grant</string>
     <string name="notification_action_exclude">Exclude</string>
+
+    <string name="settings_factory_props">Factory Props</string>
+    <string name="settings_factory_props_summary">Hide sensitive props to bypass root detection</string>
 </resources>

@@ -29,7 +29,7 @@ fun getGitDescribe(): String {
 fun getVersionCode(): Int {
     val commitCount = getGitCommitCount()
     val major = 1
-    return major * 10000 + commitCount + 200 - 6
+    return major * 10000 + commitCount + 200 - 7
 }
 
 fun getBranch(): String {

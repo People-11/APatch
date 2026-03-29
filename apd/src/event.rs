@@ -220,6 +220,11 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
         warn!("load system.prop failed: {}", e);
     }
 
+    // Hide sensitive props (Factory Props)
+    if let Err(e) = crate::hide::hide_sensitive_props() {
+        warn!("Failed to hide sensitive props: {}", e);
+    }
+
     info!("remove update flag");
     let _ = fs::remove_file(module_update_flag);
 

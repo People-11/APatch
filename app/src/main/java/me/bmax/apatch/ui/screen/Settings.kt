@@ -95,12 +95,14 @@ import me.bmax.apatch.ui.theme.refreshTheme
 import me.bmax.apatch.util.APatchKeyHelper
 import me.bmax.apatch.util.getBugreportFile
 import me.bmax.apatch.util.getMountMode
+import me.bmax.apatch.util.isFactoryPropsEnabled
 import me.bmax.apatch.util.isGlobalNamespaceEnabled
 import me.bmax.apatch.util.MOUNT_MODE_DISABLED
 import me.bmax.apatch.util.MOUNT_MODE_MAGIC
 import me.bmax.apatch.util.MOUNT_MODE_METAMODULE
 import me.bmax.apatch.util.outputStream
 import me.bmax.apatch.util.rootShellForResult
+import me.bmax.apatch.util.setFactoryPropsEnabled
 import me.bmax.apatch.util.setGlobalNamespaceEnabled
 import me.bmax.apatch.util.setMountMode
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils
@@ -220,6 +222,27 @@ fun SettingScreen() {
                             }
                         )
                         isGlobalNamespaceEnabled = it
+                    })
+
+                var isFactoryPropsEnabled by rememberSaveable {
+                    mutableStateOf(false)
+                }
+                isFactoryPropsEnabled = isFactoryPropsEnabled()
+
+                SwitchItem(
+                    icon = Icons.Filled.DeveloperMode,
+                    title = stringResource(id = R.string.settings_factory_props),
+                    summary = stringResource(id = R.string.settings_factory_props_summary),
+                    checked = isFactoryPropsEnabled,
+                    onCheckedChange = {
+                        setFactoryPropsEnabled(
+                            if (isFactoryPropsEnabled) {
+                                "0"
+                            } else {
+                                "1"
+                            }
+                        )
+                        isFactoryPropsEnabled = it
                     })
             }
 
