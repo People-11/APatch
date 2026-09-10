@@ -80,6 +80,11 @@
     <string name="mount_mode_metamodule_desc">Use third-party Metamodule to manage mounts</string>
     <string name="mount_mode_disabled">Disable Mount (Lite Mode)</string>
     <string name="mount_mode_disabled_desc">Disable mounts, only load scripts</string>
+    <string name="notification_channel_app_install">App install</string>
+    <string name="notification_app_installed_title">You have installed %1$s</string>
+    <string name="notification_grant_root_question">Would you like to grant root?</string>
+    <string name="notification_action_grant">Grant</string>
+    <string name="notification_action_exclude">Exclude</string>
     <string name="home_patch_set_key_desc">Only credential for KernelPatch</string>
     <string name="home_patch_next_step">Next step</string>
 

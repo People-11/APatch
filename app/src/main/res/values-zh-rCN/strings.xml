@@ -17,6 +17,11 @@
     <string name="mount_mode_metamodule_desc">使用元模块管理挂载</string>
     <string name="mount_mode_disabled">禁用挂载（Lite 模式）</string>
     <string name="mount_mode_disabled_desc">禁用所有模块挂载，仅加载脚本</string>
+    <string name="notification_channel_app_install">应用安装</string>
+    <string name="notification_app_installed_title">你已安装 %1$s</string>
+    <string name="notification_grant_root_question">是否要授予 Root 权限？</string>
+    <string name="notification_action_grant">授予</string>
+    <string name="notification_action_exclude">排除</string>
     <string name="app_name" translatable="false">APatch</string>
     <string name="kpm">内核模块</string>
     <string name="android_patch">系统补丁</string>

@@ -20,10 +20,14 @@ use std::{
 };
 
 use crate::{
-    assets, defs, hide, lua, magic_mount, metamodule, module, restorecon, supercall,
+    assets, defs, hide, lua, magic_mount, metamodule, module, package, restorecon, supercall,
     supercall::{init_load_su_path, refresh_ap_package_list},
     utils::{self, switch_cgroups},
 };
+
+/// How long packages.list has to stay quiet before a burst is considered
+/// finished. Only delays the catch-up refresh; the first one is immediate.
+const PACKAGE_LIST_QUIET: Duration = Duration::from_millis(500);
 
 pub fn report_kernel(superkey: Option<String>, event: &str, state: &str) {
     let Some(superkey) = superkey else {
@@ -324,13 +328,16 @@ pub fn start_uid_listener(superkey: Option<String>) -> Result<()> {
     let superkey = superkey.context("uid listener requires a SuperKey")?;
     let superkey_c = CString::new(superkey.clone()).context("SuperKey contains a null byte")?;
 
+    // Prime the baseline with the boot state; this first call reports nothing
+    // by design, and without it the first change would.
+    let _ = package::get_package_changes();
+
     // create inotify instance
     const SYS_PACKAGES_LIST_TMP: &str = "/data/system/packages.list.tmp";
     let sys_packages_list_tmp = PathBuf::from(&SYS_PACKAGES_LIST_TMP);
     let dir: PathBuf = sys_packages_list_tmp.parent().unwrap().into();
 
     let (tx, rx) = std::sync::mpsc::channel();
-    let tx_clone = tx.clone();
     let mutex = Arc::new(Mutex::new(()));
 
     {
@@ -354,7 +361,7 @@ pub fn start_uid_listener(superkey: Option<String>) -> Result<()> {
             }) => {
                 if paths.contains(&sys_packages_list_tmp) {
                     info!("[uid_monitor] System packages list changed, sending to tx...");
-                    tx_clone.send(false).unwrap()
+                    tx.send(()).unwrap()
                 }
             }
             Err(err) => warn!("inotify error: {err}"),
@@ -365,20 +372,31 @@ pub fn start_uid_listener(superkey: Option<String>) -> Result<()> {
 
     watcher.watch(dir.as_ref(), RecursiveMode::NonRecursive)?;
 
-    let mut debounce = false;
-    while let Ok(delayed) = rx.recv() {
-        if delayed {
-            debounce = false;
-            refresh_ap_package_list(&superkey_c, &mutex);
-            report_kernel(
-                Some(superkey.clone()),
-                "uid_listener",
-                "package-list-updated",
-            );
-        } else if !debounce {
-            thread::sleep(Duration::from_secs(1));
-            debounce = true;
-            tx.send(true)?;
+    let mut refresh = || {
+        refresh_ap_package_list(&superkey_c, &mutex);
+        report_kernel(
+            Some(superkey.clone()),
+            "uid_listener",
+            "package-list-updated",
+        );
+    };
+
+    // Leading edge, then one catch-up for the tail. Acting on the first rename
+    // at once is what keeps the install notification prompt; folding the rest
+    // of the burst into a single follow-up is what keeps it from becoming a
+    // storm. PackageManager rewrites packages.list for routine things (an app
+    // leaving the stopped state), and a refresh revokes every uid before
+    // re-granting from the config, so one refresh per rename would repeatedly
+    // drop root out from under running apps.
+    while rx.recv().is_ok() {
+        refresh();
+
+        let mut tail = false;
+        while rx.recv_timeout(PACKAGE_LIST_QUIET).is_ok() {
+            tail = true;
+        }
+        if tail {
+            refresh();
         }
     }
 
