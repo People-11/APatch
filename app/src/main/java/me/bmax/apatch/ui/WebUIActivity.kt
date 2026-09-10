@@ -37,7 +37,6 @@ import androidx.webkit.WebViewAssetLoader
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import me.bmax.apatch.APApplication
 import me.bmax.apatch.ui.theme.APatchTheme
 import me.bmax.apatch.ui.viewmodel.SuperUserViewModel
 import me.bmax.apatch.ui.webui.AppIconUtil
@@ -130,9 +129,6 @@ class WebUIActivity : ComponentActivity() {
             val taskDescription = ActivityManager.TaskDescription.Builder().setLabel("APatch - $name").build()
             setTaskDescription(taskDescription)
         }
-
-        val prefs = APApplication.sharedPreferences
-        WebView.setWebContentsDebuggingEnabled(prefs.getBoolean("enable_web_debugging", false))
 
         val webRoot = File("/data/adb/modules/${moduleId}/webroot")
         insets = Insets(0, 0, 0, 0)
