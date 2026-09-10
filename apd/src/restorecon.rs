@@ -35,7 +35,9 @@ pub fn lgetfilecon<P: AsRef<Path>>(path: P) -> Result<String> {
         )
     })?;
     let con = String::from_utf8_lossy(&con);
-    Ok(con.to_string())
+    // The xattr value is NUL-terminated; keeping the NUL makes every string
+    // comparison against a context constant fail.
+    Ok(con.trim_matches('\0').to_string())
 }
 
 #[cfg(any(target_os = "linux", target_os = "android"))]
