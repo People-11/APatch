@@ -182,12 +182,8 @@
 \n确定要继续吗？</string>
     <string name="home_more_menu_feedback_or_suggestion">反馈或建议</string>
     <string name="home_more_menu_about">关于</string>
-    <string name="settings_check_update">检查更新</string>
     <string name="patch_mode_install_to_next_slot">修补另一槽位内核</string>
     <string name="apm_webui_open">打开</string>
-    <string name="enable_web_debugging">启用 WebView 调试</string>
-    <string name="home_new_apatch_found">发现新版本：%s，单击升级。</string>
-    <string name="settings_check_update_summary">应用启动时自动检测更新</string>
     <string name="settings_clear_super_key_dialog">确定要继续吗？</string>
     <string name="settings_sucompat">旧版 su 兼容</string>
     <string name="settings_sucompat_summary">启用旧版su兼容(适用于su不生效)</string>
@@ -206,7 +202,6 @@
     <string name="jailbreak">越狱</string>
     <string name="jailbreak_triggered">越狱已触发，等待获取 root 后软重启。</string>
     <string name="reboot_soft">软重启</string>
-    <string name="enable_web_debugging_summary">可用于调试 WebUI，请仅在需要时启用。</string>
     <string name="home_device_info">设备</string>
     <string name="home_system_version">系统版本</string>
     <string name="home_kpatch_version">KernelPatch 版本</string>
@@ -260,29 +255,4 @@
     <string name="kpm_embedded">已嵌入</string>
     <string name="kpm_embedded_unload_invalid">嵌入的 KPM 无法卸载；重启后仍会保持生效。</string>
     <string name="kpm_install_toast_succ">安装成功，重启后生效</string>
-    <string name="kpm_update">更新</string>
-    <string name="kpm_update_available">可更新至 %s</string>
-    <string name="kpm_update_confirm_title">更新 KPModule</string>
-    <string name="kpm_update_confirm">将 %1$s 更新到版本 %2$s？已安装的 KPM 会被替换，重启后生效。</string>
-    <string name="kpm_update_succ">已更新至 %s，重启后生效</string>
-
-    <string name="online_module">在线模块</string>
-    <string name="online_module_title">模块仓库</string>
-    <string name="online_filter_all">全部</string>
-    <string name="online_filter_system">系统模块</string>
-    <string name="online_filter_kpm">KPM</string>
-    <string name="online_install">安装</string>
-    <string name="online_install_confirm">安装 %s？</string>
-    <string name="online_update">更新</string>
-    <string name="online_update_available">可更新至 %s</string>
-    <string name="online_update_confirm">将 %1$s 从 %2$s 更新到 %3$s？</string>
-    <string name="online_installed">已安装</string>
-    <string name="online_installed_version">已安装 %s</string>
-    <string name="online_stars">%s 星标</string>
-    <string name="online_empty">暂无模块</string>
-    <string name="online_load_failed">加载模块列表失败</string>
-    <string name="online_download_failed">下载失败</string>
-    <string name="online_download_cancelled">已取消下载</string>
-    <string name="online_install_failed">安装失败：%d</string>
-    <string name="online_downloading">正在下载 %1$s（%2$d%%）</string>
 </resources>

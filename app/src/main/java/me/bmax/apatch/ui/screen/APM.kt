@@ -32,14 +32,11 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarScrollBehavior
@@ -83,7 +80,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.ExecuteAPMActionScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.InstallScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.OnlineModuleScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -164,17 +160,7 @@ fun APModuleScreen(navigator: DestinationsNavigator) {
             SearchAppBar(
                 searchText = viewModel.search,
                 onSearchTextChange = { viewModel.search = it },
-                searchBarPlaceHolderText = stringResource(R.string.search_modules),
-                dropdownContent = {
-                    IconButton(onClick = {
-                        navigator.navigate(OnlineModuleScreenDestination(kpmOnly = false))
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.CloudDownload,
-                            contentDescription = stringResource(R.string.online_module)
-                        )
-                    }
-                }
+                searchBarPlaceHolderText = stringResource(R.string.search_modules)
             )
         },
         floatingActionButton = {
