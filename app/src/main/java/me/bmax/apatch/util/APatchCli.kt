@@ -399,6 +399,34 @@ fun setGlobalNamespaceEnabled(value: String) {
         }
 }
 
+// How module files get on top of the system. Must match apd's defs.rs.
+const val MOUNT_MODE_MAGIC = "magic"
+const val MOUNT_MODE_METAMODULE = "metamodule"
+const val MOUNT_MODE_DISABLED = "disabled"
+
+fun getMountMode(): String {
+    val shell = getRootShell()
+    val mode = ShellUtils.fastCmd(shell, "cat ${APApplication.MOUNT_MODE_FILE}").trim()
+    Log.i(TAG, "mount mode: $mode")
+    return when (mode) {
+        MOUNT_MODE_MAGIC, MOUNT_MODE_METAMODULE, MOUNT_MODE_DISABLED -> mode
+        else -> MOUNT_MODE_MAGIC
+    }
+}
+
+fun setMountMode(mode: String) {
+    getRootShell().newJob().add("echo $mode > ${APApplication.MOUNT_MODE_FILE}")
+        .submit { result ->
+            Log.i(TAG, "setMountMode($mode) result: ${result.isSuccess}")
+        }
+}
+
+/** Whether a metamodule, rather than apd's own magic mount, does the mounting. */
+fun isMetaModuleMode(): Boolean = runCatching {
+    rootFile(APApplication.MOUNT_MODE_FILE).takeIf { it.isFile }
+        ?.newInputStream()?.use { it.readBytes().toString(Charsets.UTF_8).trim() } == MOUNT_MODE_METAMODULE
+}.getOrDefault(false)
+
 fun isFactoryPropsEnabled(): Boolean {
     val shell = getRootShell()
     val result = ShellUtils.fastCmd(shell, "cat ${APApplication.FACTORY_PROPS_FILE}")

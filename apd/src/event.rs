@@ -20,7 +20,7 @@ use std::{
 };
 
 use crate::{
-    assets, defs, hide, lua, metamodule, module, restorecon, supercall,
+    assets, defs, hide, lua, magic_mount, metamodule, module, restorecon, supercall,
     supercall::{init_load_su_path, refresh_ap_package_list},
     utils::{self, switch_cgroups},
 };
@@ -192,8 +192,23 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
         warn!("load sepolicy.rule failed");
     }
 
-    if let Err(e) = metamodule::exec_mount_script(module_dir) {
-        warn!("execute metamodule mount failed: {e}");
+    let mount_mode = utils::get_mount_mode();
+    info!("mount mode: {mount_mode}");
+    match mount_mode.as_str() {
+        defs::MOUNT_MODE_DISABLED => {
+            info!("module mounting is disabled, only scripts will run");
+        }
+        defs::MOUNT_MODE_METAMODULE => {
+            if let Err(e) = metamodule::exec_mount_script(module_dir) {
+                warn!("execute metamodule mount failed: {e}");
+            }
+        }
+        // magic, and anything unrecognised
+        _ => {
+            if let Err(e) = magic_mount::magic_mount() {
+                warn!("magic mount failed: {e}");
+            }
+        }
     }
 
     // exec modules post-fs-data scripts
@@ -240,8 +255,11 @@ fn run_stage(stage: &str, superkey: Option<String>, block: bool) {
         return;
     }
 
-    // execute metamodule stage script first (priority)
-    if let Err(e) = metamodule::exec_stage_script(stage, block) {
+    // execute metamodule stage script first (priority), but only when the
+    // metamodule is the thing doing the mounting
+    if utils::get_mount_mode() == defs::MOUNT_MODE_METAMODULE
+        && let Err(e) = metamodule::exec_stage_script(stage, block)
+    {
         warn!("Failed to exec metamodule {stage} script: {e}");
     }
 
