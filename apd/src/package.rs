@@ -1,13 +1,62 @@
 use std::{
+    collections::HashSet,
     fs::File,
     io::{self, BufRead},
     path::Path,
+    sync::{Mutex, OnceLock},
     thread,
     time::Duration,
 };
 
 use log::{info, warn};
 use serde::{Deserialize, Serialize};
+
+const SYSTEM_PACKAGES_LIST: &str = "/data/system/packages.list";
+
+/// Package names seen the last time packages.list was read, so a later read can
+/// tell what appeared or vanished. Empty until the first get_package_changes.
+static KNOWN_PACKAGES: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
+
+fn known_packages() -> &'static Mutex<HashSet<String>> {
+    KNOWN_PACKAGES.get_or_init(|| Mutex::new(HashSet::new()))
+}
+
+fn read_package_names() -> io::Result<HashSet<String>> {
+    Ok(read_lines(SYSTEM_PACKAGES_LIST)?
+        .map_while(Result::ok)
+        .filter_map(|line| line.split_whitespace().next().map(String::from))
+        .collect())
+}
+
+/// (installed, uninstalled) since the previous call, and re-baselines.
+///
+/// The very first call has nothing to compare against, so it only records
+/// the current set and reports nothing. Call it once at startup to make that
+/// the boot state rather than whatever the first change happens to catch.
+pub fn get_package_changes() -> (Vec<String>, Vec<String>) {
+    let current = match read_package_names() {
+        Ok(packages) => packages,
+        Err(e) => {
+            warn!("[get_package_changes] failed to read package list: {e}");
+            return (Vec::new(), Vec::new());
+        }
+    };
+
+    let Ok(mut guard) = known_packages().lock() else {
+        return (Vec::new(), Vec::new());
+    };
+    // No baseline yet: adopt the current set. Reporting every installed
+    // package as new would mean a notification for each.
+    if guard.is_empty() {
+        *guard = current;
+        return (Vec::new(), Vec::new());
+    }
+
+    let added = current.difference(&guard).cloned().collect();
+    let removed = guard.difference(&current).cloned().collect();
+    *guard = current;
+    (added, removed)
+}
 
 #[derive(Deserialize, Serialize, Clone)]
 pub struct PackageConfig {

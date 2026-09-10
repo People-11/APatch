@@ -12,6 +12,7 @@
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".APApplication"
@@ -111,6 +112,11 @@
                 <action android:name="me.bmax.apatch.magica.LAUNCH" />
             </intent-filter>
         </receiver>
+
+        <!-- Targeted by name from apd's `am broadcast`, so it needs no filter. -->
+        <receiver
+            android:name=".InstallReceiver"
+            android:exported="false" />
 
     </application>
 

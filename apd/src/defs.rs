@@ -10,6 +10,10 @@ pub const GLOBAL_NAMESPACE_FILE: &str = concatcp!(ADB_DIR, ".global_namespace_en
 pub const DAEMON_PATH: &str = concatcp!(ADB_DIR, "apd");
 pub const FACTORY_PROPS_FILE: &str = concatcp!(WORKING_DIR, "factory_props_enable");
 
+// Written by the manager: the package name to broadcast package installs and
+// removals to. apd appends the receiver class.
+pub const MANAGER_PKG_FILE: &str = concatcp!(WORKING_DIR, "manager_pkg");
+
 // How module files get on top of the system: apd's own bind mounts, a
 // metamodule's mount script, or not at all.
 pub const MOUNT_MODE_FILE: &str = concatcp!(WORKING_DIR, "mount_mode");
