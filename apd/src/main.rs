@@ -3,6 +3,7 @@ mod assets;
 mod cli;
 mod defs;
 mod event;
+mod hide;
 mod insmod;
 mod late_load;
 mod lua;

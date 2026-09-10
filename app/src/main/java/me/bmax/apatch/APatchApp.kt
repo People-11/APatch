@@ -61,6 +61,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler {
         const val GLOBAL_NAMESPACE_FILE = "/data/adb/.global_namespace_enable"
         const val SUCOMPAT_FILE = "/data/adb/ap/sucompat"
         const val SELINUX_HIDE_FILE = APATCH_FOLDER + "selinux_hide"
+        const val FACTORY_PROPS_FILE = APATCH_FOLDER + "factory_props_enable"
         const val JAILBREAK_FILE = APATCH_FOLDER + "jailbreak"
         const val JAILBREAK_KO_PATH = APATCH_FOLDER + "kernelpatch.ko"
         /** Persisted, file-backed KPMs. Each module lives in <id>/<id>.kpm. */
