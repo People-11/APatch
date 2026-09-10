@@ -20,7 +20,7 @@ use std::{
 };
 
 use crate::{
-    assets, defs, lua, metamodule, module, restorecon, supercall,
+    assets, defs, hide, lua, metamodule, module, restorecon, supercall,
     supercall::{init_load_su_path, refresh_ap_package_list},
     utils::{self, switch_cgroups},
 };
@@ -207,6 +207,11 @@ pub fn on_post_data_fs(superkey: Option<String>) -> Result<()> {
     // load system.prop
     if let Err(e) = module::load_system_prop() {
         warn!("load system.prop failed: {}", e);
+    }
+
+    // rewrite bootloader/debuggable props (opt-in, after modules had their say)
+    if let Err(e) = hide::hide_sensitive_props() {
+        warn!("failed to hide sensitive props: {}", e);
     }
 
     info!("remove update flag");

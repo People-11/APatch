@@ -283,3 +283,23 @@ pub fn set_prop(name: &str, value: &str) -> Result<()> {
         .with_context(|| format!("Failed to set {name}"))?;
     Ok(())
 }
+
+/// Read a single system property, bypassing the property service (like `resetprop <name>`).
+///
+/// Returns None when the property is unset or the property API is unavailable.
+pub fn get_prop(name: &str) -> Option<String> {
+    if sys_prop::init().is_err() {
+        return None;
+    }
+
+    let rp = ResetProp {
+        skip_svc: true,
+        persistent: false,
+        persist_only: false,
+        verbose: false,
+        show_context: false,
+        rebuild: false,
+    };
+
+    rp.get(name)
+}
