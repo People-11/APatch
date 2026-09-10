@@ -5,11 +5,6 @@ import android.system.Os
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -106,10 +101,8 @@ import me.bmax.apatch.ui.component.rememberConfirmDialog
 import me.bmax.apatch.ui.viewmodel.PatchesViewModel
 import me.bmax.apatch.ui.viewmodel.isValidSuperKey
 import me.bmax.apatch.util.APatchCli
-import me.bmax.apatch.util.LatestVersionInfo
 import me.bmax.apatch.util.Version
 import me.bmax.apatch.util.Version.getManagerVersion
-import me.bmax.apatch.util.checkNewVersion
 import me.bmax.apatch.util.getSELinuxStatus
 import me.bmax.apatch.util.installJailbreak
 import me.bmax.apatch.util.isJailbreakMode
@@ -150,19 +143,6 @@ fun HomeScreen(navigator: DestinationsNavigator) {
             KStatusCard(kpState, apState, navigator)
             if (kpState != APApplication.State.UNKNOWN_STATE && apState != APApplication.State.ANDROIDPATCH_INSTALLED) {
                 AStatusCard(apState)
-            }
-            val prefs = APApplication.sharedPreferences
-            val checkUpdate by produceState(initialValue = prefs.getBoolean("check_update", true)) {
-                val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
-                    if (key == "check_update") {
-                        value = p.getBoolean(key, true)
-                    }
-                }
-                prefs.registerOnSharedPreferenceChangeListener(listener)
-                awaitDispose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
-            }
-            if (checkUpdate) {
-                UpdateCard()
             }
             InfoCard(kpState, apState)
             LearnMoreCard()
@@ -1021,45 +1001,6 @@ private fun InfoCard(kpState: APApplication.State, apState: APApplication.State)
             InfoCardItem(stringResource(R.string.home_selinux_status), getSELinuxStatus())
 
         }
-    }
-}
-
-@Composable
-fun UpdateCard() {
-    val latestVersionInfo = LatestVersionInfo()
-    val newVersion by produceState(initialValue = latestVersionInfo) {
-        value = withContext(Dispatchers.IO) {
-            checkNewVersion()
-        }
-    }
-    val currentVersionCode = managerVersion.second
-    val newVersionCode = newVersion.versionCode
-    val newVersionUrl = newVersion.downloadUrl
-    val changelog = newVersion.changelog
-
-    val uriHandler = LocalUriHandler.current
-    val title = stringResource(id = R.string.apm_changelog)
-    val updateText = stringResource(id = R.string.apm_update)
-
-    AnimatedVisibility(
-        visible = newVersionCode > currentVersionCode,
-        enter = fadeIn() + expandVertically(),
-        exit = shrinkVertically() + fadeOut()
-    ) {
-        val updateDialog = rememberConfirmDialog(onConfirm = { uriHandler.openUri(newVersionUrl) })
-        WarningCard(
-            message = stringResource(id = R.string.home_new_apatch_found).format(newVersionCode),
-            color = MaterialTheme.colorScheme.outlineVariant,
-            onClick = {
-                if (changelog.isEmpty()) {
-                    uriHandler.openUri(newVersionUrl)
-                } else {
-                    updateDialog.showConfirm(
-                        title = title, content = changelog, markdown = true, confirm = updateText
-                    )
-                }
-            }
-        )
     }
 }
 

@@ -136,22 +136,17 @@
     <string name="setting_reset_su_new_path">新的完整路徑</string>
     <string name="success">成功</string>
     <string name="failure">失敗</string>
-    <string name="settings_check_update">檢查更新</string>
     <string name="mode_select_page_patch_and_install">修補並安裝</string>
     <string name="mode_select_page_install_inactive_slot">安裝到非活動插槽（OTA 之後）</string>
     <string name="mode_select_page_select_file">選擇要修補的「boot image」</string>
-    <string name="enable_web_debugging">啟用 WebView 偵錯</string>
     <string name="home_more_menu_feedback_or_suggestion">回饋或建議</string>
     <string name="home_more_menu_about">關於</string>
     <string name="mode_select_page_install_inactive_slot_warning">重新啟動後，您的裝置將**強制**啟動到目前非活動插槽！
 \n僅在 OTA 完成之後使用此選項。
 \n繼續？</string>
-    <string name="settings_check_update_summary">開啟應用程式時自動檢查更新</string>
     <string name="apm_webui_open">打開網頁介面</string>
-    <string name="enable_web_debugging_summary">可用於偵錯WebUI，請僅在需要時啟用。</string>
     <string name="home_install_unknown_summary">點擊以安裝</string>
     <string name="home_device_info">裝置</string>
-    <string name="home_new_apatch_found">新版本可用：%s，點選升級。</string>
     <string name="mode_select_page_title">安裝</string>
     <string name="home_dialog_uninstall_title">解除安裝</string>
     <string name="home_dialog_uninstall_ap_only">僅刪除 AndroidPatch</string>

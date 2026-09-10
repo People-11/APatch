@@ -51,8 +51,6 @@
     <string name="reboot_soft">Soft reboot</string>
     <string name="settings_clear_super_key_dialog">Do you really want to proceed?</string>
 
-    <string name="settings_check_update">Check for updates</string>
-    <string name="settings_check_update_summary">Automatically check for updates when opening the app</string>
 
     <string name="home_learn_apatch">Learn APatch</string>
     <string name="home_click_to_learn_apatch">Learn about the features of APatch and how to use</string>
@@ -231,10 +229,7 @@
 
     <string name="apm_webui_open">Open</string>
     <string name="apm_action">Action</string>
-    <string name="enable_web_debugging">Enable WebView debugging</string>
-    <string name="enable_web_debugging_summary">Can be used to debug WebUI. Please enable only when needed.</string>
 
-    <string name="home_new_apatch_found">New version %s is available, click to upgrade.</string>
 
     <string name="mode_select_page_title">Install</string>
     <string name="mode_select_page_patch_and_install">Patch and install</string>

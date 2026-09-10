@@ -182,12 +182,8 @@
 \n确定要继续吗？</string>
     <string name="home_more_menu_feedback_or_suggestion">反馈或建议</string>
     <string name="home_more_menu_about">关于</string>
-    <string name="settings_check_update">检查更新</string>
     <string name="patch_mode_install_to_next_slot">修补另一槽位内核</string>
     <string name="apm_webui_open">打开</string>
-    <string name="enable_web_debugging">启用 WebView 调试</string>
-    <string name="home_new_apatch_found">发现新版本：%s，单击升级。</string>
-    <string name="settings_check_update_summary">应用启动时自动检测更新</string>
     <string name="settings_clear_super_key_dialog">确定要继续吗？</string>
     <string name="settings_sucompat">旧版 su 兼容</string>
     <string name="settings_sucompat_summary">启用旧版su兼容(适用于su不生效)</string>
@@ -206,7 +202,6 @@
     <string name="jailbreak">越狱</string>
     <string name="jailbreak_triggered">越狱已触发，等待获取 root 后软重启。</string>
     <string name="reboot_soft">软重启</string>
-    <string name="enable_web_debugging_summary">可用于调试 WebUI，请仅在需要时启用。</string>
     <string name="home_device_info">设备</string>
     <string name="home_system_version">系统版本</string>
     <string name="home_kpatch_version">KernelPatch 版本</string>
