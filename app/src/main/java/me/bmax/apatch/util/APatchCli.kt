@@ -11,7 +11,6 @@ import android.util.Log
 import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.ShellUtils
-import com.topjohnwu.superuser.internal.MainShell
 import com.topjohnwu.superuser.io.SuFile
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.APApplication.Companion.SUPERCMD
@@ -56,82 +55,25 @@ fun createRootShell(globalMnt: Boolean = false): Shell {
             }
         } catch (e: Throwable) {
             Log.e(TAG, "retry kpatch su failed: ", e)
-            return try {
-                Log.e(TAG, "retry su: ", e)
-                if (globalMnt) {
-                    builder.build("su","-mm")
-                }else{
-                    builder.build("su")
-                }
-            } catch (e: Throwable) {
-                Log.e(TAG, "retry su failed: ", e)
-                return builder.build("sh")
-            }
+            return builder.build("sh")
         }
     }
-}
-
-private fun createMainRootShell() : Shell {
-    val builder = Shell.Builder.create()
-        .setInitializers(RootShellInitializer::class.java)
-    val shell = try {
-        builder.build(SUPERCMD, APApplication.superKey, "-Z", APApplication.MAGISK_SCONTEXT)
-    } catch (e: Throwable) {
-        Log.e(TAG, "su failed: ", e)
-        builder.setCommands(getKPatchPath(), APApplication.superKey, "su", "-Z", APApplication.MAGISK_SCONTEXT)
-        try {
-            builder.build()
-        } catch (e: Throwable) {
-            Log.e(TAG, "retry kpatch su failed: ", e)
-            builder.setCommands("su")
-            try {
-                builder.build()
-            } catch (e: Throwable) {
-                Log.e(TAG, "retry su failed: ", e)
-                builder.setCommands("sh")
-                builder.build()
-            }
-        }
-    }
-
-    MainShell.setBuilder(builder)
-    return shell
 }
 
 object APatchCli {
     @Volatile
-    var SHELL: Shell = createMainRootShell()
-    val GLOBAL_MNT_SHELL: Shell = createRootShell(true)
+    var SHELL: Shell = createRootShell()
+    @Volatile
+    var GLOBAL_MNT_SHELL: Shell = createRootShell(true)
 
-    // Serialized so a reader can never observe the half-reset MainShell (private
-    // fields cleared via reflection) between the reset and the SHELL swap.
     @Synchronized
     fun refresh() {
-        val tmp = SHELL
-
-        val clazz = MainShell::class.java // reset MainShell
-        clazz.getDeclaredField("isInitMain").apply {
-            isAccessible = true
-            setBoolean(null, false)
-            isAccessible = false
-        }
-
-        clazz.getDeclaredField("mainShell").apply {
-            isAccessible = true
-            @Suppress("UNCHECKED_CAST")
-            val arr = get(null) as Array<Any?>
-            arr[0] = null
-            isAccessible = false
-        }
-
-        clazz.getDeclaredField("mainBuilder").apply {
-            isAccessible = true
-            set(null, null)
-            isAccessible = false
-        }
-
-        SHELL = createMainRootShell()
-        tmp.close()
+        val oldShell = SHELL
+        val oldGlobalMntShell = GLOBAL_MNT_SHELL
+        SHELL = createRootShell()
+        GLOBAL_MNT_SHELL = createRootShell(true)
+        oldShell.close()
+        oldGlobalMntShell.close()
     }
 }
 
@@ -141,6 +83,8 @@ fun getRootShell(globalMnt: Boolean = false): Shell {
         APatchCli.SHELL
     }
 }
+
+fun rootFile(path: String): SuFile = SuFile(path).apply { setShell(getRootShell()) }
 
 inline fun <T> withNewRootShell(
     globalMnt: Boolean = false,
@@ -170,13 +114,7 @@ fun tryGetRootShell(): Shell {
             )
         } catch (e: Throwable) {
             Log.e(TAG, "retry kpatch su failed: ", e)
-            return try {
-                Log.e(TAG, "retry su: ", e)
-                builder.build("su")
-            } catch (e: Throwable) {
-                Log.e(TAG, "retry su failed: ", e)
-                builder.build("sh")
-            }
+            return builder.build("sh")
         }
     }
 }
@@ -228,7 +166,7 @@ fun hasMetaModule(): Boolean {
 
 fun getMetaModuleImplement(): String {
     try {
-        val metaModuleProp = SuFile.open("/data/adb/metamodule/module.prop")
+        val metaModuleProp = rootFile("/data/adb/metamodule/module.prop")
         if (!metaModuleProp.isFile) {
             Log.i(TAG, "Meta module implement: None")
             return "None"
@@ -355,7 +293,8 @@ fun reboot(reason: String = "") {
 
 /** Soft reboot: restart the Android framework while keeping runtime-loaded modules. */
 fun softReboot() {
-    getRootShell().newJob().add("${APApplication.APD_PATH} soft-reboot").exec()
+    val superKey = ShellUtils.escapedString(APApplication.superKey)
+    getRootShell().newJob().add("${APApplication.APD_PATH} -s $superKey soft-reboot").exec()
 }
 
 /**
@@ -436,7 +375,7 @@ fun isSELinuxPermissive(): Boolean {
 
 /** Whether jailbreak mode is active (the ko has been loaded and a marker written). */
 fun isJailbreakMode(): Boolean {
-    return runCatching { SuFile(APApplication.JAILBREAK_FILE).exists() }.getOrDefault(false)
+    return runCatching { rootFile(APApplication.JAILBREAK_FILE).exists() }.getOrDefault(false)
 }
 
 fun hasMagisk(): Boolean {
@@ -471,4 +410,3 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
     }
     return fileName
 }
-

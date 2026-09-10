@@ -22,6 +22,7 @@ function kernelFlagsErr(){
 
 function apatchNote(){
 	ui_print "- APatch Patch Done"
+	ui_print "- APatch Key is: Ap$skey"
 	ui_print "- We do have saved Origin Boot image to /data"
 	ui_print "- If you encounter bootloop, reboot into Recovery and flash it"
 	exit
@@ -40,7 +41,7 @@ function boot_execute_ab(){
 		kernelFlagsErr
 	fi
 	mv kernel kernel-origin
-	./lib/arm64-v8a/libkptools.so -p --image kernel-origin --kpimg ./assets/kpimg --out ./kernel 2>&1 | tee /dev/tmp/install/log
+	./lib/arm64-v8a/libkptools.so -p --image kernel-origin --skey "Ap$skey" --kpimg ./assets/kpimg --out ./kernel 2>&1 | tee /dev/tmp/install/log
 	if [[ ! $(cat /dev/tmp/install/log | grep "patch done") ]]; then
 		failed
 	fi
@@ -57,7 +58,7 @@ function boot_execute(){
 		kernelFlagsErr
 	fi
 	mv kernel kernel-origin
-	./lib/arm64-v8a/libkptools.so -p --image kernel-origin --kpimg ./assets/kpimg --out ./kernel 2>&1 | tee /dev/tmp/install/log
+	./lib/arm64-v8a/libkptools.so -p --image kernel-origin --skey "Ap$skey" --kpimg ./assets/kpimg --out ./kernel 2>&1 | tee /dev/tmp/install/log
 	if [[ ! $(cat /dev/tmp/install/log | grep "patch done") ]]; then
 		failed
 	fi
@@ -76,6 +77,13 @@ chmod a+x ./assets/kpimg
 chmod a+x ./lib/arm64-v8a/libkptools.so
 
 slot=$(getprop ro.boot.slot_suffix)
+
+# The manager only accepts a key of 8-63 chars containing both a letter and a
+# digit. "Ap" covers the letter, but the hex below can come out all a-f, so a
+# digit is appended rather than hoped for -- otherwise the installer can
+# generate a key its own manager refuses to take.
+uuid=$(cat /proc/sys/kernel/random/uuid)
+skey="$(echo "$uuid" | cut -d \- -f1)$(echo "$uuid" | cut -d \- -f5)0"
 
 if [[ ! "$slot" == "" ]]; then
 

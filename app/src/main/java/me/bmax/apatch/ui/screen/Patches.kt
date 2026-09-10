@@ -8,11 +8,6 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -62,7 +57,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -85,7 +79,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.R
-import me.bmax.apatch.ui.component.SwitchItem
 import me.bmax.apatch.ui.component.WarningCard
 import me.bmax.apatch.ui.viewmodel.KPModel
 import me.bmax.apatch.ui.viewmodel.PatchesViewModel
@@ -122,8 +115,6 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
 
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
-
-    var needKey by rememberSaveable { mutableStateOf(false) }
 
     val viewModel = viewModel<PatchesViewModel>()
     LaunchedEffect(mode) {
@@ -211,34 +202,7 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
             }
 
             if (mode != PatchesViewModel.PatchMode.UNPATCH && viewModel.kimgInfo.banner.isNotEmpty()) {
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    ),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
-                ) {
-                    SwitchItem(
-                        icon = Icons.Default.Key,
-                        title = stringResource(R.string.patch_custom_superkey),
-                        summary = stringResource(R.string.patch_custom_superkey_summary),
-                        checked = needKey,
-                        onCheckedChange = { checked ->
-                            needKey = checked
-                        }
-                    )
-                }
-
-                AnimatedVisibility(
-                    visible = needKey,
-                    enter = expandVertically() + fadeIn(),
-                    exit = shrinkVertically() + fadeOut()
-                ) {
-                    Column {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        SetSuperKeyView(viewModel)
-                    }
-                }
+                SetSuperKeyView(viewModel)
             }
 
             // existed extras
@@ -276,10 +240,9 @@ fun Patches(mode: PatchesViewModel.PatchMode) {
             if (!viewModel.patching && !viewModel.patchdone) {
                 // patch start
                 if (mode != PatchesViewModel.PatchMode.UNPATCH) {
-                    val isKeyReady = !needKey || viewModel.superkey.isNotEmpty()
-                    if (isKeyReady) {
+                    if (viewModel.superkey.isNotEmpty()) {
                         StartButton(stringResource(id = R.string.patch_start_patch_btn)) {
-                            viewModel.doPatch(mode, needKey)
+                            viewModel.doPatch(mode)
                         }
                     }
                 }
