@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
+import com.topjohnwu.superuser.ShellUtils
 import com.topjohnwu.superuser.nio.ExtendedFile
 import com.topjohnwu.superuser.nio.FileSystemManager
 import kotlinx.coroutines.Dispatchers
@@ -36,14 +37,15 @@ import me.bmax.apatch.util.inputStream
 import me.bmax.apatch.util.shellForResult
 import me.bmax.apatch.util.writeTo
 import org.ini4j.Ini
-import java.io.BufferedReader
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.InputStreamReader
 import java.io.StringReader
 
 private const val TAG = "PatchViewModel"
+
+internal fun isValidSuperKey(superKey: String): Boolean =
+    superKey.length in 8..63 && superKey.any { it.isDigit() } && superKey.any { it.isLetter() }
 
 class PatchesViewModel : ViewModel() {
 
@@ -58,7 +60,7 @@ class PatchesViewModel : ViewModel() {
     var bootDev by mutableStateOf("")
     var kimgInfo by mutableStateOf(KPModel.KImgInfo("", false))
     var kpimgInfo by mutableStateOf(KPModel.KPImgInfo("", "", "", "", ""))
-    var superkey by mutableStateOf("")
+    var superkey by mutableStateOf(APApplication.superKey.takeIf(::isValidSuperKey).orEmpty())
     var existedExtras = mutableStateListOf<KPModel.IExtraInfo>()
     var newExtras = mutableStateListOf<KPModel.IExtraInfo>()
     var newExtrasFileName = mutableListOf<String>()
@@ -198,9 +200,7 @@ class PatchesViewModel : ViewModel() {
         }
     }
 
-    val checkSuperKeyValidation: (superKey: String) -> Boolean = { superKey ->
-        superKey.length in 8..63 && superKey.any { it.isDigit() } && superKey.any { it.isLetter() }
-    }
+    val checkSuperKeyValidation: (superKey: String) -> Boolean = ::isValidSuperKey
 
     fun copyAndParseBootimg(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -391,11 +391,7 @@ class PatchesViewModel : ViewModel() {
             }
         }
     }
-    fun isSuExecutable(): Boolean {
-        val suFile = File("/system/bin/su")
-        return suFile.exists() && suFile.canExecute()
-    }
-    fun doPatch(mode: PatchMode, useKey: Boolean) {
+    fun doPatch(mode: PatchMode) {
         viewModelScope.launch(Dispatchers.IO) {
             workMutex.withLock {
                 if (!ensurePrepared()) return@withLock
@@ -416,29 +412,11 @@ class PatchesViewModel : ViewModel() {
                     }
                     logs.add("****************************")
 
-                    var patchCommand = mutableListOf("./busybox sh boot_patch.sh \"$0\" \"$@\"")
+                    val patchCommand = mutableListOf("./busybox", "sh", "boot_patch.sh")
 
-                    // adapt for 0.10.7 and lower KP
-                    var isKpOld = false
-
-                    val superkey = if (useKey && this@PatchesViewModel.superkey.isNotEmpty()) this@PatchesViewModel.superkey else "su"
-
+                    patchCommand.addAll(listOf(this@PatchesViewModel.superkey, srcBoot.path))
                     if (mode == PatchMode.PATCH_AND_INSTALL || mode == PatchMode.INSTALL_TO_NEXT_SLOT) {
-
-                        val KPCheck = shell.newJob().add("truncate ${APApplication.superKey} -Z u:r:magisk:s0 -c whoami").exec()
-
-                        if (KPCheck.isSuccess && !isSuExecutable()) {
-                            patchCommand.addAll(0, listOf("truncate", APApplication.superKey, "-Z", APApplication.MAGISK_SCONTEXT, "-c"))
-                            patchCommand.addAll(listOf(superkey, srcBoot.path, "true"))
-                        } else {
-                            patchCommand = mutableListOf("./busybox", "sh", "boot_patch.sh")
-                            patchCommand.addAll(listOf(superkey, srcBoot.path, "true"))
-                            isKpOld = true
-                        }
-
-                    } else {
-                        patchCommand.addAll(0, listOf("sh", "-c"))
-                        patchCommand.addAll(listOf(superkey, srcBoot.path))
+                        patchCommand.add("true")
                     }
 
                     for (i in 0..<newExtrasFileName.size) {
@@ -464,39 +442,14 @@ class PatchesViewModel : ViewModel() {
                         patchCommand.addAll(listOf("-T", extra.type.desc))
                     }
 
-                    val builder = ProcessBuilder(patchCommand)
+                    Log.i(TAG, "running boot_patch.sh for ${srcBoot.path}")
 
-                    Log.i(TAG, "patchCommand: $patchCommand")
-
-                    var succ = false
-
-                    if (isKpOld) {
-                        val resultString = "\"" + patchCommand.joinToString(separator = "\" \"") + "\""
-                        val result = shell.newJob().add(
-                            "export ASH_STANDALONE=1",
-                            "cd $patchDir",
-                            resultString,
-                        ).to(logs, logs).exec()
-                        succ = result.isSuccess
-                    } else {
-                        builder.environment().put("ASH_STANDALONE", "1")
-                        builder.directory(patchDir)
-                        builder.redirectErrorStream(true)
-
-                        val process = builder.start()
-
-                        Thread {
-                            BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
-                                var line: String?
-                                while (reader.readLine().also { line = it } != null) {
-                                    patchLog += line
-                                    Log.i(TAG, "" + line)
-                                    patchLog += "\n"
-                                }
-                            }
-                        }.start()
-                        succ = process.waitFor() == 0
-                    }
+                    val result = shell.newJob().add(
+                        "export ASH_STANDALONE=1",
+                        "cd ${ShellUtils.escapedString(patchDir.path)}",
+                        patchCommand.joinToString(" ") { ShellUtils.escapedString(it) },
+                    ).to(logs, logs).exec()
+                    var succ = result.isSuccess
 
                     if (!succ) {
                         val msg = " Patch failed."

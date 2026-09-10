@@ -213,8 +213,6 @@
     <string name="meta_module_removed">模組未掛載，因為元模組即將刪除</string>
     <string name="metamodule_uninstall_confirm">"您確定要解除安裝模組 %s 嗎？此操作將影響所有模組，而且元模組提供的某些功能（如掛載）將不再運作。  "</string>
     <string name="no_meta_module_installed">模組未掛載，因為未安裝元模組</string>
-    <string name="patch_custom_superkey">自訂 SuperKey</string>
-    <string name="patch_custom_superkey_summary">仍可使用 superkey 管理員的 root 權限，現在我們由核心驗證管理員簽名</string>
     <string name="search">搜尋</string>
     <string name="search_apps">搜尋應用程式</string>
     <string name="search_modules">搜尋模組</string>

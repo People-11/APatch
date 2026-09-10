@@ -26,7 +26,7 @@ static inline long ver_and_cmd(const char *key, long cmd)
 /**
  * @brief If KernelPatch installed, @see SUPERCALL_HELLO_ECHO will echoed.
  * 
- * @param key : superkey or 'su' string if caller uid is su allowed 
+ * @param key SuperKey used for authentication
  * @return long 
  */
 static inline long sc_hello(const char *key)

@@ -18,7 +18,7 @@ jboolean nativeReady(JNIEnv *env, jobject /* this */, jstring super_key_jstr) {
 
     const auto super_key = JUTFString(env, super_key_jstr);
     if (super_key.get() == nullptr || strlen(super_key.get()) == 0) {
-        return sc_ready("su");
+        return JNI_FALSE;
     }
     return sc_ready(super_key.get());
 }

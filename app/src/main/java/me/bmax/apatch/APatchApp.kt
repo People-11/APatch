@@ -189,6 +189,8 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler {
                 Log.d(TAG, "state: " + _kpStateLiveData.value)
                 if (!ready) return
 
+                APatchKeyHelper.writeSPSuperKey(value)
+
                 thread {
                     val rc = Natives.su(0, null)
                     if (!rc) {
@@ -244,40 +246,18 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler {
                 }
             }
 
-        /**
-         * Resolve the SuperKey used to authenticate against the running kernel.
-         *
-         * The new manager defaults to "su" (implicit signature/uid authorization).
-         * Kernels patched by legacy versions, however, were patched with a real
-         * random/custom SuperKey and know nothing about signature authorization,
-         * so "su" fails for users who upgraded from such a version. To keep the
-         * original SuperKey upgrade path working, fall back to the legacy SuperKey
-         * persisted (Keystore-encrypted) by older managers and use it to elevate,
-         * letting the user upgrade the kernel to the latest signature-authorized one.
-         *
-         * Once "su" succeeds the kernel no longer relies on a SuperKey, so any
-         * stale legacy key is cleared.
-         */
+        /** Resolve only the stored SuperKey; an empty result prompts for it on Home. */
         private fun resolveSuperKey(): String {
             APatchKeyHelper.setSharedPreferences(sharedPreferences)
+
             val savedKey = APatchKeyHelper.readSPSuperKey()
-
-            // Signature authorization (new default).
-            if (Natives.nativeReady("su")) {
-                if (!savedKey.isNullOrEmpty()) {
-                    APatchKeyHelper.clearConfigKey()
-                    Log.i(TAG, "signature auth ready, cleared legacy SuperKey")
-                }
-                return "su"
-            }
-
-            // Legacy kernel patched with a real SuperKey: reuse the stored one.
             if (!savedKey.isNullOrEmpty() && Natives.nativeReady(savedKey)) {
-                Log.i(TAG, "fallback to legacy stored SuperKey for upgrade")
+                Log.i(TAG, "authenticated with the stored SuperKey")
                 return savedKey
             }
 
-            return "su"
+            Log.i(TAG, "no working authorization, asking the user for a SuperKey")
+            return ""
         }
     }
 

@@ -68,13 +68,8 @@ mv kernel kernel.ori
 
 echo "- Patching kernel"
 
-KPT_ARGS=""
-[ "$SUPERKEY" != "su" ] && KPT_ARGS="-S $SUPERKEY"
-
-set -x
-./kptools -p -i kernel.ori $KPT_ARGS -k kpimg -o kernel "$@"
+./kptools -p -i kernel.ori -S "$SUPERKEY" -k kpimg -o kernel "$@"
 patch_rc=$?
-set +x
 
 if [ $patch_rc -ne 0 ]; then
   >&2 echo "- Patch kernel error: $patch_rc"
@@ -110,4 +105,3 @@ if [ "$FLASH_TO_DEVICE" = "true" ]; then
 else
   echo "- Successfully Patched!"
 fi
-
