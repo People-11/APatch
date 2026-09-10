@@ -58,6 +58,7 @@ import me.bmax.apatch.ui.component.KeyEventBlocker
 import me.bmax.apatch.ui.component.rememberCustomDialog
 import me.bmax.apatch.util.hasMetaModule
 import me.bmax.apatch.util.installModule
+import me.bmax.apatch.util.isMetaModuleMode
 import me.bmax.apatch.util.reboot
 import me.bmax.apatch.util.rootFile
 import me.bmax.apatch.util.ui.LocalSnackbarHost
@@ -134,7 +135,8 @@ fun InstallScreen(navigator: DestinationsNavigator, uri: Uri, type: MODULE_TYPE)
                 scope.launch {
                     showFloatAction = true
 
-                    // check metamodule
+                    // check metamodule; irrelevant unless it does the mounting
+                    if (!isMetaModuleMode()) return@launch
                     if (hasMetaModule()) return@launch
                     val mountOldDirectory =
                         rootFile("/data/adb/modules/${getModuleIdFromUri(context, uri)}/system")

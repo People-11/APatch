@@ -10,6 +10,13 @@ pub const GLOBAL_NAMESPACE_FILE: &str = concatcp!(ADB_DIR, ".global_namespace_en
 pub const DAEMON_PATH: &str = concatcp!(ADB_DIR, "apd");
 pub const FACTORY_PROPS_FILE: &str = concatcp!(WORKING_DIR, "factory_props_enable");
 
+// How module files get on top of the system: apd's own bind mounts, a
+// metamodule's mount script, or not at all.
+pub const MOUNT_MODE_FILE: &str = concatcp!(WORKING_DIR, "mount_mode");
+pub const MOUNT_MODE_MAGIC: &str = "magic";
+pub const MOUNT_MODE_METAMODULE: &str = "metamodule";
+pub const MOUNT_MODE_DISABLED: &str = "disabled";
+
 pub const MODULE_DIR: &str = concatcp!(ADB_DIR, "modules/");
 
 // warning: this directory should not change, or you need to change the code in module_installer.sh!!!
@@ -23,6 +30,7 @@ pub const MODULE_ACTION_SH: &str = "action.sh";
 pub const DISABLE_FILE_NAME: &str = "disable";
 pub const UPDATE_FILE_NAME: &str = "update";
 pub const REMOVE_FILE_NAME: &str = "remove";
+pub const SKIP_MOUNT_FILE_NAME: &str = "skip_mount";
 
 // Metamodule support
 pub const METAMODULE_MOUNT_SCRIPT: &str = "metamount.sh";

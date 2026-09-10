@@ -7,10 +7,12 @@ mod hide;
 mod insmod;
 mod late_load;
 mod lua;
+mod magic_mount;
 mod magica;
 mod metamodule;
 mod module;
 mod module_config;
+mod mount;
 mod package;
 #[cfg(any(target_os = "linux", target_os = "android"))]
 mod pty;

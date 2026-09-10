@@ -212,3 +212,18 @@ pub fn get_tmp_path() -> &'static str {
     }
     ""
 }
+
+/// Which mounting strategy modules use. Unset or unrecognised means magic
+/// mount, which is what a device without the setting has always done.
+pub fn get_mount_mode() -> String {
+    if let Result::Ok(content) = std::fs::read_to_string(defs::MOUNT_MODE_FILE) {
+        let mode = content.trim();
+        if matches!(
+            mode,
+            defs::MOUNT_MODE_MAGIC | defs::MOUNT_MODE_METAMODULE | defs::MOUNT_MODE_DISABLED
+        ) {
+            return mode.to_string();
+        }
+    }
+    defs::MOUNT_MODE_MAGIC.to_string()
+}

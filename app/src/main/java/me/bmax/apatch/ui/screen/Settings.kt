@@ -41,6 +41,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.AlertDialogDefaults
@@ -95,8 +96,12 @@ import me.bmax.apatch.ui.component.SwitchItem
 import me.bmax.apatch.ui.component.rememberLoadingDialog
 import me.bmax.apatch.ui.theme.refreshTheme
 import me.bmax.apatch.util.APatchKeyHelper
+import me.bmax.apatch.util.MOUNT_MODE_DISABLED
+import me.bmax.apatch.util.MOUNT_MODE_MAGIC
+import me.bmax.apatch.util.MOUNT_MODE_METAMODULE
 import me.bmax.apatch.util.getBugreportFile
 import me.bmax.apatch.util.getKernelVersionCode
+import me.bmax.apatch.util.getMountMode
 import me.bmax.apatch.util.isFactoryPropsEnabled
 import me.bmax.apatch.util.isGkiKernel
 import me.bmax.apatch.util.isGlobalNamespaceEnabled
@@ -104,6 +109,7 @@ import me.bmax.apatch.util.outputStream
 import me.bmax.apatch.util.rootShellForResult
 import me.bmax.apatch.util.setFactoryPropsEnabled
 import me.bmax.apatch.util.setGlobalNamespaceEnabled
+import me.bmax.apatch.util.setMountMode
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils
 import me.bmax.apatch.util.ui.LocalSnackbarHost
 import me.bmax.apatch.util.ui.NavigationBarsSpacer
@@ -304,6 +310,33 @@ fun SettingScreen() {
                         onConfirm = { applySelinuxHide(true) },
                     )
                 }
+            }
+
+            if (kPatchReady && aPatchReady) {
+                var mountMode by rememberSaveable { mutableStateOf(MOUNT_MODE_MAGIC) }
+                var mountModeLoaded by remember { mutableStateOf(false) }
+                LaunchedEffect(Unit) {
+                    mountMode = withContext(Dispatchers.IO) { getMountMode() }
+                    mountModeLoaded = true
+                }
+
+                val showMountModeDialog = remember { mutableStateOf(false) }
+                if (showMountModeDialog.value) {
+                    MountModeDialog(showMountModeDialog) { picked ->
+                        setMountMode(picked)
+                        mountMode = picked
+                    }
+                }
+
+                ListItem(
+                    leadingContent = {
+                        Icon(Icons.Filled.Storage, stringResource(id = R.string.mount_mode))
+                    },
+                    headlineContent = { Text(stringResource(id = R.string.mount_mode)) },
+                    supportingContent = { Text(stringResource(id = mountModeLabel(mountMode))) },
+                    modifier = Modifier.clickable(enabled = mountModeLoaded) {
+                        showMountModeDialog.value = true
+                    })
             }
 
             if (kPatchReady && aPatchReady) {
@@ -638,6 +671,58 @@ fun ThemeChooseDialog(showDialog: MutableState<Boolean>) {
         }
     }
 
+}
+
+@StringRes
+private fun mountModeLabel(mode: String): Int = when (mode) {
+    MOUNT_MODE_METAMODULE -> R.string.mount_mode_metamodule
+    MOUNT_MODE_DISABLED -> R.string.mount_mode_disabled
+    else -> R.string.mount_mode_magic
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MountModeDialog(showDialog: MutableState<Boolean>, onSelect: (String) -> Unit) {
+    val modes = listOf(
+        Triple(MOUNT_MODE_MAGIC, R.string.mount_mode_magic, R.string.mount_mode_magic_desc),
+        Triple(
+            MOUNT_MODE_METAMODULE,
+            R.string.mount_mode_metamodule,
+            R.string.mount_mode_metamodule_desc
+        ),
+        Triple(MOUNT_MODE_DISABLED, R.string.mount_mode_disabled, R.string.mount_mode_disabled_desc),
+    )
+
+    BasicAlertDialog(
+        onDismissRequest = { showDialog.value = false }, properties = DialogProperties(
+            decorFitsSystemWindows = true,
+            usePlatformDefaultWidth = false,
+        )
+    ) {
+        Surface(
+            modifier = Modifier
+                .width(310.dp)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(30.dp),
+            tonalElevation = AlertDialogDefaults.TonalElevation,
+            color = AlertDialogDefaults.containerColor,
+        ) {
+            Column {
+                modes.forEach { (mode, title, desc) ->
+                    ListItem(
+                        headlineContent = { Text(stringResource(id = title)) },
+                        supportingContent = { Text(stringResource(id = desc)) },
+                        modifier = Modifier.clickable {
+                            showDialog.value = false
+                            onSelect(mode)
+                        })
+                }
+            }
+
+            val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
+            APDialogBlurBehindUtils.setupWindowBlurListener(dialogWindowProvider.window)
+        }
+    }
 }
 
 private data class APColor(

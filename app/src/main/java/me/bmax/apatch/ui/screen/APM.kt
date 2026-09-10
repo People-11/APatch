@@ -103,6 +103,7 @@ import me.bmax.apatch.util.DownloadListener
 import me.bmax.apatch.util.download
 import me.bmax.apatch.util.hasMagisk
 import me.bmax.apatch.util.isJailbreakMode
+import me.bmax.apatch.util.isMetaModuleMode
 import me.bmax.apatch.util.reboot
 import me.bmax.apatch.util.rootFile
 import me.bmax.apatch.util.toggleModule
@@ -258,6 +259,9 @@ private fun getMetaModuleWarningText(
 
     if (!needsMountModule) return null
 
+    // A missing/disabled metamodule only matters when it is the thing mounting.
+    if (!isMetaModuleMode()) return null
+
     val metaDir = "/data/adb/metamodule"
     val metaProp = rootFile("$metaDir/module.prop").isFile
     val metaRemoved = rootFile("$metaDir/remove").isFile
@@ -385,7 +389,8 @@ private fun ModuleList(
     }
 
     suspend fun onModuleUninstall(module: APModuleViewModel.ModuleInfo) {
-        val formatter = if (module.metamodule) metaModuleUninstallConfirm else moduleUninstallConfirm
+        val formatter =
+            if (module.metamodule && isMetaModuleMode()) metaModuleUninstallConfirm else moduleUninstallConfirm
         val confirmResult = confirmDialog.awaitConfirm(
             moduleStr,
             content = formatter.format(module.name),
@@ -613,7 +618,7 @@ private fun ModuleItem(
                         SubcomposeLayout { constraints ->
                             val spacingPx = 6.dp.roundToPx()
                             var nameTextLayout: TextLayoutResult? = null
-                            val metaPlaceable = if (module.metamodule) {
+                            val metaPlaceable = if (module.metamodule && isMetaModuleMode()) {
                                 subcompose("meta") {
                                     Surface(
                                         shape = RoundedCornerShape(4.dp),
