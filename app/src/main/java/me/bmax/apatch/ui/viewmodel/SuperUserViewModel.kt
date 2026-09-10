@@ -17,7 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.parcelize.Parcelize
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.IAPRootService
@@ -31,12 +33,22 @@ import java.text.Collator
 import java.util.Locale
 import kotlin.concurrent.thread
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 
 class SuperUserViewModel : ViewModel() {
     companion object {
         private const val TAG = "SuperUserViewModel"
+
+        /** PackageManager.MATCH_ANY_USER, which is not in the public SDK. */
+        private const val MATCH_ANY_USER = 0x00400000
+
+        /**
+         * How long to wait for the root service before listing packages without
+         * it. Generous enough for a cold start (the service forks a new
+         * app_process as root), short enough not to look hung.
+         */
+        private const val ROOT_SERVICE_TIMEOUT_MS = 5000L
+
         private val appsLock = Any()
         var apps by mutableStateOf<List<AppInfo>>(emptyList())
 
@@ -91,16 +103,21 @@ class SuperUserViewModel : ViewModel() {
         }
     }
 
+    // Cancellable so the timeout in fetchPackages can actually abandon the wait;
+    // a plain suspendCoroutine would keep the continuation alive and blow up
+    // with "already resumed" if the service connected after we gave up.
     private suspend inline fun connectRootService(
         crossinline onDisconnect: () -> Unit = {}
-    ): Pair<IBinder, ServiceConnection> = suspendCoroutine {
+    ): Pair<IBinder, ServiceConnection> = suspendCancellableCoroutine { continuation ->
         val connection = object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
                 onDisconnect()
             }
 
             override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-                it.resume(binder as IBinder to this)
+                if (continuation.isActive) {
+                    continuation.resume(binder as IBinder to this)
+                }
             }
         }
         val intent = Intent(apApp, RootServices::class.java)
@@ -118,21 +135,39 @@ class SuperUserViewModel : ViewModel() {
         RootServices.stop(intent)
     }
 
+    // The root service can never come up — no root yet, a wedged shell, a denied
+    // request — and there is no callback for that, so the bind just hangs and the
+    // app list stays empty forever. Give it a bounded wait and then ask the plain
+    // PackageManager instead: grant and exclude state comes from the kernel
+    // either way, only the package list itself is less complete.
+    private suspend fun fetchPackages(): List<PackageInfo> {
+        val fromRoot = withTimeoutOrNull(ROOT_SERVICE_TIMEOUT_MS) {
+            runCatching {
+                val result = connectRootService { Log.w(TAG, "RootService disconnected") }
+                val packages = IAPRootService.Stub.asInterface(result.first).getPackages(0).list
+                withContext(Dispatchers.Main) { stopRootService() }
+                packages
+            }.onFailure { Log.e(TAG, "root package query failed", it) }.getOrNull()
+        }
+        if (fromRoot != null) return fromRoot
+
+        Log.w(TAG, "root service unavailable, listing packages without it")
+        // MATCH_ANY_USER is hidden from the SDK and needs INTERACT_ACROSS_USERS,
+        // which we may not hold; fall through to the current user on refusal.
+        val fallback = runCatching { apApp.packageManager.getInstalledPackages(MATCH_ANY_USER) }
+            .getOrElse { apApp.packageManager.getInstalledPackages(0) }
+        // The mapping below dereferences applicationInfo; drop entries without
+        // one instead of failing the whole list on a single odd package.
+        return fallback.filter { it.applicationInfo != null }
+    }
+
     suspend fun fetchAppList() {
         isRefreshing = true
 
         try {
-            val result = connectRootService {
-                Log.w(TAG, "RootService disconnected")
-            }
-
             withContext(Dispatchers.IO) {
-                val binder = result.first
-                val allPackages = IAPRootService.Stub.asInterface(binder).getPackages(0)
+                val allPackages = fetchPackages()
 
-                withContext(Dispatchers.Main) {
-                    stopRootService()
-                }
                 val uids = Natives.suUids().toList()
                 Log.d(TAG, "all allows: $uids")
 
@@ -144,7 +179,7 @@ class SuperUserViewModel : ViewModel() {
 
                 Log.d(TAG, "all configs: $configs")
 
-                val newApps = allPackages.list.map {
+                val newApps = allPackages.map {
                     val appInfo = it.applicationInfo
                     val uid = appInfo!!.uid
                     val actProfile = if (uids.contains(uid)) Natives.suProfile(uid) else null
