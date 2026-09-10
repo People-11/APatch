@@ -20,7 +20,7 @@ use std::{
 };
 
 use crate::{
-    assets, defs, hide, lua, magic_mount, metamodule, module, restorecon, supercall,
+    assets, defs, hide, lua, magic_mount, metamodule, module, package, restorecon, supercall,
     supercall::{init_load_su_path, refresh_ap_package_list},
     utils::{self, switch_cgroups},
 };
@@ -323,6 +323,12 @@ pub fn start_uid_listener(superkey: Option<String>) -> Result<()> {
 
     let superkey = superkey.context("uid listener requires a SuperKey")?;
     let superkey_c = CString::new(superkey.clone()).context("SuperKey contains a null byte")?;
+
+    // Snapshot what is installed now, or the first refresh would report every
+    // existing package as newly installed.
+    if let Err(e) = package::initialize_package_baseline() {
+        warn!("[start_uid_listener] failed to baseline package list: {e}");
+    }
 
     // create inotify instance
     const SYS_PACKAGES_LIST_TMP: &str = "/data/system/packages.list.tmp";

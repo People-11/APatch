@@ -63,6 +63,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler {
         const val SELINUX_HIDE_FILE = APATCH_FOLDER + "selinux_hide"
         const val FACTORY_PROPS_FILE = APATCH_FOLDER + "factory_props_enable"
         const val MOUNT_MODE_FILE = APATCH_FOLDER + "mount_mode"
+        const val MANAGER_PKG_FILE = APATCH_FOLDER + "manager_pkg"
         const val JAILBREAK_FILE = APATCH_FOLDER + "jailbreak"
         const val JAILBREAK_KO_PATH = APATCH_FOLDER + "kernelpatch.ko"
         /** Persisted, file-backed KPMs. Each module lives in <id>/<id>.kpm. */
@@ -244,9 +245,30 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler {
                     }
                     Log.d(TAG, "ap state: " + _apStateLiveData.value)
 
+                    registerManagerPackage()
+
                     return@thread
                 }
             }
+
+        /**
+         * Tell apd where to broadcast package installs, and make sure we may post
+         * the resulting notification. Both need root, hence running after elevation.
+         */
+        private fun registerManagerPackage() {
+            val packageName = apApp.packageName
+            val receiver = "$packageName/me.bmax.apatch.InstallReceiver"
+
+            val wrote = rootShellForResult("echo -n '$receiver' > $MANAGER_PKG_FILE")
+            Log.d(TAG, "register manager package $receiver: ${wrote.isSuccess}")
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val granted = rootShellForResult(
+                    "pm grant --user 0 $packageName android.permission.POST_NOTIFICATIONS"
+                )
+                Log.d(TAG, "grant POST_NOTIFICATIONS: ${granted.isSuccess}")
+            }
+        }
 
         /** Resolve only the stored SuperKey; an empty result prompts for it on Home. */
         private fun resolveSuperKey(): String {

@@ -12,6 +12,10 @@ pub const FACTORY_PROPS_FILE: &str = concatcp!(WORKING_DIR, "factory_props_enabl
 
 // How module files get on top of the system: apd's own bind mounts, a
 // metamodule's mount script, or not at all.
+// Written by the manager: "<package>/<receiver class>" to broadcast package
+// installs and removals to.
+pub const MANAGER_PKG_FILE: &str = concatcp!(WORKING_DIR, "manager_pkg");
+
 pub const MOUNT_MODE_FILE: &str = concatcp!(WORKING_DIR, "mount_mode");
 pub const MOUNT_MODE_MAGIC: &str = "magic";
 pub const MOUNT_MODE_METAMODULE: &str = "metamodule";

@@ -1,13 +1,72 @@
 use std::{
+    collections::HashSet,
     fs::File,
     io::{self, BufRead},
     path::Path,
+    sync::{Mutex, OnceLock},
     thread,
     time::Duration,
 };
 
 use log::{info, warn};
 use serde::{Deserialize, Serialize};
+
+const SYSTEM_PACKAGES_LIST: &str = "/data/system/packages.list";
+
+/// Package names seen the last time packages.list was read, so a later read can
+/// tell what appeared or vanished. Empty until initialize_package_baseline runs.
+static KNOWN_PACKAGES: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
+
+fn known_packages() -> &'static Mutex<HashSet<String>> {
+    KNOWN_PACKAGES.get_or_init(|| Mutex::new(HashSet::new()))
+}
+
+fn read_package_names() -> io::Result<HashSet<String>> {
+    Ok(read_lines(SYSTEM_PACKAGES_LIST)?
+        .map_while(Result::ok)
+        .filter_map(|line| line.split_whitespace().next().map(String::from))
+        .collect())
+}
+
+/// Record the packages already installed so the first change scan does not
+/// report every one of them as newly installed.
+pub fn initialize_package_baseline() -> io::Result<()> {
+    let packages = read_package_names()?;
+    info!(
+        "[initialize_package_baseline] {} packages in baseline",
+        packages.len()
+    );
+    if let Ok(mut guard) = known_packages().lock() {
+        *guard = packages;
+    }
+    Ok(())
+}
+
+/// (installed, uninstalled) since the previous call, and re-baselines.
+pub fn get_package_changes() -> (Vec<String>, Vec<String>) {
+    let current = match read_package_names() {
+        Ok(packages) => packages,
+        Err(e) => {
+            warn!("[get_package_changes] failed to read package list: {e}");
+            return (Vec::new(), Vec::new());
+        }
+    };
+
+    let Ok(mut guard) = known_packages().lock() else {
+        return (Vec::new(), Vec::new());
+    };
+    // An empty baseline means initialize_package_baseline never ran; treating
+    // every installed package as new would spam a notification for each.
+    if guard.is_empty() {
+        *guard = current;
+        return (Vec::new(), Vec::new());
+    }
+
+    let added = current.difference(&guard).cloned().collect();
+    let removed = guard.difference(&current).cloned().collect();
+    *guard = current;
+    (added, removed)
+}
 
 #[derive(Deserialize, Serialize, Clone)]
 pub struct PackageConfig {
