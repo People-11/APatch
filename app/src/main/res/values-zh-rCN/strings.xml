@@ -8,6 +8,8 @@
     <string name="home_dialog_auth_fail_content">超级密钥验证失败，因此 APatch 不能正常工作。\n下面是一些可能的原因： \n⒈ 未使用 KernelPatch 修补内核镜像 \n⒉ KernelPatch 修补后的内核镜像未刷入 \n⒊超级密钥输入错误或包含特殊字符\n⒋设备不支持 APatch 以及 KernelPatch \n\n请检查后重试，如果问题仍然存在，可随时前往 GitHub 仓库的 issues 页面提问。</string>
     <string name="settings_donot_store_superkey">不存储超级密钥</string>
     <string name="settings_donot_store_superkey_summary">每次打开管理器时验证超级密钥</string>
+    <string name="settings_factory_props">修补出厂属性</string>
+    <string name="settings_factory_props_summary">隐藏敏感属性以绕过 Root 检测</string>
     <string name="app_name" translatable="false">APatch</string>
     <string name="kpm">内核模块</string>
     <string name="android_patch">系统补丁</string>

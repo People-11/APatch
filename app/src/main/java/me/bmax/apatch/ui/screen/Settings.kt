@@ -37,6 +37,7 @@ import androidx.compose.material.icons.automirrored.filled.FeaturedPlayList
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.InvertColors
 import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Share
@@ -96,10 +97,12 @@ import me.bmax.apatch.ui.theme.refreshTheme
 import me.bmax.apatch.util.APatchKeyHelper
 import me.bmax.apatch.util.getBugreportFile
 import me.bmax.apatch.util.getKernelVersionCode
+import me.bmax.apatch.util.isFactoryPropsEnabled
 import me.bmax.apatch.util.isGkiKernel
 import me.bmax.apatch.util.isGlobalNamespaceEnabled
 import me.bmax.apatch.util.outputStream
 import me.bmax.apatch.util.rootShellForResult
+import me.bmax.apatch.util.setFactoryPropsEnabled
 import me.bmax.apatch.util.setGlobalNamespaceEnabled
 import me.bmax.apatch.util.ui.APDialogBlurBehindUtils
 import me.bmax.apatch.util.ui.LocalSnackbarHost
@@ -298,6 +301,25 @@ fun SettingScreen() {
                         onConfirm = { applySelinuxHide(true) },
                     )
                 }
+            }
+
+            if (kPatchReady && aPatchReady) {
+                var factoryPropsEnabled by rememberSaveable { mutableStateOf(false) }
+                var factoryPropsLoaded by remember { mutableStateOf(false) }
+                LaunchedEffect(Unit) {
+                    factoryPropsEnabled = withContext(Dispatchers.IO) { isFactoryPropsEnabled() }
+                    factoryPropsLoaded = true
+                }
+                SwitchItem(
+                    icon = Icons.Filled.Lock,
+                    title = stringResource(id = R.string.settings_factory_props),
+                    summary = stringResource(id = R.string.settings_factory_props_summary),
+                    checked = factoryPropsEnabled,
+                    enabled = factoryPropsLoaded,
+                    onCheckedChange = {
+                        setFactoryPropsEnabled(if (it) "1" else "0")
+                        factoryPropsEnabled = it
+                    })
             }
 
             if (kPatchReady) {
