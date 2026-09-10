@@ -8,7 +8,9 @@ use notify::{
 };
 use signal_hook::{consts::signal::*, iterator::Signals};
 use std::{
-    env, fs,
+    env,
+    ffi::CString,
+    fs,
     os::unix::{fs::PermissionsExt, process::CommandExt},
     path::{Path, PathBuf},
     process::Command,
@@ -24,8 +26,12 @@ use crate::{
 };
 
 pub fn report_kernel(superkey: Option<String>, event: &str, state: &str) {
+    let Some(superkey) = superkey else {
+        warn!("skip kernel event {event}/{state}: no SuperKey");
+        return;
+    };
     let args = [
-        superkey.unwrap_or("su".to_string()),
+        superkey,
         "event".to_string(),
         event.to_string(),
         state.to_string(),
@@ -252,8 +258,13 @@ pub fn on_services(superkey: Option<String>) -> Result<()> {
     Ok(())
 }
 
-fn run_uid_monitor() {
+fn run_uid_monitor(superkey: Option<&str>) {
     info!("Trigger run_uid_monitor!");
+
+    let Some(superkey) = superkey else {
+        warn!("not starting uid monitor: no SuperKey");
+        return;
+    };
 
     let mut command = &mut Command::new("/data/adb/apd");
     {
@@ -266,7 +277,7 @@ fn run_uid_monitor() {
             })
         };
     }
-    command = command.arg("uid-listener");
+    command = command.args(["-s", superkey, "uid-listener"]);
 
     command
         .spawn()
@@ -277,15 +288,18 @@ fn run_uid_monitor() {
 pub fn on_boot_completed(superkey: Option<String>) -> Result<()> {
     info!("on_boot_completed triggered!");
 
-    run_stage("boot-completed", superkey, false);
+    run_stage("boot-completed", superkey.clone(), false);
 
-    run_uid_monitor();
+    run_uid_monitor(superkey.as_deref());
     Ok(())
 }
 
-pub fn start_uid_listener() -> Result<()> {
+pub fn start_uid_listener(superkey: Option<String>) -> Result<()> {
     info!("start_uid_listener triggered!");
     println!("[start_uid_listener] Registering...");
+
+    let superkey = superkey.context("uid listener requires a SuperKey")?;
+    let superkey_c = CString::new(superkey.clone()).context("SuperKey contains a null byte")?;
 
     // create inotify instance
     const SYS_PACKAGES_LIST_TMP: &str = "/data/system/packages.list.tmp";
@@ -298,12 +312,12 @@ pub fn start_uid_listener() -> Result<()> {
 
     {
         let mutex_clone = mutex.clone();
+        let signal_key = superkey_c.clone();
         thread::spawn(move || {
             let mut signals = Signals::new([SIGTERM, SIGINT, SIGPWR]).unwrap();
             if let Some(sig) = signals.forever().next() {
                 log::warn!("[shutdown] Caught signal {sig}, refreshing package list...");
-                let skey = c"su";
-                refresh_ap_package_list(skey, &mutex_clone);
+                refresh_ap_package_list(&signal_key, &mutex_clone);
             }
         });
     }
@@ -332,9 +346,12 @@ pub fn start_uid_listener() -> Result<()> {
     while let Ok(delayed) = rx.recv() {
         if delayed {
             debounce = false;
-            let skey = c"su";
-            refresh_ap_package_list(skey, &mutex);
-            report_kernel(None, "uid_listener", "package-list-updated");
+            refresh_ap_package_list(&superkey_c, &mutex);
+            report_kernel(
+                Some(superkey.clone()),
+                "uid_listener",
+                "package-list-updated",
+            );
         } else if !debounce {
             thread::sleep(Duration::from_secs(1));
             debounce = true;

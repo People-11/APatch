@@ -50,7 +50,6 @@ import androidx.lifecycle.compose.dropUnlessResumed
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.topjohnwu.superuser.io.SuFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -60,6 +59,7 @@ import me.bmax.apatch.ui.component.rememberCustomDialog
 import me.bmax.apatch.util.hasMetaModule
 import me.bmax.apatch.util.installModule
 import me.bmax.apatch.util.reboot
+import me.bmax.apatch.util.rootFile
 import me.bmax.apatch.util.ui.LocalSnackbarHost
 import java.io.File
 import java.text.SimpleDateFormat
@@ -137,9 +137,9 @@ fun InstallScreen(navigator: DestinationsNavigator, uri: Uri, type: MODULE_TYPE)
                     // check metamodule
                     if (hasMetaModule()) return@launch
                     val mountOldDirectory =
-                        SuFile.open("/data/adb/modules/${getModuleIdFromUri(context, uri)}/system")
+                        rootFile("/data/adb/modules/${getModuleIdFromUri(context, uri)}/system")
                     val mountNewDirectory =
-                        SuFile.open("/data/adb/modules_update/${getModuleIdFromUri(context, uri)}/system")
+                        rootFile("/data/adb/modules_update/${getModuleIdFromUri(context, uri)}/system")
                     if (!mountNewDirectory.isDirectory && !mountOldDirectory.isDirectory) return@launch
 
                     metaModuleAlertDialog.show()

@@ -36,6 +36,7 @@ import androidx.compose.material.icons.filled.Engineering
 import androidx.compose.material.icons.automirrored.filled.FeaturedPlayList
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.InvertColors
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Share
@@ -92,6 +93,7 @@ import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.SwitchItem
 import me.bmax.apatch.ui.component.rememberLoadingDialog
 import me.bmax.apatch.ui.theme.refreshTheme
+import me.bmax.apatch.util.APatchKeyHelper
 import me.bmax.apatch.util.getBugreportFile
 import me.bmax.apatch.util.getKernelVersionCode
 import me.bmax.apatch.util.isGkiKernel
@@ -296,6 +298,22 @@ fun SettingScreen() {
                         onConfirm = { applySelinuxHide(true) },
                     )
                 }
+            }
+
+            if (kPatchReady) {
+                var skipStoreSuperKey by rememberSaveable {
+                    mutableStateOf(APatchKeyHelper.shouldSkipStoreSuperKey())
+                }
+                SwitchItem(
+                    icon = Icons.Filled.Key,
+                    title = stringResource(id = R.string.settings_donot_store_superkey),
+                    summary = stringResource(id = R.string.settings_donot_store_superkey_summary),
+                    checked = skipStoreSuperKey,
+                    onCheckedChange = {
+                        // setShouldSkipStoreSuperKey also drops any already stored key.
+                        APatchKeyHelper.setShouldSkipStoreSuperKey(it)
+                        skipStoreSuperKey = it
+                    })
             }
 
             // WebView Debug

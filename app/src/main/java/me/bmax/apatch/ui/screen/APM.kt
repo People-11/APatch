@@ -81,7 +81,6 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.ExecuteAPMActionScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.InstallScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.topjohnwu.superuser.io.SuFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -105,6 +104,7 @@ import me.bmax.apatch.util.download
 import me.bmax.apatch.util.hasMagisk
 import me.bmax.apatch.util.isJailbreakMode
 import me.bmax.apatch.util.reboot
+import me.bmax.apatch.util.rootFile
 import me.bmax.apatch.util.toggleModule
 import me.bmax.apatch.util.ui.LocalSnackbarHost
 import me.bmax.apatch.util.undoRemoveModule
@@ -250,8 +250,8 @@ private fun getMetaModuleWarningText(
         val moduleDir = "/data/adb/modules/${module.id}"
 
         // Module requires mounting if it has a system dir and no skip_mount file
-        val hasSystem = SuFile.open("$moduleDir/system").isDirectory
-        val isSkipped = SuFile.open("$moduleDir/skip_mount").isFile
+        val hasSystem = rootFile("$moduleDir/system").isDirectory
+        val isSkipped = rootFile("$moduleDir/skip_mount").isFile
 
         hasSystem && !isSkipped
     }
@@ -259,9 +259,9 @@ private fun getMetaModuleWarningText(
     if (!needsMountModule) return null
 
     val metaDir = "/data/adb/metamodule"
-    val metaProp = SuFile.open("$metaDir/module.prop").isFile
-    val metaRemoved = SuFile.open("$metaDir/remove").isFile
-    val metaDisabled = SuFile.open("$metaDir/disable").isFile
+    val metaProp = rootFile("$metaDir/module.prop").isFile
+    val metaRemoved = rootFile("$metaDir/remove").isFile
+    val metaDisabled = rootFile("$metaDir/disable").isFile
 
     return when {
         !metaProp -> context.getString(R.string.no_meta_module_installed)

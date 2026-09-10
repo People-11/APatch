@@ -2,6 +2,7 @@ package me.bmax.apatch.ui.screen
 
 import android.os.Build
 import android.system.Os
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
@@ -19,10 +20,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
@@ -31,6 +34,8 @@ import androidx.compose.material.icons.filled.InstallMobile
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Cached
@@ -50,6 +55,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -68,10 +74,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
@@ -88,11 +98,14 @@ import kotlinx.coroutines.withContext
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
 import me.bmax.apatch.R
+import me.bmax.apatch.TAG
 import me.bmax.apatch.apApp
 import me.bmax.apatch.ui.component.ProvideMenuShape
 import me.bmax.apatch.ui.component.WarningCard
 import me.bmax.apatch.ui.component.rememberConfirmDialog
 import me.bmax.apatch.ui.viewmodel.PatchesViewModel
+import me.bmax.apatch.ui.viewmodel.isValidSuperKey
+import me.bmax.apatch.util.APatchCli
 import me.bmax.apatch.util.LatestVersionInfo
 import me.bmax.apatch.util.Version
 import me.bmax.apatch.util.Version.getManagerVersion
@@ -330,6 +343,168 @@ private fun TopBar(
     })
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AuthSuperKey(showDialog: MutableState<Boolean>, showFailedDialog: MutableState<Boolean>) {
+    var key by remember { mutableStateOf("") }
+    var keyVisible by remember { mutableStateOf(false) }
+    var enable by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    BasicAlertDialog(
+        onDismissRequest = { showDialog.value = false }, properties = DialogProperties(
+            decorFitsSystemWindows = true,
+            usePlatformDefaultWidth = false,
+        )
+    ) {
+        Surface(
+            modifier = Modifier
+                .width(310.dp)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(30.dp),
+            tonalElevation = AlertDialogDefaults.TonalElevation,
+            color = AlertDialogDefaults.containerColor,
+        ) {
+            Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+                Box(
+                    Modifier
+                        .padding(PaddingValues(bottom = 16.dp))
+                        .align(Alignment.Start)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.home_auth_key_title),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
+
+                Box(
+                    Modifier
+                        .weight(weight = 1f, fill = false)
+                        .align(Alignment.Start)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.home_auth_key_desc),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Box(contentAlignment = Alignment.CenterEnd) {
+                    OutlinedTextField(
+                        value = key,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 6.dp),
+                        onValueChange = {
+                            key = it
+                            enable = isValidSuperKey(key)
+                        },
+                        shape = RoundedCornerShape(50.0f),
+                        label = { Text(stringResource(id = R.string.super_key)) },
+                        visualTransformation = if (keyVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                    )
+                    IconButton(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .padding(top = 15.dp, end = 5.dp),
+                        onClick = { keyVisible = !keyVisible }) {
+                        Icon(
+                            imageVector = if (keyVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            contentDescription = null,
+                            tint = Color.Gray
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { showDialog.value = false }) {
+                        Text(stringResource(id = android.R.string.cancel))
+                    }
+
+                    Button(onClick = {
+                        showDialog.value = false
+                        if (Natives.nativeReady(key)) {
+                            APApplication.superKey = key
+                            // Any root shell cached before this point was built
+                            // with the key that did not work; rebuild it. Best
+                            // effort: the state is already authenticated, and a
+                            // shell that fails to rebuild must not take that down.
+                            scope.launch(Dispatchers.IO) {
+                                runCatching { APatchCli.refresh() }
+                                    .onFailure { Log.w(TAG, "root shell refresh failed", it) }
+                            }
+                        } else {
+                            showFailedDialog.value = true
+                        }
+                    }, enabled = enable) {
+                        Text(stringResource(id = android.R.string.ok))
+                    }
+                }
+            }
+            val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
+            APDialogBlurBehindUtils.setupWindowBlurListener(dialogWindowProvider.window)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AuthFailedTipDialog(showDialog: MutableState<Boolean>) {
+    BasicAlertDialog(
+        onDismissRequest = { showDialog.value = false }, properties = DialogProperties(
+            decorFitsSystemWindows = true,
+            usePlatformDefaultWidth = false,
+        )
+    ) {
+        Surface(
+            modifier = Modifier
+                .width(320.dp)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(20.dp),
+            tonalElevation = AlertDialogDefaults.TonalElevation,
+            color = AlertDialogDefaults.containerColor,
+        ) {
+            Column(modifier = Modifier.padding(PaddingValues(all = 24.dp))) {
+                Box(
+                    Modifier
+                        .padding(PaddingValues(bottom = 16.dp))
+                        .align(Alignment.Start)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.home_dialog_auth_fail_title),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
+
+                Box(
+                    Modifier
+                        .weight(weight = 1f, fill = false)
+                        .padding(PaddingValues(bottom = 24.dp))
+                        .align(Alignment.Start)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.home_dialog_auth_fail_content),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { showDialog.value = false }) {
+                        Text(text = stringResource(id = android.R.string.ok))
+                    }
+                }
+            }
+            val dialogWindowProvider = LocalView.current.parent as DialogWindowProvider
+            APDialogBlurBehindUtils.setupWindowBlurListener(dialogWindowProvider.window)
+        }
+    }
+}
+
 @Composable
 private fun KStatusCard(
     kpState: APApplication.State, apState: APApplication.State, navigator: DestinationsNavigator
@@ -338,6 +513,16 @@ private fun KStatusCard(
     val showUninstallDialog = remember { mutableStateOf(false) }
     if (showUninstallDialog.value) {
         UninstallDialog(showDialog = showUninstallDialog, navigator)
+    }
+
+    val showAuthFailedTipDialog = remember { mutableStateOf(false) }
+    if (showAuthFailedTipDialog.value) {
+        AuthFailedTipDialog(showDialog = showAuthFailedTipDialog)
+    }
+
+    val showAuthKeyDialog = remember { mutableStateOf(false) }
+    if (showAuthKeyDialog.value) {
+        AuthSuperKey(showDialog = showAuthKeyDialog, showFailedDialog = showAuthFailedTipDialog)
     }
 
     // Jailbreak button appears when the kernel is not installed and SELinux is permissive.
@@ -481,68 +666,74 @@ private fun KStatusCard(
                 Column(
                     modifier = Modifier.align(Alignment.CenterVertically)
                 ) {
-                    Button(onClick = {
-                        when {
-                            isJailbreak -> {
-                                softReboot()
-                            }
+                    // Nothing to offer here when the kernel is not installed: the
+                    // card itself and the top bar already lead to the installer,
+                    // and what is actually wanted may be the key dialog below.
+                    if (isJailbreak || kpState != APApplication.State.UNKNOWN_STATE) {
+                        Button(onClick = {
+                            when {
+                                isJailbreak -> {
+                                    softReboot()
+                                }
 
-                            kpState == APApplication.State.UNKNOWN_STATE -> {
-                                navigator.navigate(InstallModeSelectScreenDestination)
-                            }
+                                kpState == APApplication.State.KERNELPATCH_NEED_UPDATE -> {
+                                    // todo: remove legacy compact for kp < 0.9.0
+                                    if (Version.installedKPVUInt() < 0x900u) {
+                                        navigator.navigate(PatchesDestination(PatchesViewModel.PatchMode.PATCH_ONLY))
+                                    } else {
+                                        navigator.navigate(InstallModeSelectScreenDestination)
+                                    }
+                                }
 
-                            kpState == APApplication.State.KERNELPATCH_NEED_UPDATE -> {
-                                // todo: remove legacy compact for kp < 0.9.0
-                                if (Version.installedKPVUInt() < 0x900u) {
-                                    navigator.navigate(PatchesDestination(PatchesViewModel.PatchMode.PATCH_ONLY))
-                                } else {
-                                    navigator.navigate(InstallModeSelectScreenDestination)
+                                kpState == APApplication.State.KERNELPATCH_NEED_REBOOT -> {
+                                    reboot()
+                                }
+
+                                kpState == APApplication.State.KERNELPATCH_UNINSTALLING -> {
+                                    // Do nothing
+                                }
+
+                                else -> {
+                                    if (apState == APApplication.State.ANDROIDPATCH_INSTALLED || apState == APApplication.State.ANDROIDPATCH_NEED_UPDATE) {
+                                        showUninstallDialog.value = true
+                                    } else {
+                                        navigator.navigate(PatchesDestination(PatchesViewModel.PatchMode.UNPATCH))
+                                    }
                                 }
                             }
+                        }, content = {
+                            when {
+                                isJailbreak -> {
+                                    Text(text = stringResource(id = R.string.reboot_soft))
+                                }
 
-                            kpState == APApplication.State.KERNELPATCH_NEED_REBOOT -> {
-                                reboot()
-                            }
+                                kpState == APApplication.State.KERNELPATCH_NEED_UPDATE -> {
+                                    Text(text = stringResource(id = R.string.home_ap_cando_update))
+                                }
 
-                            kpState == APApplication.State.KERNELPATCH_UNINSTALLING -> {
-                                // Do nothing
-                            }
+                                kpState == APApplication.State.KERNELPATCH_NEED_REBOOT -> {
+                                    Text(text = stringResource(id = R.string.home_ap_cando_reboot))
+                                }
 
-                            else -> {
-                                if (apState == APApplication.State.ANDROIDPATCH_INSTALLED || apState == APApplication.State.ANDROIDPATCH_NEED_UPDATE) {
-                                    showUninstallDialog.value = true
-                                } else {
-                                    navigator.navigate(PatchesDestination(PatchesViewModel.PatchMode.UNPATCH))
+                                kpState == APApplication.State.KERNELPATCH_UNINSTALLING -> {
+                                    Icon(Icons.Outlined.Cached, contentDescription = "busy")
+                                }
+
+                                else -> {
+                                    Text(text = stringResource(id = R.string.home_ap_cando_uninstall))
                                 }
                             }
+                        })
+                    }
+
+                    // A missing or rejected stored key leaves the state UNKNOWN;
+                    // let the user authenticate with the key used to patch the kernel.
+                    if (kpState == APApplication.State.UNKNOWN_STATE) {
+                        Spacer(Modifier.height(8.dp))
+                        Button(onClick = { showAuthKeyDialog.value = true }) {
+                            Text(text = stringResource(id = R.string.home_auth_key_title))
                         }
-                    }, content = {
-                        when {
-                            isJailbreak -> {
-                                Text(text = stringResource(id = R.string.reboot_soft))
-                            }
-
-                            kpState == APApplication.State.UNKNOWN_STATE -> {
-                                Text(text = stringResource(id = R.string.home_ap_cando_install))
-                            }
-
-                            kpState == APApplication.State.KERNELPATCH_NEED_UPDATE -> {
-                                Text(text = stringResource(id = R.string.home_ap_cando_update))
-                            }
-
-                            kpState == APApplication.State.KERNELPATCH_NEED_REBOOT -> {
-                                Text(text = stringResource(id = R.string.home_ap_cando_reboot))
-                            }
-
-                            kpState == APApplication.State.KERNELPATCH_UNINSTALLING -> {
-                                Icon(Icons.Outlined.Cached, contentDescription = "busy")
-                            }
-
-                            else -> {
-                                Text(text = stringResource(id = R.string.home_ap_cando_uninstall))
-                            }
-                        }
-                    })
+                    }
 
                     if (kpState == APApplication.State.UNKNOWN_STATE && isPermissive) {
                         Spacer(Modifier.height(8.dp))
