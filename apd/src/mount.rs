@@ -124,6 +124,12 @@ pub fn move_mount_path(_from: impl AsRef<Path>, _to: impl AsRef<Path>) -> Result
     unimplemented!()
 }
 
+/// Source name the tmpfs reports as the device column of /proc/*/mounts and
+/// field 10 of /proc/*/mountinfo, both world-readable. It used to be the
+/// literal "APatch", which is a free exact-match for anything scanning the
+/// mount table; a plain "tmpfs" is what a great many system mounts already say.
+const TMPFS_SOURCE: &str = "tmpfs";
+
 /// Private tmpfs that magic mount assembles the merged tree in before moving
 /// it over the real directory.
 #[cfg(any(target_os = "linux", target_os = "android"))]
@@ -132,7 +138,7 @@ pub fn mount_tmpfs(dest: impl AsRef<Path>) -> Result<()> {
     match fsopen("tmpfs", FsOpenFlags::FSOPEN_CLOEXEC) {
         Result::Ok(fs) => {
             let fs = fs.as_fd();
-            fsconfig_set_string(fs, "source", "APatch")?;
+            fsconfig_set_string(fs, "source", TMPFS_SOURCE)?;
             fsconfig_create(fs)?;
             let mount = fsmount(fs, FsMountFlags::FSMOUNT_CLOEXEC, MountAttrFlags::empty())?;
             move_mount(
@@ -145,7 +151,7 @@ pub fn mount_tmpfs(dest: impl AsRef<Path>) -> Result<()> {
         }
         _ => {
             mount(
-                "APatch",
+                TMPFS_SOURCE,
                 dest.as_ref(),
                 "tmpfs",
                 MountFlags::empty(),

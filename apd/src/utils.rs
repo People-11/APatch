@@ -93,6 +93,25 @@ pub fn is_safe_mode(superkey: Option<String>) -> bool {
     safemode
 }
 
+/// Set the name reported by /proc/<pid>/comm and /proc/<pid>/stat.
+///
+/// Both are 0444 and only shielded by hidepid, which an isolated process
+/// bypasses with gid 3009, so they are readable by any app that cares to look.
+/// /proc/<pid>/exe still resolves to the real binary, but reading that link
+/// needs ptrace access to another uid's process, which such a caller does not
+/// have -- comm and cmdline are the part actually on display.
+#[cfg(any(target_os = "linux", target_os = "android"))]
+pub fn set_process_name(name: &str) {
+    // PR_SET_NAME reads 16 bytes and wants them NUL-terminated.
+    let mut buf = [0u8; 16];
+    let bytes = name.as_bytes();
+    let n = bytes.len().min(buf.len() - 1);
+    buf[..n].copy_from_slice(&bytes[..n]);
+    unsafe {
+        libc::prctl(libc::PR_SET_NAME, buf.as_ptr() as libc::c_ulong, 0, 0, 0);
+    }
+}
+
 #[cfg(any(target_os = "linux", target_os = "android"))]
 pub fn switch_mnt_ns(pid: i32) -> Result<()> {
     use std::os::fd::AsRawFd;
