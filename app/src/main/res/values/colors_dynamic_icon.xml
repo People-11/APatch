@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Fallback for API < 31: Light mode - light background, dark pattern -->
-    <color name="ic_launcher_bg_dyn">#B3C5FF</color>
-    <color name="ic_launcher_fg_color_dyn">#181B25</color>
+    <!-- The static icon: a fixed palette, so the toggle has something to
+         switch away from. No -v31 variant, by design. -->
+    <color name="ic_launcher_bg">#B3C5FF</color>
+    <color name="ic_launcher_fg">#181B25</color>
+
+    <!-- The themed icon: the system palette from API 31 (see values-v31),
+         this as the fallback below it. -->
+    <color name="ic_launcher_bg_themed">#B3C5FF</color>
+    <color name="ic_launcher_fg_themed">#181B25</color>
 </resources>
