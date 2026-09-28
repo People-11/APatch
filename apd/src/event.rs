@@ -1,5 +1,5 @@
 use crate::sepolicy::get_policy_main;
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
 use libc::SIGPWR;
 use log::{info, warn};
 use notify::{
@@ -11,9 +11,10 @@ use std::{
     env,
     ffi::CString,
     fs,
+    io::Write,
     os::unix::{fs::PermissionsExt, process::CommandExt},
     path::{Path, PathBuf},
-    process::Command,
+    process::{Command, Stdio},
     sync::{Arc, Mutex},
     thread,
     time::Duration,
@@ -24,6 +25,11 @@ use crate::{
     supercall::{init_load_su_path, refresh_ap_package_list},
     utils::{self, switch_cgroups},
 };
+
+/// argv[0] and comm for the package-list monitor. /proc/<pid>/cmdline and
+/// /proc/<pid>/comm are readable by any isolated process (gid 3009 bypasses
+/// hidepid), and the default of both would be "/data/adb/apd" / "apd".
+const UID_MONITOR_NAME: &str = "uid_monitor";
 
 /// How long packages.list has to stay quiet before a burst is considered
 /// finished. Only delays the catch-up refresh; the first one is immediate.
@@ -296,6 +302,14 @@ fn run_uid_monitor(superkey: Option<&str>) {
     let mut command = &mut Command::new("/data/adb/apd");
     {
         command = command.process_group(0);
+        // Keeps the real path out of /proc/<pid>/cmdline; the binary that runs
+        // is still /data/adb/apd.
+        command = command.arg0(UID_MONITOR_NAME);
+        // The key is handed over on stdin, never on argv: this daemon outlives
+        // the boot and /proc/<pid>/cmdline is readable by anything that can see
+        // the pid. An isolated process carries gid 3009 (AID_READPROC) and can
+        // see every pid, so argv here would hand the SuperKey to any app.
+        command = command.stdin(Stdio::piped());
         command = unsafe {
             command.pre_exec(|| {
                 // ignore the error?
@@ -304,12 +318,22 @@ fn run_uid_monitor(superkey: Option<&str>) {
             })
         };
     }
-    command = command.args(["-s", superkey, "uid-listener"]);
+    command = command.arg("uid-listener");
 
-    command
-        .spawn()
-        .map(|_| ())
-        .expect("[run_uid_monitor] Failed to run uid monitor");
+    match command.spawn() {
+        Ok(mut child) => {
+            match child.stdin.take() {
+                // Dropping the pipe closes it, which is the child's EOF.
+                Some(mut stdin) => {
+                    if let Err(e) = writeln!(stdin, "{superkey}") {
+                        warn!("[run_uid_monitor] failed to hand over the SuperKey: {e}");
+                    }
+                }
+                None => warn!("[run_uid_monitor] no stdin pipe to hand the SuperKey over"),
+            }
+        }
+        Err(e) => warn!("[run_uid_monitor] Failed to run uid monitor: {e}"),
+    }
 }
 
 pub fn on_boot_completed(superkey: Option<String>) -> Result<()> {
@@ -325,7 +349,24 @@ pub fn start_uid_listener(superkey: Option<String>) -> Result<()> {
     info!("start_uid_listener triggered!");
     println!("[start_uid_listener] Registering...");
 
-    let superkey = superkey.context("uid listener requires a SuperKey")?;
+    utils::set_process_name(UID_MONITOR_NAME);
+
+    // run_uid_monitor hands the key over on stdin so it stays out of
+    // /proc/<pid>/cmdline; -s is still accepted for running this by hand.
+    let superkey = match superkey {
+        Some(key) => key,
+        None => {
+            let mut key = String::new();
+            std::io::stdin()
+                .read_line(&mut key)
+                .context("uid listener requires a SuperKey on stdin")?;
+            let key = key.trim_end_matches(['\r', '\n']).to_string();
+            if key.is_empty() {
+                bail!("uid listener requires a SuperKey");
+            }
+            key
+        }
+    };
     let superkey_c = CString::new(superkey.clone()).context("SuperKey contains a null byte")?;
 
     // Prime the baseline with the boot state; this first call reports nothing
